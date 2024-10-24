@@ -21,5 +21,5 @@ LABEL com.redhat.component="multicluster-engine-operator-bundle-container" \
       io.openshift.tags="data,images" \
       io.k8s.display-name="multicluster-engine-operator-bundle" \
       maintainer="['acm-component-maintainers@redhat.com']" \
-      description="multicluster-engine-operator-bundle
+      description="multicluster-engine-operator-bundle"
 
