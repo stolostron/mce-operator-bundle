@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2024-12-02T23:43:50Z'
+    createdAt: '2024-12-04T16:06:38Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -24,18 +24,18 @@ metadata:
     features.operators.openshift.io/token-auth-aws: 'false'
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
-    olm.skipRange: '>=2.6.0 <2.7.0-2'
-  name: multicluster-engine.v2.7.0-2
+    olm.skipRange: '>=2.6.0 <2.7.0-3'
+  name: multicluster-engine.v2.7.0-3
   namespace: placeholder
   labels:
-    operatorframework.io/arch.amd64: supported
+    operatorframework.io/arch.amd64,: supported
     operatorframework.io/arch.ppc64le: supported
     operatorframework.io/arch.s390x: supported
     operatorframework.io/arch.arm64: supported
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 2.7.0-2
+  version: 2.7.0-3
   provider:
     name: Red Hat
   maintainers:
@@ -2802,19 +2802,19 @@ spec:
                 - name: OPERAND_IMAGE_BACKPLANE_OPERATOR
                   value: registry.redhat.io/multicluster-engine/backplane-operator@sha256:067eada467fb18766ff19d47ced693c5762abf3dca9e8f0c9446c7577d060abb
                 - name: OPERAND_IMAGE_ASSISTED_IMAGE_SERVICE
-                  value: registry.redhat.io/rhacm2/assisted-image-service@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/multicluster-engine/assisted-image-service-rhel9@sha256:c6b1e12ac45735934f6f9d665077b5b4cd21400d48a76f784128726804906905
                 - name: OPERAND_IMAGE_ASSISTED_INSTALLER
-                  value: registry.redhat.io/rhacm2/assisted-installer@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/multicluster-engine/assisted-installer-rhel9@sha256:6b40314c07315fff31f80a1db9913ded8d0ccd1523964a814c912d5366b4c88f
                 - name: OPERAND_IMAGE_ASSISTED_INSTALLER_AGENT
-                  value: registry.redhat.io/rhacm2/assisted-installer-agent@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:8b352023da3006c17eb88a6eca8caab154a50c9135b4f844ec75ee03224d0476
                 - name: OPERAND_IMAGE_ASSISTED_INSTALLER_CONTROLLER
-                  value: registry.redhat.io/rhacm2/assisted-installer-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
-                - name: OPERAND_IMAGE_ASSISTED_SERVICE_9
-                  value: registry.redhat.io/rhacm2/assisted-service@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:b3e87c99187cbd70b6163ae0ac1d6fe4b4d894dd9175d1c1ff95814cf798feb3
+                - name: OPERAND_IMAGE_ASSISTED_SERVICE_8
+                  value: registry.redhat.io/multicluster-engine/assisted-service-8-rhel8@sha256:eb4d337822303fc35bc80e0ef8516bde50f768e4a285bdfa565c03aa358a56e1
                 - name: OPERAND_IMAGE_POSTGRESQL_12
-                  value: registry.redhat.io/rhel8/postgresql-12@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/rhel8/postgresql-12@sha256:82d171ab0ce78a0157408662155b53d4f637947a303bfecb684f6132f5f468be
                 - name: OPERATOR_VERSION
-                  value: 2.7.0-2
+                  value: 2.7.0-3
                 - name: OPERATOR_PACKAGE
                   value: multicluster-engine
                 image: registry.redhat.io/multicluster-engine/backplane-operator@sha256:067eada467fb18766ff19d47ced693c5762abf3dca9e8f0c9446c7577d060abb
@@ -2914,14 +2914,14 @@ spec:
   - name: work
     image: registry.redhat.io/multicluster-engine/work@sha256:0000000000000000000000000000000000000000000000000000000000000000
   - name: assisted_image_service
-    image: registry.redhat.io/rhacm2/assisted-image-service@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/assisted-image-service-rhel9@sha256:c6b1e12ac45735934f6f9d665077b5b4cd21400d48a76f784128726804906905
   - name: assisted_installer
-    image: registry.redhat.io/rhacm2/assisted-installer@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/assisted-installer-rhel9@sha256:6b40314c07315fff31f80a1db9913ded8d0ccd1523964a814c912d5366b4c88f
   - name: assisted_installer_agent
-    image: registry.redhat.io/rhacm2/assisted-installer-agent@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:8b352023da3006c17eb88a6eca8caab154a50c9135b4f844ec75ee03224d0476
   - name: assisted_installer_controller
-    image: registry.redhat.io/rhacm2/assisted-installer-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
-  - name: assisted_service_9
-    image: registry.redhat.io/rhacm2/assisted-service@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:b3e87c99187cbd70b6163ae0ac1d6fe4b4d894dd9175d1c1ff95814cf798feb3
+  - name: assisted_service_8
+    image: registry.redhat.io/multicluster-engine/assisted-service-8-rhel8@sha256:eb4d337822303fc35bc80e0ef8516bde50f768e4a285bdfa565c03aa358a56e1
   - name: postgresql_12
-    image: registry.redhat.io/rhel8/postgresql-12@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/rhel8/postgresql-12@sha256:82d171ab0ce78a0157408662155b53d4f637947a303bfecb684f6132f5f468be
