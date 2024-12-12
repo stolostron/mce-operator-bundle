@@ -13,13 +13,13 @@ The copies of workflows, scripts or configuration file sin this branch should be
 
 The usual/required files in this branch:
 
--  `.github/workflows/gen-bundle-contents-when-triggered.yaml` - The main-branch copy of the bundle content generation workflow.  
+-  `.github/workflows/gen-bundle-contents-when-triggered.yaml` - The main-branch copy of the bundle content generation workflow.  [1]
+-  `tools/run-script-from-tools-repo` - The "front" end script which is invoked from the Gen Bundle Contents When Triggered workflow.  This script clones the `release` repo at a specified branch and then runs a target "business-logic" from the cloned copy, as defined in configuration.
+-  `config/config-vars` - The configuration file (source'd Bash fragment) that provides configuration into to the front-end script.
 
-  Note: Because of the way GitHub Actions works, this same workflow-definition Yaml file will also be in the `release-bracnh-template` branch and each release branch, and should be identical across all instances. In fact, hopefully it should be identical or close to it across all bundle-building repos.  A "reference" copy of this workflow definition can be found in the `stolostron/release` repo.
+Notes:
 
-- `tools/run-script-from-tools-repo` - The "front" end script which is invoked from the Gen Bundle Contents When Triggered workflow.  This script clones the `release` repo at a specified branch and then runs a target "business-logic" from the cloned copy, as defined in configuration.
-
-- `config/config-vars` - The configuration file (source'd Bash fragment) that provides configuration into to the front-end script.
+- Note [1]: Because of the way GitHub Actions works, this same workflow-definition Yaml file will also be in the `release-bracnh-template` branch and each release branch, and should be identical across all instances. In fact, hopefully it should be identical or close to it across all bundle-building repos.  A "reference" copy of this workflow definition can be found in the `stolostron/release` repo.
 
 #### The release-branch-template Branch
 
