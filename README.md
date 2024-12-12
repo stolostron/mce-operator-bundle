@@ -3,7 +3,7 @@ The main branch of this operator-bundle repository holds configuration and gener
 
 ## Description of Branches
 
-#### The main Branch (this branch)
+### The main Branch (this branch)
 
 This is the branch that is checked out by the Gen Bundle Contents When Triggered workflow in this repository in order to get the front-end script (and its configuration) that then obtains and runs the bundle-generation "business logic"c from the `stolostron/release` repo's `master` branch. 
 
@@ -21,7 +21,7 @@ Notes:
 
 - Note [1]: Because of the way GitHub Actions works, this same workflow-definition Yaml file will also be in the `release-bracnh-template` branch and each release branch, and should be identical across all instances. In fact, hopefully it should be identical or close to it across all bundle-building repos.  A "reference" copy of this workflow definition can be found in the `stolostron/release` repo.
 
-#### The release-branch-template Branch
+### The release-branch-template Branch
 
 A branch whose contents serve as a template for the creation of a new release branch. 
 
@@ -29,7 +29,7 @@ This branch does not contain any generated artifacts and thus will probably neve
 
 See "Setting Up A New Release Branch" below.
 
-#### backplane-x.y Branches (Release Branches)
+### backplane-x.y Branches (Release Branches)
 
 A series of release branches, that is branches that contain the generated operator bundle contents for a given release.  These branches are the ones to which bundle-building-request PRs should be targeted and from which operator bundle images are built.
 
