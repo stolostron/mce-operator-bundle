@@ -1,23 +1,38 @@
 # mce-operator-bundle - main branch
 The main branch of this operator-bundle repository holds configuration and generated manifests needed to build the MCE operator bundle image.
 
-## Branches
+## Description of Branches
 
--  `main` branch (this branch) - This is the branch that is checked out by the Gen Bundle Contents When Triggered workflow in this repository in order to get the front-end script (and its configuration) that then obtains and runs the bundle-generation "business logic"c from the `stolostron/release` repo's `master` branch.   This branch does not contain any generated artifacts and thus will probably never be the source branch for an image build.   The copies of workflows, scripts or configuration file sin this branch should be relatively static, and in particular not need any release-to-release updates to change version numbers and the like.
+#### The main Branch (this branch)
 
-  Important files:
+This is the branch that is checked out by the Gen Bundle Contents When Triggered workflow in this repository in order to get the front-end script (and its configuration) that then obtains and runs the bundle-generation "business logic"c from the `stolostron/release` repo's `master` branch. 
 
-  -  `.github/workflows/gen-bundle-contents-when-triggered.yaml` - The main-branch copy of the bundle content generation workflow.  
+This branch does not contain any generated artifacts and thus will probably never be the source branch for an image build. 
 
-    Note: Because of the way GitHub Actions works, this same workflow-definition Yaml file will also be in the `release-bracnh-template` branch and each release branch, and should be identical across all instances. In fact, hopefully it should be identical or close to it across all bundle-building repos.  A "reference" copy of this workflow definition can be found in the `stolostron/release` repo.
+The copies of workflows, scripts or configuration file sin this branch should be relatively static, and in particular not need any release-to-release updates to change version numbers and the like.
 
-  - `tools/run-script-from-tools-repo` - The "front" end script which is invoked from the Gen Bundle Contents When Triggered workflow.  This script clones the `release` repo at a specified branch and then runs a target "business-logic" from the cloned copy, as defined in configuration.
+The usual/required files in this branch:
 
-  - `config/config-vars` - The configuration file (source'd Bash fragement) that provides configuration into to the front-end script.
+-  `.github/workflows/gen-bundle-contents-when-triggered.yaml` - The main-branch copy of the bundle content generation workflow.  
 
-- `release-branch-templat`e - A branch whose contents serve as a template for a new release branch. This is the branch you check out and use as the base branch for creating a new release branch.  This branch does not contain any generated artifacts and thus will probably never be the source branch for an image build.  See "Setting Up A New Release Branch" below.
+  Note: Because of the way GitHub Actions works, this same workflow-definition Yaml file will also be in the `release-bracnh-template` branch and each release branch, and should be identical across all instances. In fact, hopefully it should be identical or close to it across all bundle-building repos.  A "reference" copy of this workflow definition can be found in the `stolostron/release` repo.
 
-- `backplane-x.y` -  A series of release branches, that is branches that contain the generated operator bundle contents for a given release.  These branches are the ones to which bundle-building-request PRs should be targeted and from which operator bundle images are built.
+- `tools/run-script-from-tools-repo` - The "front" end script which is invoked from the Gen Bundle Contents When Triggered workflow.  This script clones the `release` repo at a specified branch and then runs a target "business-logic" from the cloned copy, as defined in configuration.
+
+- `config/config-vars` - The configuration file (source'd Bash fragment) that provides configuration into to the front-end script.
+
+#### The release-branch-template Branch
+
+A branch whose contents serve as a template for the creation of a new release branch. 
+
+This branch does not contain any generated artifacts and thus will probably never be the source branch for an image build.  
+
+See "Setting Up A New Release Branch" below.
+
+#### backplane-x.y Branches (Release Branches)
+
+A series of release branches, that is branches that contain the generated operator bundle contents for a given release.  These branches are the ones to which bundle-building-request PRs should be targeted and from which operator bundle images are built.
+
 
 ## Setting Up a New Release Branch
 
