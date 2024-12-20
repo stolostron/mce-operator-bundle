@@ -1,3 +1,3 @@
-# mce-operator-bundle - release x.y
+# mce-operator-bundle - backplane-2.8 branch
 
 Holds the Dockerfile and contents for the MCE operator bundle image for release 2.8.
