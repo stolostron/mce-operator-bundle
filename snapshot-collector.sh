@@ -18,5 +18,13 @@ get_latest_release() {
   fi
 }
 
-# Currently calling the function with 'publish' aka my test releasePlan as an argument
-get_latest_release publish
+releasePlan=$1
+
+# Check if the release plan is provided
+if [ -z "$releasePlan" ]; then
+  echo "Error: release-plan argument is missing."
+  exit 1
+fi
+
+# Call the function with the release-plan passed into script
+get_latest_release $releasePlan
