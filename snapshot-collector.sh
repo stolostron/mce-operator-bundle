@@ -11,8 +11,7 @@ get_latest_release() {
         oc get snapshot $latestSnapshot -o yaml > latest-snapshot.yaml
     else
       echo "No snapshot found for the latest release."
-    fi
-  fi    
+    fi    
   else
     echo "No release found."
   fi
