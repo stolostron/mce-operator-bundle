@@ -17,6 +17,31 @@ get_latest_release() {
   fi
 }
 
+install_oc() {
+  CLI_DESTINATION_DIR="${CLI_DESTINATION_DIR:=/usr/local/bin}"
+
+  if ! which oc > /dev/null; then
+    echo "Installing oc and kubectl CLIs to ${CLI_DESTINATION_DIR}..."
+    mkdir clis-unpacked
+    curl -kLo oc.tar.gz https://mirror.openshift.com/pub/openshift-v4/clients/ocp/stable/openshift-client-linux.tar.gz
+    tar -xzf oc.tar.gz -C clis-unpacked
+    chmod 755 ./clis-unpacked/oc
+    chmod 755 ./clis-unpacked/kubectl
+    mv ./clis-unpacked/oc "${CLI_DESTINATION_DIR}/oc"
+    mv ./clis-unpacked/kubectl "${CLI_DESTINATION_DIR}/kubectl"
+    rm -rf ./clis-unpacked
+    rm -f oc.tar.gz
+  fi
+}
+
+set_kube_env() {
+
+  export KUBECONFIG=$(pwd)/kubeconfig
+  kubectl get cm
+  kubectl config use-context konflux-crt-redhat-acm
+
+}
+
 releasePlan=$1
 
 # Check if the release plan is provided
@@ -26,4 +51,6 @@ if [ -z "$releasePlan" ]; then
 fi
 
 # Call the function with the release-plan passed into script
+install_oc
+set_kube_env
 get_latest_release $releasePlan
