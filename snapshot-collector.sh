@@ -37,7 +37,7 @@ install_oc() {
 set_kube_env() {
   saToken=$1
   oc login --token=$saToken --server=https://api.stone-prd-rh01.pg1f.p1.openshiftapps.com:6443
-
+  kubectl config set-context --current --namespace=crt-redhat-acm-tenant
 }
 
 releasePlan=$1
