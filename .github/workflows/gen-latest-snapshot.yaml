@@ -26,9 +26,11 @@ jobs:
 
       # Run the snapshot collector script and create a PR with the latest snapshot in the correct branch
       - name: Run snapshot collection and file handling
+        env:
+          SA_TOKEN: ${{ secrets.KONFLUX_SERVICE_ACCOUNT_TOKEN }}
         run: |
           chmod +x snapshot-collector.sh
-          ./snapshot-collector.sh ${{ matrix.release-plan }}
+          ./snapshot-collector.sh ${{ matrix.release-plan }} "$SA_TOKEN"
 
       # Create Pull Request
       - name: Create Pull Request
