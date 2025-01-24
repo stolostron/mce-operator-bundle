@@ -32,13 +32,21 @@ jobs:
           chmod +x snapshot-collector.sh
           ./snapshot-collector.sh ${{ matrix.release-plan }} "$SA_TOKEN"
 
+      - name: Generate GitHub token for workflow actions
+        id: gen-workflow-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ vars.WORKFLOW_BOT_APP_ID }}
+          private-key: ${{ secrets.WORKFLOW_BOT_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
       # Create Pull Request
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v7
         with:
           branch: "update-snapshot-${{ matrix.branch }}"
           base: "${{ matrix.branch }}"
           delete-branch: true
           title: "Gen Latest Snapshot [${{ matrix.branch }}]"
-          committer: GitHub <noreply@github.com>
           author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          token: ${{ steps.gen-workflow-token.outputs.token }}
