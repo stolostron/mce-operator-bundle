@@ -109,7 +109,7 @@ git checkout release-branch-template
 git checkout --orphan <new-release-branch>
 # The starting content of the new branch will already be staged and ready to commit
 git commit --signoff -m "Create branch for release x.y"
-git push git push --set-upstream origin <new-release-branch>
+git push --set-upstream origin <new-release-branch>
 ```
 
 We suggest that each release branch starts as an orphan (also sometimes called unrelated) branch to
