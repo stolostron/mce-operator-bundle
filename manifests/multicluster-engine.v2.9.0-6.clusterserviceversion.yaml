@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2025-04-03T14:16:20Z'
+    createdAt: '2025-04-03T19:43:13Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -24,8 +24,8 @@ metadata:
     features.operators.openshift.io/token-auth-aws: 'false'
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
-    olm.skipRange: '>=2.8.0 <2.9.0-5'
-  name: multicluster-engine.v2.9.0-5
+    olm.skipRange: '>=2.8.0 <2.9.0-6'
+  name: multicluster-engine.v2.9.0-6
   namespace: placeholder
   labels:
     operatorframework.io/arch.amd64,: supported
@@ -35,7 +35,7 @@ metadata:
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 2.9.0-5
+  version: 2.9.0-6
   provider:
     name: Red Hat
   maintainers:
@@ -86,10 +86,12 @@ spec:
     type: AllNamespaces
   customresourcedefinitions:
     owned:
-    - description: MultiClusterEngine defines the configuration for an instance of a multicluster engine,
-        a central point providing the foundational components for managing multiple Kubernetes-based clusters.
-        The deployment of the multicluster engine components is determined based on the configuration
-        that is defined in this resource.
+    - description: 'MultiClusterEngine defines the configuration for an instance
+
+        of a multicluster engine, a central point providing the foundational components for managing multiple
+        Kubernetes-based clusters. The deployment of the multicluster engine components is
+
+        determined based on the configuration that is defined in this resource.'
       displayName: MultiCluster Engine
       kind: MultiClusterEngine
       name: multiclusterengines.multicluster.openshift.io
@@ -107,6 +109,12 @@ spec:
         path: imagePullSecret
         x-descriptors:
         - urn:alm:descriptor:io.kubernetes:Secret
+        - urn:alm:descriptor:com.tectonic.ui:advanced
+      - description: The name of the local-cluster resource
+        displayName: Local Cluster Name
+        path: localClusterName
+        x-descriptors:
+        - urn:alm:descriptor:io.kubernetes:text
         - urn:alm:descriptor:com.tectonic.ui:advanced
       - description: Developer Overrides
         displayName: Developer Overrides
@@ -314,7 +322,12 @@ spec:
           - events
           verbs:
           - create
+          - delete
+          - get
+          - list
           - patch
+          - update
+          - watch
         - apiGroups:
           - ''
           resources:
@@ -438,6 +451,7 @@ spec:
           - serviceaccounts/token
           verbs:
           - create
+          - get
         - apiGroups:
           - ''
           resources:
@@ -776,6 +790,27 @@ spec:
           resources:
           - managedclusteraddons/status
           verbs:
+          - patch
+          - update
+        - apiGroups:
+          - addons.cluster.x-k8s.io
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - addons.cluster.x-k8s.io
+          resources:
+          - clusterresourcesets/finalizers
+          - clusterresourcesets/status
+          verbs:
+          - get
           - patch
           - update
         - apiGroups:
@@ -1280,6 +1315,51 @@ spec:
           - update
           - watch
         - apiGroups:
+          - bootstrap.cluster.x-k8s.io
+          resources:
+          - eksconfigs
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - bootstrap.cluster.x-k8s.io
+          resources:
+          - eksconfigs/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - bootstrap.cluster.x-k8s.io
+          - controlplane.cluster.x-k8s.io
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - bootstrap.cluster.x-k8s.io
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - '*'
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - capi-provider.agent-install.openshift.io
           resources:
           - agentmachines
@@ -1612,6 +1692,222 @@ spec:
           verbs:
           - update
         - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusterclasses
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusterclasses
+          - clusterclasses/status
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusters
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusters
+          - clusters/finalizers
+          - clusters/status
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusters
+          - clusters/status
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusters
+          - machinepools
+          - machines
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinedeployments
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinedeployments
+          - machinedeployments/finalizers
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinedeployments
+          - machinedeployments/finalizers
+          - machinedeployments/status
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinehealthchecks
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinehealthchecks
+          - machinehealthchecks/finalizers
+          - machinehealthchecks/status
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinepools
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinepools
+          - machinepools/finalizers
+          - machinepools/status
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinepools
+          - machinepools/status
+          verbs:
+          - get
+          - list
+          - patch
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machines
+          - machines/finalizers
+          - machines/status
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machines
+          - machines/status
+          verbs:
+          - delete
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinesets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinesets
+          - machinesets/finalizers
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinesets
+          - machinesets/finalizers
+          - machinesets/status
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - clusterview.open-cluster-management.io
           resources:
           - managedclusters
@@ -1740,6 +2036,76 @@ spec:
           - patch
           - update
           - watch
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - '*'
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - awsmanagedcontrolplanes
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - awsmanagedcontrolplanes
+          - awsmanagedcontrolplanes/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - awsmanagedcontrolplanes/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - rosacontrolplanes
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - rosacontrolplanes
+          - rosacontrolplanes/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - rosacontrolplanes/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - rosacontrolplanes/status
+          verbs:
+          - get
+          - patch
+          - update
         - apiGroups:
           - coordination.k8s.io
           resources:
@@ -2032,6 +2398,14 @@ spec:
           - hypershift.openshift.io
           resources:
           - hostedclusters
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - hypershift.openshift.io
+          resources:
+          - hostedclusters
           - nodepools
           verbs:
           - delete
@@ -2066,6 +2440,236 @@ spec:
           - update
           - watch
         - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsclustercontrolleridentities
+          verbs:
+          - create
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsclustercontrolleridentities
+          - awsclusterroleidentities
+          - awsclusterstaticidentities
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsclusterroleidentities
+          - awsclusterstaticidentities
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsclusters
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsclusters/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsfargateprofiles
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsfargateprofiles/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachinepools
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachinepools
+          - awsmachinepools/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachinepools/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachines
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachines
+          - awsmachines/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachines/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachinetemplates
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmanagedclusters
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmanagedclusters
+          - awsmanagedclusters/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmanagedclusters/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmanagedmachinepools
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmanagedmachinepools
+          - awsmanagedmachinepools/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmanagedmachinepools/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - rosaclusters
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - rosaclusters/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - rosamachinepools
+          verbs:
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - rosamachinepools/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - rosamachinepools/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
           - internal.open-cluster-management.io
           resources:
           - managedclusterinfos
@@ -2093,6 +2697,14 @@ spec:
           verbs:
           - patch
           - update
+        - apiGroups:
+          - ipam.cluster.x-k8s.io
+          resources:
+          - ipaddressclaims
+          verbs:
+          - get
+          - list
+          - watch
         - apiGroups:
           - metal3.io
           resources:
@@ -2230,6 +2842,25 @@ spec:
           - patch
           - update
         - apiGroups:
+          - multicluster.x-k8s.io
+          resources:
+          - clusterprofiles
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - multicluster.x-k8s.io
+          resources:
+          - clusterprofiles/status
+          verbs:
+          - patch
+          - update
+        - apiGroups:
           - networking.k8s.io
           resources:
           - ingresses
@@ -2241,6 +2872,14 @@ spec:
           - patch
           - update
           - watch
+        - apiGroups:
+          - networking.k8s.io
+          resources:
+          - networkpolicies
+          verbs:
+          - create
+          - get
+          - update
         - apiGroups:
           - operator.open-cluster-management.io
           resources:
@@ -2546,6 +3185,17 @@ spec:
           - update
           - watch
         - apiGroups:
+          - runtime.cluster.x-k8s.io
+          resources:
+          - extensionconfigs
+          - extensionconfigs/status
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
           - scheduling.k8s.io
           resources:
           - priorityclasses
@@ -2554,6 +3204,13 @@ spec:
           - get
           - patch
           - update
+        - apiGroups:
+          - search.open-cluster-management.io
+          resources:
+          - searches
+          verbs:
+          - list
+          - watch
         - apiGroups:
           - storage.k8s.io
           resources:
@@ -2752,49 +3409,49 @@ spec:
                 - name: OPERAND_IMAGE_BACKPLANE_MUST_GATHER
                   value: registry.redhat.io/multicluster-engine/backplane-must-gather@sha256:dee742d705d4a5924dfea2aec171159dfab93daea143dae41efdbc293ab29546
                 - name: OPERAND_IMAGE_BACKPLANE_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/backplane-operator@sha256:5333ee4e62887887b0b69f897888b77bbbca067fe8abf534639c3798c291e3ae
+                  value: registry.redhat.io/multicluster-engine/backplane-operator@sha256:90dc42f7e65a9448bd577d3a8f44988188621bd412a9689d9d6eaee2c89bc008
                 - name: OPERAND_IMAGE_CLUSTER_API
-                  value: registry.redhat.io/multicluster-engine/cluster-api@sha256:b5e0714b668e64a85d5d3e23e2170c7236395b67817a84db3c3ad8c4566072c3
+                  value: registry.redhat.io/multicluster-engine/cluster-api@sha256:0000000000000000000000000000000000000000000000000000000000000000
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_AGENT
                   value: registry.redhat.io/multicluster-engine/cluster-api-provider-agent@sha256:259f55ea944db77b7d7d065de6c097a91137cea90b5bff37a51510d2f05a43a0
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_KUBEVIRT
-                  value: registry.redhat.io/multicluster-engine/cluster-api-provider-kubevirt@sha256:6a81cbb3408c3c0033a4da4bd3a9dcb5a22137040eecd3b914bbab15bbb47b25
+                  value: registry.redhat.io/multicluster-engine/cluster-api-provider-kubevirt@sha256:0000000000000000000000000000000000000000000000000000000000000000
                 - name: OPERAND_IMAGE_CLUSTERCLAIMS_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/clusterclaims-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/multicluster-engine/clusterclaims-controller@sha256:4dcf06f051bec9bfabe6a713ccf3cfab82c879a23be5de77ab8645a8fcc7086d
                 - name: OPERAND_IMAGE_CLUSTER_CURATOR_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/cluster-curator-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/multicluster-engine/cluster-curator-controller@sha256:4652f774c706c83525d6c86e1dd29da14eb2cdb07de673532555e51e8f10345e
                 - name: OPERAND_IMAGE_CLUSTER_IMAGE_SET_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/cluster-image-set-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/multicluster-engine/cluster-image-set-controller@sha256:d3e77a9da8d1bed4f2c5c2e0ca2f063b60e48b65342ff5b28a8a30d1b7b6e9f7
                 - name: OPERAND_IMAGE_CLUSTERLIFECYCLE_STATE_METRICS
                   value: registry.redhat.io/multicluster-engine/clusterlifecycle-state-metrics@sha256:a0f63f1ccd3433241ac05a1f84086c6ce4b7997a45f6d0c90a197a5f84ddd49c
                 - name: OPERAND_IMAGE_CLUSTER_PROXY_ADDON
                   value: registry.redhat.io/multicluster-engine/cluster-proxy-addon@sha256:9067e32b13d77be0e720ba0c7f4256e624ae3d79859921b6552d9950fc5292f2
                 - name: OPERAND_IMAGE_CLUSTER_PROXY
-                  value: registry.redhat.io/multicluster-engine/cluster-proxy@sha256:a17bd06cd09e7d4776abb30147af11e07f1940fc18fff343becce2e205dec50b
+                  value: registry.redhat.io/multicluster-engine/cluster-proxy@sha256:dc5fcad5e1595b49fc35d51d0295a85cb0fe0f686e97254cab512bbd0920b167
                 - name: OPERAND_IMAGE_CONSOLE_MCE
-                  value: registry.redhat.io/multicluster-engine/console-mce@sha256:3678fbc0ca86c6ae3e7457c00bcab0a05ec8605caafca3b0a40ad7c3764802ab
+                  value: registry.redhat.io/multicluster-engine/console-mce@sha256:9c59ecc4ae1def6a0793f7aea7d317c5e2270f68d644783cd51c77d5d8933295
                 - name: OPERAND_IMAGE_DISCOVERY_OPERATOR
                   value: registry.redhat.io/multicluster-engine/discovery-operator@sha256:3e4b3a2da9ac61a40e3f8db4a6c840a1bd1b9f64f3d5d524240437a8c3132e52
                 - name: OPERAND_IMAGE_HYPERSHIFT_ADDON_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/hypershift-addon-operator@sha256:b7249206856369358b9745d0c614edc44f19eb616305bfae193c16645513b10a
+                  value: registry.redhat.io/multicluster-engine/hypershift-addon-operator@sha256:f1c0d524cb519eba5a735b7cca8538d0df70ae8215d6b1c14c47054da5c5910b
                 - name: OPERAND_IMAGE_HYPERSHIFT_CLI
-                  value: registry.redhat.io/multicluster-engine/hypershift-cli@sha256:389a87254ebf42f664f4ba4aebe12f179aa258ff131048c39ec713f46a14be62
+                  value: registry.redhat.io/multicluster-engine/hypershift-cli@sha256:0000000000000000000000000000000000000000000000000000000000000000
                 - name: OPERAND_IMAGE_HYPERSHIFT_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/hypershift-release@sha256:82ba4c4a67a6666f3b8ef7b6d90b10acfc25611fc292a73439364b35d2a286c3
+                  value: registry.redhat.io/multicluster-engine/hypershift-release@sha256:0000000000000000000000000000000000000000000000000000000000000000
                 - name: OPERAND_IMAGE_IMAGE_BASED_INSTALL_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/image-based-install-operator@sha256:d0dcc4335c28e7a49be49444299902e412fc3218b3fb9a6f3cdac177a2f2eb63
+                  value: registry.redhat.io/multicluster-engine/image-based-install-operator@sha256:5964aa8e9347f034494c52215b25b6c2075dc90d876d1b978373640119a633ce
                 - name: OPERAND_IMAGE_KUBE_RBAC_PROXY_MCE
-                  value: registry.redhat.io/multicluster-engine/kube-rbac-proxy@sha256:186d7bff8d2c47f4292eae2dc9fc2c258df5d0523dee87feff50b38ccd08c7fb
+                  value: registry.redhat.io/multicluster-engine/kube-rbac-proxy@sha256:0000000000000000000000000000000000000000000000000000000000000000
                 - name: OPERAND_IMAGE_MANAGEDCLUSTER_IMPORT_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/managedcluster-import-controller-addon@sha256:052a2e763a8218fe4b795a654ac300c8deff2b1536a27cd10c6977a5723f8a65
+                  value: registry.redhat.io/multicluster-engine/managedcluster-import-controller-addon@sha256:1cb300b1e260822074f014e97cae226fa0bde234006b6c5d94d71a267e9eac97
                 - name: OPERAND_IMAGE_MANAGED_SERVICEACCOUNT
                   value: registry.redhat.io/multicluster-engine/managed-serviceaccount@sha256:f4a00dae51a6fe1c035d91fb16da5f14cd572a3ac797524d793132b4f5f5dd24
                 - name: OPERAND_IMAGE_MULTICLOUD_MANAGER
                   value: registry.redhat.io/multicluster-engine/multicloud-manager@sha256:f6b886185a5a608f62a335fc55ce4044cf6889da70fe67dcae4ff0616faeb3b7
                 - name: OPERAND_IMAGE_OPENSHIFT_HIVE
-                  value: registry.redhat.io/multicluster-engine/hive@sha256:0f6c7c4f085dd25db4395091f12d04b754d58e752c6ca08bfdb067d5548b35c6
+                  value: registry.redhat.io/multicluster-engine/hive@sha256:0000000000000000000000000000000000000000000000000000000000000000
                 - name: OPERAND_IMAGE_PROVIDER_CREDENTIAL_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/provider-credential-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
+                  value: registry.redhat.io/multicluster-engine/provider-credential-controller@sha256:821354c00e2355c90899025072d358ecc7a10a518fce6d9262a1ef1f563eac43
                 - name: OPERAND_IMAGE_PLACEMENT
                   value: registry.redhat.io/multicluster-engine/placement@sha256:7703b7116b877e14518fa802af7161112a2f72313df66806bac1c2cca0bbaf8e
                 - name: OPERAND_IMAGE_REGISTRATION
@@ -2810,11 +3467,11 @@ spec:
                 - name: OPERAND_IMAGE_ASSISTED_INSTALLER_AGENT
                   value: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:49f93c9d88aac3a1a4bb9df2f46d52ea2581c05095a42b01993ea15594b21aa9
                 - name: OPERAND_IMAGE_ASSISTED_INSTALLER_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:4e24269289d5a647895683e2cc1710bd4f260dffbf114bc3f67c0ec8c9ada39f
+                  value: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:0000000000000000000000000000000000000000000000000000000000000000
                 - name: OPERAND_IMAGE_ASSISTED_SERVICE_8
                   value: registry.redhat.io/multicluster-engine/assisted-service-8-rhel8@sha256:a7b83be96e01aab37ae26385538a62b7f918efce3ca31ae8245c1f23ac4618d7
                 - name: OPERAND_IMAGE_ASSISTED_SERVICE_9
-                  value: registry.redhat.io/multicluster-engine/assisted-service-9-rhel9@sha256:315c2914a0973e33d5c7b5376b8e9ae736a05591675d7a9da2596d10ce1162a5
+                  value: registry.redhat.io/multicluster-engine/assisted-service-9-rhel9@sha256:e0331d0f118050ec1163df9598cfb7703f5e4a8d62e44ce06713de4c5603eb08
                 - name: OPERAND_IMAGE_OSE_CLUSTER_API_RHEL9
                   value: registry.redhat.io/openshift4/ose-cluster-api-rhel9@sha256:0e3b3f1985392de570d296fc4067be16e303f37790292c93e94f7c387c765074
                 - name: OPERAND_IMAGE_OSE_AWS_CLUSTER_API_CONTROLLERS_RHEL9
@@ -2822,10 +3479,10 @@ spec:
                 - name: OPERAND_IMAGE_POSTGRESQL_12
                   value: registry.redhat.io/rhel8/postgresql-12@sha256:82d171ab0ce78a0157408662155b53d4f637947a303bfecb684f6132f5f468be
                 - name: OPERATOR_VERSION
-                  value: 2.9.0-5
+                  value: 2.9.0-6
                 - name: OPERATOR_PACKAGE
                   value: multicluster-engine
-                image: registry.redhat.io/multicluster-engine/backplane-operator@sha256:5333ee4e62887887b0b69f897888b77bbbca067fe8abf534639c3798c291e3ae
+                image: registry.redhat.io/multicluster-engine/backplane-operator@sha256:90dc42f7e65a9448bd577d3a8f44988188621bd412a9689d9d6eaee2c89bc008
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -2880,33 +3537,33 @@ spec:
   - name: cluster_api_provider_kubevirt
     image: registry.redhat.io/multicluster-engine/cluster-api-provider-kubevirt@sha256:0000000000000000000000000000000000000000000000000000000000000000
   - name: clusterclaims_controller
-    image: registry.redhat.io/multicluster-engine/clusterclaims-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/clusterclaims-controller@sha256:4dcf06f051bec9bfabe6a713ccf3cfab82c879a23be5de77ab8645a8fcc7086d
   - name: cluster_curator_controller
-    image: registry.redhat.io/multicluster-engine/cluster-curator-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/cluster-curator-controller@sha256:4652f774c706c83525d6c86e1dd29da14eb2cdb07de673532555e51e8f10345e
   - name: cluster_image_set_controller
-    image: registry.redhat.io/multicluster-engine/cluster-image-set-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/cluster-image-set-controller@sha256:d3e77a9da8d1bed4f2c5c2e0ca2f063b60e48b65342ff5b28a8a30d1b7b6e9f7
   - name: clusterlifecycle_state_metrics
     image: registry.redhat.io/multicluster-engine/clusterlifecycle-state-metrics@sha256:a0f63f1ccd3433241ac05a1f84086c6ce4b7997a45f6d0c90a197a5f84ddd49c
   - name: cluster_proxy_addon
     image: registry.redhat.io/multicluster-engine/cluster-proxy-addon@sha256:9067e32b13d77be0e720ba0c7f4256e624ae3d79859921b6552d9950fc5292f2
   - name: cluster_proxy
-    image: registry.redhat.io/multicluster-engine/cluster-proxy@sha256:a17bd06cd09e7d4776abb30147af11e07f1940fc18fff343becce2e205dec50b
+    image: registry.redhat.io/multicluster-engine/cluster-proxy@sha256:dc5fcad5e1595b49fc35d51d0295a85cb0fe0f686e97254cab512bbd0920b167
   - name: console_mce
-    image: registry.redhat.io/multicluster-engine/console-mce@sha256:3678fbc0ca86c6ae3e7457c00bcab0a05ec8605caafca3b0a40ad7c3764802ab
+    image: registry.redhat.io/multicluster-engine/console-mce@sha256:9c59ecc4ae1def6a0793f7aea7d317c5e2270f68d644783cd51c77d5d8933295
   - name: discovery_operator
     image: registry.redhat.io/multicluster-engine/discovery-operator@sha256:3e4b3a2da9ac61a40e3f8db4a6c840a1bd1b9f64f3d5d524240437a8c3132e52
   - name: hypershift_addon_operator
-    image: registry.redhat.io/multicluster-engine/hypershift-addon-operator@sha256:b7249206856369358b9745d0c614edc44f19eb616305bfae193c16645513b10a
+    image: registry.redhat.io/multicluster-engine/hypershift-addon-operator@sha256:f1c0d524cb519eba5a735b7cca8538d0df70ae8215d6b1c14c47054da5c5910b
   - name: hypershift_cli
-    image: registry.redhat.io/multicluster-engine/HYPERSHIFT_CLI@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/hypershift-cli@sha256:0000000000000000000000000000000000000000000000000000000000000000
   - name: hypershift_operator
     image: registry.redhat.io/multicluster-engine/hypershift-release@sha256:0000000000000000000000000000000000000000000000000000000000000000
   - name: image_based_install_operator
-    image: registry.redhat.io/multicluster-engine/image-based-install-operator@sha256:d0dcc4335c28e7a49be49444299902e412fc3218b3fb9a6f3cdac177a2f2eb63
+    image: registry.redhat.io/multicluster-engine/image-based-install-operator@sha256:5964aa8e9347f034494c52215b25b6c2075dc90d876d1b978373640119a633ce
   - name: kube_rbac_proxy_mce
     image: registry.redhat.io/multicluster-engine/kube-rbac-proxy@sha256:0000000000000000000000000000000000000000000000000000000000000000
   - name: managedcluster_import_controller
-    image: registry.redhat.io/multicluster-engine/managedcluster-import-controller-addon@sha256:052a2e763a8218fe4b795a654ac300c8deff2b1536a27cd10c6977a5723f8a65
+    image: registry.redhat.io/multicluster-engine/managedcluster-import-controller-addon@sha256:1cb300b1e260822074f014e97cae226fa0bde234006b6c5d94d71a267e9eac97
   - name: managed_serviceaccount
     image: registry.redhat.io/multicluster-engine/managed-serviceaccount@sha256:f4a00dae51a6fe1c035d91fb16da5f14cd572a3ac797524d793132b4f5f5dd24
   - name: multicloud_manager
@@ -2914,7 +3571,7 @@ spec:
   - name: openshift_hive
     image: registry.redhat.io/multicluster-engine/hive@sha256:0000000000000000000000000000000000000000000000000000000000000000
   - name: provider_credential_controller
-    image: registry.redhat.io/multicluster-engine/provider-credential-controller@sha256:0000000000000000000000000000000000000000000000000000000000000000
+    image: registry.redhat.io/multicluster-engine/provider-credential-controller@sha256:821354c00e2355c90899025072d358ecc7a10a518fce6d9262a1ef1f563eac43
   - name: placement
     image: registry.redhat.io/multicluster-engine/placement@sha256:7703b7116b877e14518fa802af7161112a2f72313df66806bac1c2cca0bbaf8e
   - name: registration
@@ -2924,17 +3581,17 @@ spec:
   - name: work
     image: registry.redhat.io/multicluster-engine/work@sha256:fd5d091e49f19a81ec281fb8b92f6cc76978465a3b5d4196cb61238ac705e3c1
   - name: assisted_image_service
-    image: registry.redhat.io/multicluster-engine/assisted-image-service-rhel9@sha256:faf710cbf76c17bdc329210bb69804c9ec254eb0040aaf0c36128aab514bbf32
+    image: registry.redhat.io/multicluster-engine/assisted-image-service-rhel9@sha256:6f9d79c4edf52d6e07b257b27abdde961be0a93d6a5826dd477cc6b17e3938e5
   - name: assisted_installer
-    image: registry.redhat.io/multicluster-engine/assisted-installer-rhel9@sha256:12855f5d3e9f06461f00c6f83377ae706a09c055c8120ea5caaba199499bcb24
+    image: registry.redhat.io/multicluster-engine/assisted-installer-rhel9@sha256:19ca9efe15a8dabb89d59abf3308e60eb10b72cb76b6deb4cd9d7a10ba84001b
   - name: assisted_installer_agent
-    image: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:1cd3611cfcdb8581fe83da23979c2711c0852bffa6ea608cb0598cbea62b5a3d
+    image: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:49f93c9d88aac3a1a4bb9df2f46d52ea2581c05095a42b01993ea15594b21aa9
   - name: assisted_installer_controller
     image: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:0000000000000000000000000000000000000000000000000000000000000000
   - name: assisted_service_8
-    image: registry.redhat.io/multicluster-engine/assisted-service-8-rhel8@sha256:8851a90f5fc2b3d4f62cc9e2e86487cd62c9652eff1d494eea93ed923250e939
+    image: registry.redhat.io/multicluster-engine/assisted-service-8-rhel8@sha256:a7b83be96e01aab37ae26385538a62b7f918efce3ca31ae8245c1f23ac4618d7
   - name: assisted_service_9
-    image: registry.redhat.io/multicluster-engine/assisted-service-9-rhel9@sha256:0335b35d3206e47c38a003038fcfb3c8957f2992b22a905995b955681020d286
+    image: registry.redhat.io/multicluster-engine/assisted-service-9-rhel9@sha256:e0331d0f118050ec1163df9598cfb7703f5e4a8d62e44ce06713de4c5603eb08
   - name: ose_cluster_api_rhel9
     image: registry.redhat.io/openshift4/ose-cluster-api-rhel9@sha256:0e3b3f1985392de570d296fc4067be16e303f37790292c93e94f7c387c765074
   - name: ose_aws_cluster_api_controllers_rhel9
