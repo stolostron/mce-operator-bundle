@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2025-05-14T13:13:37Z'
+    createdAt: '2025-05-14T19:05:42Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -24,8 +24,8 @@ metadata:
     features.operators.openshift.io/token-auth-aws: 'false'
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
-    olm.skipRange: '>=2.8.0 <2.9.0-54'
-  name: multicluster-engine.v2.9.0-54
+    olm.skipRange: '>=2.8.0 <2.9.0-55'
+  name: multicluster-engine.v2.9.0-55
   namespace: placeholder
   labels:
     operatorframework.io/arch.amd64: supported
@@ -35,7 +35,7 @@ metadata:
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 2.9.0-54
+  version: 2.9.0-55
   provider:
     name: Red Hat
   maintainers:
@@ -263,6 +263,13 @@ spec:
           - secrets
           verbs:
           - '*'
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
         - apiGroups:
           - ''
           resources:
@@ -276,6 +283,15 @@ spec:
           - list
           - patch
           - update
+          - watch
+        - apiGroups:
+          - ''
+          resources:
+          - configmaps
+          - services
+          verbs:
+          - get
+          - list
           - watch
         - apiGroups:
           - ''
@@ -372,8 +388,11 @@ spec:
           resources:
           - nodes
           verbs:
+          - delete
           - get
           - list
+          - patch
+          - update
           - watch
         - apiGroups:
           - ''
@@ -795,6 +814,18 @@ spec:
         - apiGroups:
           - addons.cluster.x-k8s.io
           resources:
+          - clusterresourcesets/finalizers
+          - clusterresourcesets/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - addons.cluster.x-k8s.io
+          - bootstrap.cluster.x-k8s.io
+          - controlplane.cluster.x-k8s.io
+          - infrastructure.cluster.x-k8s.io
+          resources:
           - '*'
           verbs:
           - create
@@ -804,15 +835,6 @@ spec:
           - patch
           - update
           - watch
-        - apiGroups:
-          - addons.cluster.x-k8s.io
-          resources:
-          - clusterresourcesets/finalizers
-          - clusterresourcesets/status
-          verbs:
-          - get
-          - patch
-          - update
         - apiGroups:
           - admission.hive.openshift.io
           resources:
@@ -1334,10 +1356,8 @@ spec:
           - update
         - apiGroups:
           - bootstrap.cluster.x-k8s.io
-          - controlplane.cluster.x-k8s.io
-          - infrastructure.cluster.x-k8s.io
           resources:
-          - '*'
+          - openshiftassistedconfigs
           verbs:
           - create
           - delete
@@ -1348,6 +1368,7 @@ spec:
           - watch
         - apiGroups:
           - bootstrap.cluster.x-k8s.io
+          - controlplane.cluster.x-k8s.io
           - infrastructure.cluster.x-k8s.io
           resources:
           - '*'
@@ -1695,117 +1716,10 @@ spec:
           - cluster.x-k8s.io
           resources:
           - clusterclasses
-          verbs:
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - clusterclasses
           - clusterclasses/status
-          verbs:
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - clusters
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
           - clusters
           - clusters/finalizers
           - clusters/status
-          verbs:
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - clusters
-          - clusters/status
-          verbs:
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - clusters
-          - machinepools
-          - machines
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machinedeployments
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machinedeployments
-          - machinedeployments/finalizers
-          verbs:
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machinedeployments
-          - machinedeployments/finalizers
-          - machinedeployments/status
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machinehealthchecks
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machinehealthchecks
           - machinehealthchecks/finalizers
           - machinehealthchecks/status
           verbs:
@@ -1817,7 +1731,29 @@ spec:
         - apiGroups:
           - cluster.x-k8s.io
           resources:
-          - machinepools
+          - clusters
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusters
+          - clusters/status
+          - machinedeployments
+          - machines/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusters
+          - clusters/status
+          - machines
+          - machines/status
           verbs:
           - create
           - delete
@@ -1829,73 +1765,66 @@ spec:
         - apiGroups:
           - cluster.x-k8s.io
           resources:
+          - clusters
+          - clusters/status
+          - machinesets
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusters
+          - machines
+          - machinesets
+          - machinesets/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - clusters/status
+          verbs:
+          - get
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - kubeadmcontrolplanes
+          - machinedeployments
+          - machines
+          - machines/status
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinedeployments
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinedeployments
+          - machinedeployments/finalizers
+          - machinedeployments/status
+          - machinehealthchecks
           - machinepools
           - machinepools/finalizers
           - machinepools/status
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machinepools
-          - machinepools/status
-          verbs:
-          - get
-          - list
-          - patch
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
           - machines
           - machines/finalizers
           - machines/status
-          verbs:
-          - create
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machines
-          - machines/status
-          verbs:
-          - delete
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machinesets
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
-          - machinesets
-          - machinesets/finalizers
-          verbs:
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - cluster.x-k8s.io
-          resources:
           - machinesets
           - machinesets/finalizers
           - machinesets/status
@@ -1906,6 +1835,39 @@ spec:
           - list
           - patch
           - update
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinedrainrules
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinepools
+          verbs:
+          - list
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machinepools
+          - machinepools/status
+          verbs:
+          - get
+          - list
+          - patch
+          - watch
+        - apiGroups:
+          - cluster.x-k8s.io
+          resources:
+          - machines
+          verbs:
+          - delete
+          - get
+          - list
           - watch
         - apiGroups:
           - clusterview.open-cluster-management.io
@@ -2048,33 +2010,6 @@ spec:
           - controlplane.cluster.x-k8s.io
           resources:
           - awsmanagedcontrolplanes
-          verbs:
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - controlplane.cluster.x-k8s.io
-          resources:
-          - awsmanagedcontrolplanes
-          - awsmanagedcontrolplanes/status
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - controlplane.cluster.x-k8s.io
-          resources:
-          - awsmanagedcontrolplanes/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - controlplane.cluster.x-k8s.io
-          resources:
           - rosacontrolplanes
           verbs:
           - delete
@@ -2086,25 +2021,45 @@ spec:
         - apiGroups:
           - controlplane.cluster.x-k8s.io
           resources:
-          - rosacontrolplanes
+          - awsmanagedcontrolplanes/status
           - rosacontrolplanes/status
           verbs:
           - get
           - list
+          - patch
+          - update
           - watch
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - openshiftassistedcontrolplanes
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - openshiftassistedcontrolplanes/finalizers
+          verbs:
+          - update
+        - apiGroups:
+          - controlplane.cluster.x-k8s.io
+          resources:
+          - openshiftassistedcontrolplanes/status
+          verbs:
+          - get
+          - patch
+          - update
         - apiGroups:
           - controlplane.cluster.x-k8s.io
           resources:
           - rosacontrolplanes/finalizers
           verbs:
-          - update
-        - apiGroups:
-          - controlplane.cluster.x-k8s.io
-          resources:
-          - rosacontrolplanes/status
-          verbs:
-          - get
-          - patch
           - update
         - apiGroups:
           - coordination.k8s.io
@@ -2221,6 +2176,15 @@ spec:
         - apiGroups:
           - extensions.hive.openshift.io
           resources:
+          - agentclusterinstalls
+          - agentclusterinstalls/status
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - extensions.hive.openshift.io
+          resources:
           - agentclusterinstalls/finalizers
           verbs:
           - update
@@ -2321,6 +2285,19 @@ spec:
           - hive.openshift.io
           resources:
           - clusterdeployments
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - hive.openshift.io
+          resources:
+          - clusterdeployments
+          - clusterimagesets
           verbs:
           - create
           - delete
@@ -2451,119 +2428,8 @@ spec:
         - apiGroups:
           - infrastructure.cluster.x-k8s.io
           resources:
-          - awsclustercontrolleridentities
           - awsclusterroleidentities
           - awsclusterstaticidentities
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsclusterroleidentities
-          - awsclusterstaticidentities
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsclusters
-          verbs:
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsclusters/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsfargateprofiles
-          verbs:
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsfargateprofiles/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmachinepools
-          verbs:
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmachinepools
-          - awsmachinepools/status
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmachinepools/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmachines
-          verbs:
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmachines
-          - awsmachines/status
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmachines/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
           - awsmachinetemplates
           verbs:
           - get
@@ -2572,81 +2438,12 @@ spec:
         - apiGroups:
           - infrastructure.cluster.x-k8s.io
           resources:
+          - awsclusters
+          - awsfargateprofiles
+          - awsmachinepools
           - awsmanagedclusters
-          verbs:
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmanagedclusters
-          - awsmanagedclusters/status
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmanagedclusters/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
           - awsmanagedmachinepools
-          verbs:
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmanagedmachinepools
-          - awsmanagedmachinepools/status
-          verbs:
-          - get
-          - list
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - awsmanagedmachinepools/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
           - rosaclusters
-          verbs:
-          - delete
-          - get
-          - list
-          - patch
-          - update
-          - watch
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
-          - rosaclusters/status
-          verbs:
-          - get
-          - patch
-          - update
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
           - rosamachinepools
           verbs:
           - delete
@@ -2658,16 +2455,88 @@ spec:
         - apiGroups:
           - infrastructure.cluster.x-k8s.io
           resources:
-          - rosamachinepools/finalizers
-          verbs:
-          - update
-        - apiGroups:
-          - infrastructure.cluster.x-k8s.io
-          resources:
+          - awsclusters/status
+          - awsfargateprofiles/status
+          - rosaclusters/status
           - rosamachinepools/status
           verbs:
           - get
           - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachinepools/status
+          - awsmachines/status
+          - awsmanagedclusters/status
+          - awsmanagedmachinepools/status
+          verbs:
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - awsmachines
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - metal3clusters
+          - metal3dataclaims
+          - metal3datas
+          - metal3datatemplates
+          - metal3machines
+          - metal3machinetemplates
+          - metal3remediations
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - metal3clusters/status
+          - metal3dataclaims/status
+          - metal3datas/status
+          - metal3datatemplates/status
+          - metal3machines/status
+          - metal3remediations/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - metal3machines
+          - metal3machinetemplates
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - infrastructure.cluster.x-k8s.io
+          resources:
+          - rosamachinepools/finalizers
+          verbs:
           - update
         - apiGroups:
           - internal.open-cluster-management.io
@@ -2702,14 +2571,86 @@ spec:
           resources:
           - ipaddressclaims
           verbs:
+          - create
+          - delete
           - get
           - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ipam.cluster.x-k8s.io
+          resources:
+          - ipaddressclaims/status
+          verbs:
+          - get
+          - watch
+        - apiGroups:
+          - ipam.cluster.x-k8s.io
+          - ipam.metal3.io
+          resources:
+          - ipaddresses
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
+          - ipam.cluster.x-k8s.io
+          - ipam.metal3.io
+          resources:
+          - ipaddresses/status
+          verbs:
+          - get
+        - apiGroups:
+          - ipam.metal3.io
+          resources:
+          - ipaddresses
+          - ipclaims
+          - ippools
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ipam.metal3.io
+          resources:
+          - ipaddresses/status
+          - ipclaims/status
+          - ippools/status
+          verbs:
+          - get
+          - patch
+          - update
+        - apiGroups:
+          - ipam.metal3.io
+          resources:
+          - ipclaims
+          verbs:
+          - create
+          - delete
+          - get
+          - list
+          - patch
+          - update
+          - watch
+        - apiGroups:
+          - ipam.metal3.io
+          resources:
+          - ipclaims/status
+          verbs:
+          - get
           - watch
         - apiGroups:
           - metal3.io
           resources:
           - baremetalhosts
           verbs:
+          - create
+          - delete
           - get
           - list
           - patch
@@ -2728,6 +2669,14 @@ spec:
           resources:
           - baremetalhosts/finalizers
           verbs:
+          - update
+        - apiGroups:
+          - metal3.io
+          resources:
+          - baremetalhosts/status
+          verbs:
+          - get
+          - patch
           - update
         - apiGroups:
           - metal3.io
@@ -3141,6 +3090,14 @@ spec:
           - update
           - watch
         - apiGroups:
+          - rbac.open-cluster-management.io
+          resources:
+          - clusterpermissions
+          verbs:
+          - get
+          - list
+          - watch
+        - apiGroups:
           - register.open-cluster-management.io
           resources:
           - managedclusters/accept
@@ -3215,6 +3172,13 @@ spec:
           - storage.k8s.io
           resources:
           - storageclasses
+          verbs:
+          - list
+          - watch
+        - apiGroups:
+          - storage.k8s.io
+          resources:
+          - volumeattachments
           verbs:
           - list
           - watch
@@ -3407,9 +3371,9 @@ spec:
                 - name: OPERAND_IMAGE_ADDON_MANAGER
                   value: registry.redhat.io/multicluster-engine/addon-manager-rhel9@sha256:c5dbe8209e10e39f5398871a5a178fcd88305a4ef2b920ae9b27519b52be3c8e
                 - name: OPERAND_IMAGE_BACKPLANE_MUST_GATHER
-                  value: registry.redhat.io/multicluster-engine/backplane-must-gather-rhel9@sha256:63b50e792e55dd986a3f51ba52ad566b2bf6bec1167c1240fcb0bdd2b061970a
+                  value: registry.redhat.io/multicluster-engine/backplane-must-gather-rhel9@sha256:9eaa19cf7d622b0b88527171342ffa8e38808acf189cd72bbae2d8ede930c065
                 - name: OPERAND_IMAGE_BACKPLANE_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:0d1a85056d9e8149f9eead5371bc9853149a388344fde2cdaee7423a45d967d1
+                  value: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:96795b27699c1adbe9e460c6ad24801b640cc32fbc991e489d0d44fdc855f3ff
                 - name: OPERAND_IMAGE_CLUSTER_API
                   value: registry.redhat.io/multicluster-engine/cluster-api-rhel9@sha256:0000000000000000000000000000000000000000000000000000000000000000
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_AGENT
@@ -3421,7 +3385,7 @@ spec:
                 - name: OPERAND_IMAGE_CLUSTERCLAIMS_CONTROLLER
                   value: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:60e07b6cdfc2b359b93e18a606c188d88e6d42ad52b2419dfc569a2e0e1fd052
                 - name: OPERAND_IMAGE_CLUSTER_CURATOR_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:8f3f1d0ef08e5dc9b20f3ea30d697344d31f8476321e376d62ac111b507a1ef0
+                  value: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:927bf87048485141cc15904f5fc05c5473369ed8f77fc8fdc87536be1e920fe2
                 - name: OPERAND_IMAGE_CLUSTER_IMAGE_SET_CONTROLLER
                   value: registry.redhat.io/multicluster-engine/cluster-image-set-controller-rhel9@sha256:287746c827d9a5ee2218e886507aec8de8029650c3a7f684695ba274e35ea42f
                 - name: OPERAND_IMAGE_CLUSTERLIFECYCLE_STATE_METRICS
@@ -3431,11 +3395,11 @@ spec:
                 - name: OPERAND_IMAGE_CLUSTER_PROXY
                   value: registry.redhat.io/multicluster-engine/cluster-proxy-rhel9@sha256:45e158a2028ac338ebbffb0e9c441827f5c2909ff2e169c0cbbc1ee5561a7e29
                 - name: OPERAND_IMAGE_CONSOLE_MCE
-                  value: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:fbd1248b403cdb7a4969dda6458563f7a3c4ea9fae3e0bad0aed42ccf33c0664
+                  value: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:6ee2adaf0e924a61101d94d5e3e042f73d01a585a26e613856dc862ae8ed1b0b
                 - name: OPERAND_IMAGE_DISCOVERY_OPERATOR
                   value: registry.redhat.io/multicluster-engine/discovery-rhel9@sha256:c8cb2cc7ed97486857db52879eff138f34def1114c5d4e29fbb3e79a4fc4ed2d
                 - name: OPERAND_IMAGE_HYPERSHIFT_ADDON_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/hypershift-addon-rhel9-operator@sha256:8d27c737fb7f2a69a0146ec1f468810b1f42912a698abaedba82d17894792da1
+                  value: registry.redhat.io/multicluster-engine/hypershift-addon-rhel9-operator@sha256:37449b97579916528a6ccbaf5a9b806a6cacf6d5a97f4f0beb6c658db3aad14a
                 - name: OPERAND_IMAGE_HYPERSHIFT_CLI
                   value: registry.redhat.io/multicluster-engine/hypershift-cli-rhel9@sha256:6e3198058caab99088d4ab2a39d092a7145633a7d36f476050dbf2ee6488f584
                 - name: OPERAND_IMAGE_HYPERSHIFT_OPERATOR
@@ -3487,10 +3451,10 @@ spec:
                 - name: OPERAND_IMAGE_POSTGRESQL_12
                   value: registry.redhat.io/rhel8/postgresql-12@sha256:82d171ab0ce78a0157408662155b53d4f637947a303bfecb684f6132f5f468be
                 - name: OPERATOR_VERSION
-                  value: 2.9.0-54
+                  value: 2.9.0-55
                 - name: OPERATOR_PACKAGE
                   value: multicluster-engine
-                image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:0d1a85056d9e8149f9eead5371bc9853149a388344fde2cdaee7423a45d967d1
+                image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:96795b27699c1adbe9e460c6ad24801b640cc32fbc991e489d0d44fdc855f3ff
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -3537,7 +3501,7 @@ spec:
   - name: addon_manager
     image: registry.redhat.io/multicluster-engine/addon-manager-rhel9@sha256:c5dbe8209e10e39f5398871a5a178fcd88305a4ef2b920ae9b27519b52be3c8e
   - name: backplane_must_gather
-    image: registry.redhat.io/multicluster-engine/backplane-must-gather-rhel9@sha256:63b50e792e55dd986a3f51ba52ad566b2bf6bec1167c1240fcb0bdd2b061970a
+    image: registry.redhat.io/multicluster-engine/backplane-must-gather-rhel9@sha256:9eaa19cf7d622b0b88527171342ffa8e38808acf189cd72bbae2d8ede930c065
   - name: cluster_api
     image: registry.redhat.io/multicluster-engine/cluster-api-rhel9@sha256:0000000000000000000000000000000000000000000000000000000000000000
   - name: cluster_api_provider_agent
@@ -3549,7 +3513,7 @@ spec:
   - name: clusterclaims_controller
     image: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:60e07b6cdfc2b359b93e18a606c188d88e6d42ad52b2419dfc569a2e0e1fd052
   - name: cluster_curator_controller
-    image: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:8f3f1d0ef08e5dc9b20f3ea30d697344d31f8476321e376d62ac111b507a1ef0
+    image: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:927bf87048485141cc15904f5fc05c5473369ed8f77fc8fdc87536be1e920fe2
   - name: cluster_image_set_controller
     image: registry.redhat.io/multicluster-engine/cluster-image-set-controller-rhel9@sha256:287746c827d9a5ee2218e886507aec8de8029650c3a7f684695ba274e35ea42f
   - name: clusterlifecycle_state_metrics
@@ -3559,11 +3523,11 @@ spec:
   - name: cluster_proxy
     image: registry.redhat.io/multicluster-engine/cluster-proxy-rhel9@sha256:45e158a2028ac338ebbffb0e9c441827f5c2909ff2e169c0cbbc1ee5561a7e29
   - name: console_mce
-    image: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:fbd1248b403cdb7a4969dda6458563f7a3c4ea9fae3e0bad0aed42ccf33c0664
+    image: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:6ee2adaf0e924a61101d94d5e3e042f73d01a585a26e613856dc862ae8ed1b0b
   - name: discovery_operator
     image: registry.redhat.io/multicluster-engine/discovery-rhel9@sha256:c8cb2cc7ed97486857db52879eff138f34def1114c5d4e29fbb3e79a4fc4ed2d
   - name: hypershift_addon_operator
-    image: registry.redhat.io/multicluster-engine/hypershift-addon-rhel9-operator@sha256:8d27c737fb7f2a69a0146ec1f468810b1f42912a698abaedba82d17894792da1
+    image: registry.redhat.io/multicluster-engine/hypershift-addon-rhel9-operator@sha256:37449b97579916528a6ccbaf5a9b806a6cacf6d5a97f4f0beb6c658db3aad14a
   - name: hypershift_cli
     image: registry.redhat.io/multicluster-engine/hypershift-cli-rhel9@sha256:6e3198058caab99088d4ab2a39d092a7145633a7d36f476050dbf2ee6488f584
   - name: hypershift_operator
