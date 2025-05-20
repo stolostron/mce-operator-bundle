@@ -15,11 +15,11 @@ LABEL com.redhat.delivery.operator.bundle="true" \
 
 LABEL com.redhat.component="multicluster-engine-operator-bundle-container" \
       name="multicluster-engine/mce-operator-bundle" \
-      version="2.9.0-61" \
+      version="2.9.0-62" \
       summary="multicluster-engine-operator-bundle" \
       io.openshift.expose-services="" \
       io.openshift.tags="data,images" \
       io.k8s.display-name="multicluster-engine-operator-bundle" \
       maintainer="['acm-component-maintainers@redhat.com']" \
       description="multicluster-engine-operator-bundle" \
-      konflux.additional-tags="v2.9.0-61,snapshot-release-mce-29-q7bwk"
+      konflux.additional-tags="v2.9.0-62,snapshot-release-mce-29-27lvh"
