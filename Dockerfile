@@ -20,7 +20,11 @@ LABEL com.redhat.component="multicluster-engine-operator-bundle-container" \
       io.openshift.expose-services="" \
       io.openshift.tags="data,images" \
       io.k8s.display-name="multicluster-engine-operator-bundle" \
+      io.k8s.description="Operator bundle for Red Hat Multicluster engine" \
       maintainer="['acm-component-maintainers@redhat.com']" \
       description="multicluster-engine-operator-bundle" \
-      konflux.additional-tags="v2.7.0-16,snapshot-release-mce-27-mgvw7"
-
+      konflux.additional-tags="v2.7.0-16,snapshot-release-mce-27-mgvw7" \
+      vendor="Red Hat, Inc." \
+      url="https://github.com/stolostron/mce-operator-bundle" \
+      release="${BUNDLE_VERSION}" \
+      distribution-scope="public"
