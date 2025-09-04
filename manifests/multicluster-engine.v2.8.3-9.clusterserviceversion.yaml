@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2025-09-04T11:06:12Z'
+    createdAt: '2025-09-04T19:00:14Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -25,8 +25,8 @@ metadata:
     features.operators.openshift.io/token-auth-aws: 'false'
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
-    olm.skipRange: '>=2.6.0 <2.8.0-8'
-  name: multicluster-engine.v2.8.0-8
+    olm.skipRange: '>=2.6.0 <2.8.3-9'
+  name: multicluster-engine.v2.8.3-9
   namespace: placeholder
   labels:
     operatorframework.io/arch.amd64,: supported
@@ -36,7 +36,7 @@ metadata:
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 2.8.0-8
+  version: 2.8.3-9
   provider:
     name: Red Hat
   maintainers:
@@ -2755,11 +2755,11 @@ spec:
                 - name: OPERAND_IMAGE_BACKPLANE_OPERATOR
                   value: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:5b23578f3016d472f51d86fd2ee0a810f12842d84874ba9db0735e1610fdcb33
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_AGENT
-                  value: registry.redhat.io/multicluster-engine/cluster-api-provider-agent-rhel9@sha256:bc4854dad8f5c32441ffa1f735e8235ebe7de706f8078cbaaf0479d176989263
+                  value: registry.redhat.io/multicluster-engine/cluster-api-provider-agent-rhel9@sha256:93d1aeea155262fbe13e6018ed22d85423c908ce3de6b9c5039f964d5b596932
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_KUBEVIRT
                   value: registry.redhat.io/multicluster-engine/cluster-api-provider-kubevirt-rhel9@sha256:86783ad1dfcb2be041edac383891b210bf2973de31873b3dc44f1a3329acf57c
                 - name: OPERAND_IMAGE_CLUSTERCLAIMS_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:adc55fc10cf85af1a630c2e70e8d4995d700abec14bc19a5a2e6c88dda3c4bdc
+                  value: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:b5b5bea3049f0f6647b460be7c281c9bd818ef8ca034f163d31fa6d89fe645b5
                 - name: OPERAND_IMAGE_CLUSTER_CURATOR_CONTROLLER
                   value: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:a5622e7106a581fffb3813f96b7a176189551a9c2d0aa14a32e9586d691ca1f4
                 - name: OPERAND_IMAGE_CLUSTER_IMAGE_SET_CONTROLLER
@@ -2821,7 +2821,7 @@ spec:
                 - name: OPERAND_IMAGE_POSTGRESQL_12
                   value: registry.redhat.io/rhel8/postgresql-12@sha256:82d171ab0ce78a0157408662155b53d4f637947a303bfecb684f6132f5f468be
                 - name: OPERATOR_VERSION
-                  value: 2.8.0-8
+                  value: 2.8.3-9
                 - name: OPERATOR_PACKAGE
                   value: multicluster-engine
                 image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:5b23578f3016d472f51d86fd2ee0a810f12842d84874ba9db0735e1610fdcb33
@@ -2867,17 +2867,18 @@ spec:
                 secret:
                   defaultMode: 420
                   secretName: multicluster-engine-operator-webhook
+  replaces: multicluster-engine.v2.8.2
   relatedImages:
   - name: addon_manager
     image: registry.redhat.io/multicluster-engine/addon-manager-rhel9@sha256:3e100335f03abc70496b6918353c981d0fab4d6c26936459aceb48bb25bb284e
   - name: backplane_must_gather
     image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:2dfc2d2a469ed807e24e56bc136b6b28770b004b27dd6db359612ae6d3c8b3aa
   - name: cluster_api_provider_agent
-    image: registry.redhat.io/multicluster-engine/cluster-api-provider-agent-rhel9@sha256:bc4854dad8f5c32441ffa1f735e8235ebe7de706f8078cbaaf0479d176989263
+    image: registry.redhat.io/multicluster-engine/cluster-api-provider-agent-rhel9@sha256:93d1aeea155262fbe13e6018ed22d85423c908ce3de6b9c5039f964d5b596932
   - name: cluster_api_provider_kubevirt
     image: registry.redhat.io/multicluster-engine/cluster-api-provider-kubevirt-rhel9@sha256:86783ad1dfcb2be041edac383891b210bf2973de31873b3dc44f1a3329acf57c
   - name: clusterclaims_controller
-    image: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:adc55fc10cf85af1a630c2e70e8d4995d700abec14bc19a5a2e6c88dda3c4bdc
+    image: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:b5b5bea3049f0f6647b460be7c281c9bd818ef8ca034f163d31fa6d89fe645b5
   - name: cluster_curator_controller
     image: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:a5622e7106a581fffb3813f96b7a176189551a9c2d0aa14a32e9586d691ca1f4
   - name: cluster_image_set_controller
