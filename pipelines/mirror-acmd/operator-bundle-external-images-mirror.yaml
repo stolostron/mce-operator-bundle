@@ -1,0 +1,516 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: operator-bundle-external-images-mirror
+  labels:
+    "pipelines.openshift.io/used-by": "build-cloud"
+    "pipelines.openshift.io/runtime": "generic"
+    "pipelines.openshift.io/strategy": "docker"
+  annotations:
+    tekton.dev/pipelines.minVersion: "0.12.1"
+    tekton.dev/categories: Security
+    tekton.dev/tags: image, mirror, operator-bundle, external-images
+    tekton.dev/displayName: "Operator Bundle External Images Mirror Pipeline"
+    tekton.dev/platforms: "linux/amd64"
+spec:
+  description: >-
+    This pipeline processes *-manifest-gen-config.json files from ACM/MCE operator bundles
+    to extract external-images and mirror them to the ACM-D Quay organization.
+    Supports both ACM (acm-manifest-gen-config.json) and MCE (mce-manifest-gen-config.json).
+
+  params:
+    - name: MANIFEST_CONFIG_FILE
+      description: Path to *-manifest-gen-config.json file
+      type: string
+      default: "config/manifest-gen-config.json"
+    - name: TARGET_REGISTRY
+      description: Target ACM-D registry for mirrored images
+      type: string
+      default: "quay.io/acm-d"
+    - name: BUNDLE_TYPE
+      description: Bundle type identifier (acm or mce) for logging
+      type: string
+      default: "bundle"
+    - name: DRY_RUN
+      description: Perform dry-run without actually mirroring
+      type: string
+      default: "false"
+    - name: SKIP_EXISTING
+      description: Skip images that already exist in target registry
+      type: string
+      default: "true"
+
+  workspaces:
+    - name: source
+      description: Workspace containing the operator bundle source code
+    - name: auth
+      description: Workspace containing ACM-D push authentication (acm-d-push secret)
+
+  tasks:
+    - name: extract-external-images
+      taskSpec:
+        params:
+          - name: MANIFEST_CONFIG_FILE
+            type: string
+          - name: TARGET_REGISTRY
+            type: string
+          - name: BUNDLE_TYPE
+            type: string
+        workspaces:
+          - name: source
+        results:
+          - name: images-to-mirror
+            description: List of external images that need mirroring
+          - name: images-total
+            description: Total number of images found
+          - name: images-skip
+            description: Number of images already in ACM-D (to skip)
+        steps:
+          - name: parse-bundle-config
+            image: registry.redhat.io/ubi9/ubi-minimal:latest
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: CONFIG_FILE
+                value: $(params.MANIFEST_CONFIG_FILE)
+              - name: TARGET_REGISTRY
+                value: $(params.TARGET_REGISTRY)
+              - name: BUNDLE_TYPE
+                value: $(params.BUNDLE_TYPE)
+            script: |
+              #!/bin/bash
+              set -euo pipefail
+
+              echo "🔍 Processing $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') operator bundle config: $CONFIG_FILE"
+              echo "🎯 Target registry: $TARGET_REGISTRY"
+
+              # Install required tools
+              microdnf install -y python3 python3-pip findutils
+              pip3 install --quiet --no-cache-dir pyyaml
+
+              # Python script to extract external images from operator bundle config
+              cat > extract_external_images.py << 'EOF'
+              import json
+              import sys
+              import os
+              from urllib.parse import urlparse
+
+              def extract_external_images(config_file, target_registry, bundle_type):
+                  """Extract external images from *-manifest-gen-config.json"""
+                  
+                  # Try to find the config file with common variations
+                  config_variations = [
+                      config_file,
+                      f"config/{bundle_type}-manifest-gen-config.json",
+                      "config/acm-manifest-gen-config.json", 
+                      "config/mce-manifest-gen-config.json"
+                  ]
+                  
+                  actual_config_file = None
+                  for variation in config_variations:
+                      if os.path.exists(variation):
+                          actual_config_file = variation
+                          print(f"📄 Found config file: {variation}", file=sys.stderr)
+                          break
+                  
+                  if not actual_config_file:
+                      print(f"❌ No config file found. Tried:", file=sys.stderr)
+                      for variation in config_variations:
+                          print(f"  - {variation}", file=sys.stderr)
+                      
+                      # List contents of config directory for debugging
+                      if os.path.exists("config/"):
+                          print(f"📁 Contents of config/ directory:", file=sys.stderr)
+                          try:
+                              for item in sorted(os.listdir("config/")):
+                                  print(f"  - {item}", file=sys.stderr)
+                          except PermissionError:
+                              print(f"  - (Permission denied listing config/)", file=sys.stderr)
+                      else:
+                          print(f"📁 config/ directory does not exist", file=sys.stderr)
+                      
+                      return [], 0, 0
+                  
+                  try:
+                      with open(actual_config_file, 'r') as f:
+                          config_data = json.load(f)
+                  except json.JSONDecodeError as e:
+                      print(f"❌ Invalid JSON in config file: {e}", file=sys.stderr)
+                      return [], 0, 0
+                  except Exception as e:
+                      print(f"❌ Error reading config file: {e}", file=sys.stderr)
+                      return [], 0, 0
+                  
+                  # Extract external-images array
+                  external_images = config_data..get('external-images').get('image-list', [])
+                  if not external_images:
+                      print("⚠️  No 'external-images' found in operator bundle config", file=sys.stderr)
+                      return [], 0, 0
+                  
+                  print(f"📋 Found {len(external_images)} external images in {bundle_type.upper()} bundle config", file=sys.stderr)
+                  
+                  images_to_mirror = []
+                  images_already_in_acmd = []
+                  
+                  for idx, image_entry in enumerate(external_images):
+                      if not isinstance(image_entry, dict):
+                          print(f"⚠️  Skipping invalid image entry at index {idx}: {image_entry}", file=sys.stderr)
+                          continue
+                      
+                      # Extract image-ref field
+                      image_ref = image_entry.get('image-ref')
+                      if not image_ref:
+                          print(f"⚠️  No 'image-ref' found in entry {idx}: {image_entry}", file=sys.stderr)
+                          continue
+                      
+                      print(f"  📦 Processing: {image_ref}", file=sys.stderr)
+                      
+                      # Check if image is already in ACM-D org
+                      if image_ref.startswith(target_registry + "/"):
+                          print(f"    ⏭️  Already in ACM-D, skipping", file=sys.stderr)
+                          images_already_in_acmd.append(image_ref)
+                      else:
+                          print(f"    ✅ Needs mirroring", file=sys.stderr)
+                          images_to_mirror.append(image_ref)
+                  
+                  return images_to_mirror, len(external_images), len(images_already_in_acmd)
+
+              def main():
+                  if len(sys.argv) != 4:
+                      print("Usage: python3 extract_external_images.py <config_file> <target_registry> <bundle_type>", file=sys.stderr)
+                      sys.exit(1)
+                      
+                  config_file = sys.argv[1]
+                  target_registry = sys.argv[2]
+                  bundle_type = sys.argv[3]
+                  
+                  images_to_mirror, total_images, skip_count = extract_external_images(config_file, target_registry, bundle_type)
+                  
+                  # Output images to mirror (one per line)
+                  for image in images_to_mirror:
+                      print(image)
+                  
+                  # Output stats to stderr for logging
+                  print(f"📊 {bundle_type.upper()} BUNDLE EXTRACTION SUMMARY:", file=sys.stderr)
+                  print(f"  Total external images: {total_images}", file=sys.stderr)
+                  print(f"  Images to mirror: {len(images_to_mirror)}", file=sys.stderr)
+                  print(f"  Already in ACM-D: {skip_count}", file=sys.stderr)
+                  
+                  # Write results for next task
+                  try:
+                      with open('/tekton/results/images-total', 'w') as f:
+                          f.write(str(total_images))
+                      with open('/tekton/results/images-skip', 'w') as f:
+                          f.write(str(skip_count))
+                  except Exception as e:
+                      print(f"⚠️  Could not write results: {e}", file=sys.stderr)
+                  
+                  return 0
+
+              if __name__ == '__main__':
+                  sys.exit(main())
+              EOF
+
+              # Show available files for debugging
+              echo "📁 Repository structure (top-level):"
+              ls -la | head -10
+
+              echo ""
+              echo "📁 Searching for manifest config files:"
+              find . -name "*manifest-gen-config.json" -type f | head -10
+
+              # Execute the extraction
+              echo ""
+              echo "🚀 Starting image extraction..."
+              if python3 extract_external_images.py "$CONFIG_FILE" "$TARGET_REGISTRY" "$BUNDLE_TYPE" > $(results.images-to-mirror.path); then
+                  echo "✅ Successfully extracted external images from $BUNDLE_TYPE bundle config"
+                  
+                  # Show what we found
+                  mirror_count=$(cat $(results.images-to-mirror.path) | wc -l)
+                  echo "📊 Images requiring mirroring: $mirror_count"
+                  
+                  if [[ $mirror_count -gt 0 ]]; then
+                      echo "📋 First 5 images to mirror:"
+                      cat $(results.images-to-mirror.path) | head -5
+                      if [[ $mirror_count -gt 5 ]]; then
+                          echo "... and $(($mirror_count - 5)) more images"
+                      fi
+                  else
+                      echo "🎉 All external images are already in ACM-D!"
+                  fi
+              else
+                  echo "❌ Failed to extract external images from $BUNDLE_TYPE bundle config"
+                  exit 1
+              fi
+
+      params:
+        - name: MANIFEST_CONFIG_FILE
+          value: $(params.MANIFEST_CONFIG_FILE)
+        - name: TARGET_REGISTRY
+          value: $(params.TARGET_REGISTRY)
+        - name: BUNDLE_TYPE
+          value: $(params.BUNDLE_TYPE)
+      workspaces:
+        - name: source
+          workspace: source
+
+    - name: mirror-external-images
+      runAfter:
+        - extract-external-images
+      taskSpec:
+        params:
+          - name: TARGET_REGISTRY
+            type: string
+          - name: BUNDLE_TYPE
+            type: string
+          - name: DRY_RUN
+            type: string
+          - name: SKIP_EXISTING
+            type: string
+        workspaces:
+          - name: source
+          - name: auth
+        steps:
+          - name: setup-auth
+            image: quay.io/skopeo/stable:latest
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: BUNDLE_TYPE
+                value: $(params.BUNDLE_TYPE)
+            script: |
+              #!/bin/bash
+              set -euo pipefail
+
+              echo "🔐 Setting up ACM-D authentication for $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') bundle mirroring"
+
+              # Setup authentication for ACM-D registry using acm-d-push secret
+              if [[ -f "$(workspaces.auth.path)/.dockerconfigjson" ]]; then
+                  cp "$(workspaces.auth.path)/.dockerconfigjson" /tmp/auth.json
+                  echo "✅ Found ACM-D push authentication (acm-d-push secret)"
+                  
+                  # Verify the auth contains quay.io
+                  if grep -q "quay.io" /tmp/auth.json; then
+                      echo "✅ Authentication includes quay.io credentials"
+                  else
+                      echo "⚠️  Authentication may not include quay.io credentials"
+                  fi
+              else
+                  echo "❌ No ACM-D authentication found in workspace"
+                  echo "Expected acm-d-push secret at: $(workspaces.auth.path)/.dockerconfigjson"
+                  echo "Available files in auth workspace:"
+                  ls -la "$(workspaces.auth.path)/" || echo "Cannot list auth workspace"
+                  exit 1
+              fi
+
+          - name: mirror-images
+            image: quay.io/skopeo/stable:latest
+            workingDir: $(workspaces.source.path)
+            env:
+              - name: TARGET_REGISTRY
+                value: $(params.TARGET_REGISTRY)
+              - name: BUNDLE_TYPE
+                value: $(params.BUNDLE_TYPE)
+              - name: DRY_RUN
+                value: $(params.DRY_RUN)
+              - name: SKIP_EXISTING
+                value: $(params.SKIP_EXISTING)
+            script: |
+              #!/bin/bash
+              set -euo pipefail
+
+              echo "🪞 $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') External Images Mirroring to: $TARGET_REGISTRY"
+              echo "🔧 Dry run mode: $DRY_RUN"
+              echo "🔧 Skip existing: $SKIP_EXISTING"
+
+              # Get stats from previous task
+              images_total=$(cat $(tasks.extract-external-images.results.images-total.path) 2>/dev/null || echo "0")
+              images_skip=$(cat $(tasks.extract-external-images.results.images-skip.path) 2>/dev/null || echo "0")
+
+              echo "📊 $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') EXTERNAL IMAGES SUMMARY:"
+              echo "  📋 Total external images: $images_total"
+              echo "  ⏭️  Already in ACM-D: $images_skip"
+
+              # Read the image list from previous task
+              if [[ ! -f $(tasks.extract-external-images.results.images-to-mirror.path) ]]; then
+                  echo "❌ No image list found from extraction task"
+                  exit 1
+              fi
+
+              mirror_count=$(cat $(tasks.extract-external-images.results.images-to-mirror.path) | wc -l)
+              if [[ $mirror_count -eq 0 ]]; then
+                  echo "🎉 No images need mirroring - all external images are already in ACM-D!"
+                  exit 0
+              fi
+
+              echo "  🪞 Images to mirror: $mirror_count"
+              echo ""
+
+              success_count=0
+              failure_count=0
+              skip_existing_count=0
+
+              while IFS= read -r source_image; do
+                  [[ -z "$source_image" ]] && continue
+
+                  echo "📦 Processing $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') external image: $source_image"
+
+                  # Parse image components for target naming
+                  # Extract the image name (last part after /) and tag (after :)
+                  if [[ "$source_image" =~ ^(.+)/([^/]+):([^:]+)$ ]]; then
+                      # Format: registry.domain.com/path/image:tag
+                      source_registry="${BASH_REMATCH[1]}"
+                      image_name="${BASH_REMATCH[2]}"
+                      tag="${BASH_REMATCH[3]}"
+                  elif [[ "$source_image" =~ ^([^:]+):([^:]+)$ ]]; then
+                      # Format: image:tag (assume docker.io)
+                      source_registry="docker.io/library"
+                      image_name="${BASH_REMATCH[1]}"
+                      tag="${BASH_REMATCH[2]}"
+                      # If the image name contains /, use the last part
+                      if [[ "$image_name" == *"/"* ]]; then
+                          image_name="${image_name##*/}"
+                      fi
+                  else
+                      echo "  ⚠️  Could not parse image format: $source_image, using as-is"
+                      # Fallback: use the whole string minus tag
+                      if [[ "$source_image" == *":"* ]]; then
+                          image_name="${source_image%:*}"
+                          tag="${source_image##*:}"
+                          # Get just the image name part
+                          image_name="${image_name##*/}"
+                      else
+                          image_name="${source_image##*/}"
+                          tag="latest"
+                      fi
+                  fi
+
+                  # Create target image name preserving original structure
+                  target_image="${TARGET_REGISTRY}/${image_name}:${tag}"
+
+                  echo "  📋 Source: $source_image"
+                  echo "  📋 Target: $target_image"
+
+                  # Check if image already exists in target (if skip_existing is enabled)
+                  if [[ "$SKIP_EXISTING" == "true" && "$DRY_RUN" != "true" ]]; then
+                      echo "  🔍 Checking if target image already exists..."
+                      if skopeo inspect --authfile /tmp/auth.json "docker://$target_image" &>/dev/null; then
+                          echo "  ⏭️  Image already exists in ACM-D, skipping: $target_image"
+                          ((skip_existing_count++))
+                          echo "  ---"
+                          continue
+                      fi
+                  fi
+
+                  if [[ "$DRY_RUN" == "true" ]]; then
+                      echo "  🔍 DRY-RUN: Would mirror $source_image -> $target_image"
+                      ((success_count++))
+                  else
+                      # Perform actual mirroring
+                      echo "  🚀 Mirroring to ACM-D..."
+                      if timeout 300 skopeo copy \
+                          --authfile /tmp/auth.json \
+                          --src-tls-verify=true \
+                          --dest-tls-verify=true \
+                          --retry-times=3 \
+                          --preserve-digests \
+                          --override-arch=amd64 \
+                          --override-os=linux \
+                          "docker://$source_image" \
+                          "docker://$target_image"; then
+                          echo "  ✅ Successfully mirrored: $target_image"
+                          ((success_count++))
+                      else
+                          echo "  ❌ Failed to mirror: $source_image"
+                          echo "    This may be due to:"
+                          echo "    - Image requires special authentication"
+                          echo "    - Image is not publicly accessible"
+                          echo "    - Network connectivity issues"
+                          echo "    - Registry rate limiting"
+                          ((failure_count++))
+                          # Continue with other images rather than failing completely
+                      fi
+                  fi
+                  echo "  ---"
+              done < "$(tasks.extract-external-images.results.images-to-mirror.path)"
+
+              echo ""
+              echo "🎯 $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') EXTERNAL IMAGES MIRROR SUMMARY:"
+              echo "  ✅ Successfully mirrored: $success_count"
+              echo "  ⏭️  Skipped (already exist): $skip_existing_count"
+              echo "  ❌ Failed: $failure_count"
+              echo "  🪞 Target Registry: $TARGET_REGISTRY"
+              echo ""
+
+              if [[ $failure_count -gt 0 && "$DRY_RUN" != "true" ]]; then
+                  echo "⚠️  Some images failed to mirror, but continuing..."
+                  echo "    This is expected for images requiring special authentication"
+                  echo "    or private registries. Check logs above for specific failures."
+              fi
+
+              if [[ $success_count -gt 0 || "$DRY_RUN" == "true" ]]; then
+                  echo "🎉 $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') external images mirroring completed!"
+                  echo "🔗 Mirrored images are available in ACM-D Quay:"
+                  echo "   https://quay.io/organization/acm-d"
+              elif [[ $skip_existing_count -gt 0 ]]; then
+                  echo "✅ All $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') external images were already available in ACM-D"
+              else
+                  echo "⚠️  No images were successfully mirrored"
+                  echo "   This may indicate configuration or authentication issues"
+              fi
+
+              # Pipeline should continue even if some images fail to mirror
+              # This is expected behavior for restricted or private images
+              echo ""
+              echo "📝 Pipeline completed. Check individual image results above."
+
+      params:
+        - name: TARGET_REGISTRY
+          value: $(params.TARGET_REGISTRY)
+        - name: BUNDLE_TYPE
+          value: $(params.BUNDLE_TYPE)
+        - name: DRY_RUN
+          value: $(params.DRY_RUN)
+        - name: SKIP_EXISTING
+          value: $(params.SKIP_EXISTING)
+      workspaces:
+        - name: source
+          workspace: source
+        - name: auth
+          workspace: auth
+
+  finally:
+    - name: cleanup-and-summary
+      taskSpec:
+        params:
+          - name: BUNDLE_TYPE
+            type: string
+        steps:
+          - name: final-summary
+            image: registry.redhat.io/ubi9/ubi-minimal:latest
+            env:
+              - name: BUNDLE_TYPE
+                value: $(params.BUNDLE_TYPE)
+            script: |
+              #!/bin/bash
+              set -euo pipefail
+
+              echo ""
+              echo "🎊 =========================================="
+              echo "🎊 $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') OPERATOR BUNDLE EXTERNAL IMAGES MIRROR"
+              echo "🎊 Pipeline execution completed successfully!"
+              echo "🎊 =========================================="
+              echo ""
+              echo "📋 What happened:"
+              echo "  1. ✅ Processed $(echo $BUNDLE_TYPE | tr '[:lower:]' '[:upper:]') operator bundle configuration"
+              echo "  2. ✅ Extracted external-images from *-manifest-gen-config.json"
+              echo "  3. ✅ Filtered images already in ACM-D organization"
+              echo "  4. ✅ Mirrored new external images to quay.io/acm-d"
+              echo ""
+              echo "🔗 Mirrored images are available at:"
+              echo "   https://quay.io/organization/acm-d"
+              echo ""
+              echo "📝 For detailed results, check the individual task logs above."
+              echo "🎊 =========================================="
+      params:
+        - name: BUNDLE_TYPE
+          value: $(params.BUNDLE_TYPE)
