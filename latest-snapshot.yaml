@@ -2,60 +2,64 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/hypershift-addon-operator?rev=ae1451f1386fe58ca45b8964f0a8fbd42aeb4d53
-    build.appstudio.redhat.com/commit_sha: ae1451f1386fe58ca45b8964f0a8fbd42aeb4d53
-    build.appstudio.redhat.com/target_branch: main
-    pac.test.appstudio.openshift.io/branch: main
+    build.appstudio.openshift.io/repo: https://github.com/openshift/hive?rev=c2795048f4427f12a6eacbef1bc6aab1439cce61
+    build.appstudio.redhat.com/commit_sha: c2795048f4427f12a6eacbef1bc6aab1439cce61
+    build.appstudio.redhat.com/target_branch: master
+    pac.test.appstudio.openshift.io/branch: master
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "52002948089"
+    pac.test.appstudio.openshift.io/check-run-id: "52019569985"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-emsqze
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-jcgtzj
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hypershift-addon-operator-mce-210-on-push-s6hvr
+    pac.test.appstudio.openshift.io/installation-id: "35333059"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hive-mce-210-on-push-drj6n
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
-    pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && (target_branch
-      == "backplane-2.9" || target_branch == "main" )
-    pac.test.appstudio.openshift.io/original-prname: hypershift-addon-operator-mce-210-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/hypershift-addon-operator
-    pac.test.appstudio.openshift.io/repository: hypershift-addon-operator-backplane-24
+    pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
+      == "master" && !files.all.all(x, x.matches('^docs/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
+    pac.test.appstudio.openshift.io/original-prname: hive-mce-210-on-push
+    pac.test.appstudio.openshift.io/pull-request: "2760"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hive
+    pac.test.appstudio.openshift.io/repository: hive-master
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
-    pac.test.appstudio.openshift.io/sender: rokej
-    pac.test.appstudio.openshift.io/sha: ae1451f1386fe58ca45b8964f0a8fbd42aeb4d53
-    pac.test.appstudio.openshift.io/sha-title: 'ACM-24682: automate ACM configuration
-      for MCE HCP discovery (#599)'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/hypershift-addon-operator/commit/ae1451f1386fe58ca45b8964f0a8fbd42aeb4d53
-    pac.test.appstudio.openshift.io/source-branch: refs/heads/main
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/hypershift-addon-operator
+    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
+    pac.test.appstudio.openshift.io/sha: c2795048f4427f12a6eacbef1bc6aab1439cce61
+    pac.test.appstudio.openshift.io/sha-title: 'Merge pull request #2760 from openshift/konflux/references/master'
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hive/commit/c2795048f4427f12a6eacbef1bc6aab1439cce61
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/master
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: hypershift-addon-operator
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-210-release-mce-210-cnq9h":{"lastUpdateTime":"2025-10-06T01:17:06.984944833Z"}}}'
-    test.appstudio.openshift.io/pipelinerunstarttime: "1759712579"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/hypershift-addon-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-210","status":"TestPassed","lastUpdateTime":"2025-10-06T01:17:06.984944833Z","details":"Integration
-      test passed","startTime":"2025-10-06T01:16:34.090936037Z","completionTime":"2025-10-06T01:17:06.984944833Z","testPipelineRunName":"enterprise-contract-mce-210-l2t2z"}]'
-  creationTimestamp: "2025-10-06T01:16:33Z"
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: hive
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-210-release-mce-210-74zb9":{"lastUpdateTime":"2025-10-06T08:05:04.630494067Z"}}}'
+    test.appstudio.openshift.io/pipelinerunstarttime: "1759735483"
+    test.appstudio.openshift.io/pr-group: refs/heads/master
+    test.appstudio.openshift.io/snapshot-creation-report: BuildPLRInProgress
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-210","status":"TestPassed","lastUpdateTime":"2025-10-06T08:05:04.630494067Z","details":"Integration
+      test passed","startTime":"2025-10-06T08:04:15.864560513Z","completionTime":"2025-10-06T08:05:04.630494067Z","testPipelineRunName":"enterprise-contract-mce-210-m86tr"}]'
+  creationTimestamp: "2025-10-06T08:04:15Z"
   generateName: release-mce-210-
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-210
-    appstudio.openshift.io/build-pipelinerun: hypershift-addon-operator-mce-210-on-push-s6hvr
-    appstudio.openshift.io/component: hypershift-addon-operator-mce-210
+    appstudio.openshift.io/build-pipelinerun: hive-mce-210-on-push-drj6n
+    appstudio.openshift.io/component: hive-mce-210
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "52002948089"
+    pac.test.appstudio.openshift.io/check-run-id: "52019569985"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: hypershift-addon-operator-mce-210-on-push
-    pac.test.appstudio.openshift.io/repository: hypershift-addon-operator-backplane-24
-    pac.test.appstudio.openshift.io/sha: ae1451f1386fe58ca45b8964f0a8fbd42aeb4d53
+    pac.test.appstudio.openshift.io/original-prname: hive-mce-210-on-push
+    pac.test.appstudio.openshift.io/pull-request: "2760"
+    pac.test.appstudio.openshift.io/repository: hive-master
+    pac.test.appstudio.openshift.io/sha: c2795048f4427f12a6eacbef1bc6aab1439cce61
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: hypershift-addon-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1759713388"
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: hive
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1759737849"
+    test.appstudio.openshift.io/pr-group-sha: 49c8f7d5c7458baeb01c297edec96d2886bf083c68c65a3df9c2d60de88795
     test.appstudio.openshift.io/type: component
-  name: release-mce-210-cnq9h
+  name: release-mce-210-74zb9
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -64,8 +68,8 @@ metadata:
     kind: Application
     name: release-mce-210
     uid: 991ec411-638f-453f-837e-5b8d3562aa61
-  resourceVersion: "5348754846"
-  uid: aa74a23b-27eb-467f-9da2-a1740492a657
+  resourceVersion: "5350693759"
+  uid: e389ae43-6286-4f8b-a404-7f54906f4cd4
 spec:
   application: release-mce-210
   artifacts: {}
@@ -86,13 +90,11 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: 3c59204843fa13ad7143075c2d2831e8a73e7a32
         url: https://github.com/stolostron/cluster-curator-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-210@sha256:1514c687724e16710ea0b8865cd2d46db7937eb04557d7e7a7f5ca0f1e6969a7
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-210@sha256:4db83448e0b08bf1fc56c4d17af52818497dc91315b9b33817146067b5fc58dc
     name: hive-mce-210
     source:
       git:
-        context: ./
-        dockerfileUrl: Dockerfile
-        revision: 08341899d1d333720c764780b2872195202f9979
+        revision: c2795048f4427f12a6eacbef1bc6aab1439cce61
         url: https://github.com/openshift/hive
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-210@sha256:c9605f60e5e3ae7b737dc8c22d43eb9f5bc1025afa800cdd6304dec82669c077
     name: hypershift-cli-mce-210
@@ -218,6 +220,8 @@ spec:
     name: hypershift-addon-operator-mce-210
     source:
       git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: ae1451f1386fe58ca45b8964f0a8fbd42aeb4d53
         url: https://github.com/stolostron/hypershift-addon-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-210@sha256:2983f6d088931772494c48ba78d4f8505de33fb4a52d3c6dbe3a4931448b43e8
@@ -318,23 +322,23 @@ spec:
         url: https://github.com/stolostron/ocm
 status:
   conditions:
-  - lastTransitionTime: "2025-10-06T01:16:34Z"
+  - lastTransitionTime: "2025-10-06T08:04:15Z"
     message: The Snapshot's component(s) was/were added to the global candidate list
     reason: Added
     status: "True"
     type: AddedToGlobalCandidateList
-  - lastTransitionTime: "2025-10-06T01:17:07Z"
+  - lastTransitionTime: "2025-10-06T08:05:04Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2025-10-06T01:17:07Z"
+  - lastTransitionTime: "2025-10-06T08:05:04Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2025-10-06T01:17:07Z"
+  - lastTransitionTime: "2025-10-06T08:05:04Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
