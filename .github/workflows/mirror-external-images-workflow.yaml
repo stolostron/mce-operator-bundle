@@ -1,0 +1,204 @@
+name: Mirror External Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to checkout (defaults to current branch)'
+        required: false
+        type: string
+      dry-run:
+        description: 'Run in dry-run mode (no actual mirroring)'
+        required: false
+        type: boolean
+        default: false
+  workflow_run:
+    workflows: ["Gen Bundle Contents When Triggered"]
+    types:
+      - completed
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  mirror-images:
+    runs-on: ubuntu-24.04
+    # Only run if the triggering workflow succeeded or if manually triggered
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+    - name: Log workflow trigger context
+      run: |
+        echo "Workflow triggered by: ${{ github.event_name }}"
+        if [ "${{ github.event_name }}" = "workflow_run" ]; then
+          echo "Triggering workflow: ${{ github.event.workflow_run.name }}"
+          echo "Triggering commit SHA: ${{ github.event.workflow_run.head_sha }}"
+          echo "Triggering branch: ${{ github.event.workflow_run.head_branch }}"
+          echo "Triggering repo: ${{ github.event.workflow_run.head_repository.full_name }}"
+        elif [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "Manual trigger - branch input: ${{ inputs.branch }}"
+        fi
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        # When triggered by workflow_run, checkout the commit SHA that triggered it (persists even if branch is deleted)
+        # When triggered manually, checkout the specified branch or current branch
+        ref: ${{ inputs.branch || github.event.workflow_run.head_sha || github.ref }}
+        path: workflow
+        sparse-checkout: |
+          config
+        show-progress: false
+
+    - name: Generate GitHub token to read release tools repo
+      id: gen-tools-repo-token
+      uses: actions/create-github-app-token@v1
+      with:
+        app-id: ${{ vars.TOOLS_REPO_READER_APP_ID }}
+        private-key: ${{ secrets.TOOLS_REPO_READER_PRIVATE_KEY }}
+        owner: ${{ vars.TOOLS_REPO_OWNER }}
+        repositories: "release"
+
+    - name: Checkout release tools repo
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ vars.TOOLS_REPO_OWNER }}/release
+        ref: master
+        token: ${{ steps.gen-tools-repo-token.outputs.token }}
+        path: release-tools
+        sparse-checkout: |
+          tools/konflux/bundle/utils
+        show-progress: false
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install skopeo
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y skopeo
+
+    - name: Authenticate and run mirror script
+      id: mirror
+      continue-on-error: true
+      run: |
+        # Authenticate to needed image registries...
+
+        # Access to registry.redhat.io needed to resolve external image references (shipped images):
+        echo "Doing skopeo login to registry.redhat.io"
+        echo "${{ secrets.REGISTRY_REDHAT_IO_RGY_PASSWORD }}" \
+           | skopeo login -u="${{ vars.REGISTRY_REDHAT_IO_RGY_USERNAME }}" --password-stdin registry.redhat.io
+
+        # Access to quay.io/acm-d needed to resolve external image references (in-dev images):
+        echo "Doing skopeo login to quay.io (for acm-d)"
+        echo "${{ secrets.QUAY_IO_ACMD_RGY_PASSWORD }}" \
+           | skopeo login -u="${{ vars.QUAY_IO_ACMD_RGY_USERNAME }}" --password-stdin quay.io
+
+        # Run the mirror script
+        ARGS="--operator mce"
+        if [ "${{ inputs.dry-run }}" == "true" ]; then
+          ARGS="$ARGS --dry-run"
+        fi
+
+        # Run the script from stolostron/release repo, using config from workflow (bundle) repo
+        cd workflow
+        python ../release-tools/tools/konflux/bundle/utils/mirror-external-images.py $ARGS
+
+    - name: Send Slack notification
+      if: always()
+      run: |
+        # Read results from the JSON file
+        if [ ! -f workflow/mirror-results.json ]; then
+          echo "No results file found, creating minimal report"
+          STATUS="❌ *FAILED*"
+          SUMMARY="Mirror script did not complete successfully"
+          DETAILS=""
+        else
+          # Parse the JSON results
+          MIRRORED=$(jq -r '.mirrored' workflow/mirror-results.json)
+          SKIPPED=$(jq -r '.skipped' workflow/mirror-results.json)
+          FAILED=$(jq -r '.failed' workflow/mirror-results.json)
+          DRY_RUN=$(jq -r '.dry_run' workflow/mirror-results.json)
+
+          # Determine status
+          if [ "$FAILED" -gt 0 ]; then
+            STATUS="⚠️ *COMPLETED WITH FAILURES*"
+          elif [ "$DRY_RUN" = "true" ]; then
+            STATUS="🔍 *DRY RUN COMPLETED*"
+          else
+            STATUS="✅ *SUCCESS*"
+          fi
+
+          # Build summary
+          SUMMARY="*Summary:*\n• Mirrored: $MIRRORED\n• Skipped: $SKIPPED\n• Failed: $FAILED"
+
+          # Build failure details if any
+          DETAILS=""
+          if [ "$FAILED" -gt 0 ]; then
+            DETAILS="\n\n*Failed Images:*\n"
+            FAILURES=$(jq -r '.failures[] | "• `\(.image_key)` [\(.operator)]\n  Source: `\(.source)`\n  Target: `\(.target)`\n  Error: \(.error)\n"' workflow/mirror-results.json)
+            DETAILS="$DETAILS$FAILURES"
+          fi
+        fi
+
+        # Build the Slack message
+        WORKFLOW_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        MESSAGE=$(cat <<EOF
+        {
+          "blocks": [
+            {
+              "type": "header",
+              "text": {
+                "type": "plain_text",
+                "text": "Image Mirroring Report"
+              }
+            },
+            {
+              "type": "section",
+              "text": {
+                "type": "mrkdwn",
+                "text": "$STATUS\n\n$SUMMARY$DETAILS"
+              }
+            },
+            {
+              "type": "section",
+              "fields": [
+                {
+                  "type": "mrkdwn",
+                  "text": "*Triggered by:*\n${{ github.event_name }}"
+                },
+                {
+                  "type": "mrkdwn",
+                  "text": "*Branch:*\n${{ github.ref_name }}"
+                }
+              ]
+            },
+            {
+              "type": "actions",
+              "elements": [
+                {
+                  "type": "button",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "View Workflow Run"
+                  },
+                  "url": "$WORKFLOW_URL"
+                }
+              ]
+            }
+          ]
+        }
+        EOF
+        )
+
+        # Send to Slack
+        curl -X POST -H 'Content-type: application/json' \
+          --data "$MESSAGE" \
+          "${{ secrets.SLACK_WEBHOOK_URL }}"
+
+    - name: Fail workflow if mirroring failed
+      if: steps.mirror.outcome == 'failure'
+      run: exit 1
