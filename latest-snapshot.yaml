@@ -2,62 +2,67 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/openshift/image-based-install-operator?rev=69a9eebc090d474de332d6f4b39609dd383b21bf
-    build.appstudio.redhat.com/commit_sha: 69a9eebc090d474de332d6f4b39609dd383b21bf
-    build.appstudio.redhat.com/target_branch: backplane-2.9
-    pac.test.appstudio.openshift.io/branch: backplane-2.9
+    build.appstudio.openshift.io/component-nudge-processed: "true"
+    build.appstudio.openshift.io/repo: https://github.com/openshift/hypershift?rev=ad856ee53f2dd8063ac710c9f1b1494975df8177
+    build.appstudio.redhat.com/commit_sha: ad856ee53f2dd8063ac710c9f1b1494975df8177
+    build.appstudio.redhat.com/target_branch: release-4.19
+    pac.test.appstudio.openshift.io/branch: release-4.19
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "59859835474"
+    pac.test.appstudio.openshift.io/check-run-id: "59910013424"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-bnawur
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-cetguc
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35333059"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/image-based-install-operator-mce-29-on-push-xf5ss
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hypershift-release-mce-29-on-push-8pcw7
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
-    pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "backplane-2.9"
-    pac.test.appstudio.openshift.io/original-prname: image-based-install-operator-mce-29-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/image-based-install-operator
-    pac.test.appstudio.openshift.io/repository: image-based-install-operator-mce-27
+    pac.test.appstudio.openshift.io/on-cel-expression: |
+      event == "push"
+      && target_branch == "release-4.19"
+      && files.all.exists(x, !x.matches('^(?:docs|examples|enhancements|contrib)/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
+    pac.test.appstudio.openshift.io/original-prname: hypershift-release-mce-29-on-push
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hypershift
+    pac.test.appstudio.openshift.io/repository: hypershift-manual-merge
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
-    pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: 69a9eebc090d474de332d6f4b39609dd383b21bf
-    pac.test.appstudio.openshift.io/sha-title: 'NO-ISSUE: Update Konflux references
-      to 0b10508'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/image-based-install-operator/commit/69a9eebc090d474de332d6f4b39609dd383b21bf
-    pac.test.appstudio.openshift.io/source-branch: backplane-2.9
-    pac.test.appstudio.openshift.io/source-repo-url: ""
+    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
+    pac.test.appstudio.openshift.io/sha: ad856ee53f2dd8063ac710c9f1b1494975df8177
+    pac.test.appstudio.openshift.io/sha-title: |-
+      Merge pull request #7102 from akalenyu/swap-resizer-img-4-19
+
+      CNV-70889: use csi-resizer image from release provider
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hypershift/commit/ad856ee53f2dd8063ac710c9f1b1494975df8177
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/release-4.19
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hypershift
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: image-based-install-operator
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-01-09T00:02:58Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-5fqmn":{"lastUpdateTime":"2026-01-09T00:03:44.894072903Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: hypershift
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-01-09T13:02:49Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-h6gf9":{"lastUpdateTime":"2026-01-09T13:03:28.364823554Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1767915577"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/image-based-install-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"TestPassed","lastUpdateTime":"2026-01-09T00:03:44.894072903Z","details":"Integration
-      test passed","startTime":"2026-01-09T00:02:59.293839343Z","completionTime":"2026-01-09T00:03:44.894072903Z","testPipelineRunName":"enterprise-contract-mce-29-6m96s"}]'
-  creationTimestamp: "2026-01-09T00:02:58Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1767962596"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hypershift
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"TestPassed","lastUpdateTime":"2026-01-09T13:03:28.364823554Z","details":"Integration
+      test passed","startTime":"2026-01-09T13:02:49.901246882Z","completionTime":"2026-01-09T13:03:28.364823554Z","testPipelineRunName":"enterprise-contract-mce-29-n6sfz"}]'
+  creationTimestamp: "2026-01-09T13:02:49Z"
   generateName: release-mce-29-
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-29
-    appstudio.openshift.io/build-pipelinerun: image-based-install-operator-mce-29-on-push-xf5ss
-    appstudio.openshift.io/component: image-based-install-operator-mce-29
+    appstudio.openshift.io/build-pipelinerun: hypershift-release-mce-29-on-push-8pcw7
+    appstudio.openshift.io/component: hypershift-release-mce-29
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "59859835474"
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: image-based-install-operator-mce-29-on-push
-    pac.test.appstudio.openshift.io/repository: image-based-install-operator-mce-27
-    pac.test.appstudio.openshift.io/sha: 69a9eebc090d474de332d6f4b39609dd383b21bf
+    pac.test.appstudio.openshift.io/check-run-id: "59910013424"
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/original-prname: hypershift-release-mce-29-on-push
+    pac.test.appstudio.openshift.io/repository: hypershift-manual-merge
+    pac.test.appstudio.openshift.io/sha: ad856ee53f2dd8063ac710c9f1b1494975df8177
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: image-based-install-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1767916970"
+    pac.test.appstudio.openshift.io/url-repository: hypershift
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1767963761"
     test.appstudio.openshift.io/type: component
-  name: release-mce-29-5fqmn
+  name: release-mce-29-h6gf9
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -66,8 +71,8 @@ metadata:
     kind: Application
     name: release-mce-29
     uid: 20473971-c86b-40e3-8b15-f0637463a27d
-  resourceVersion: "6583474337"
-  uid: 65e33a3a-e82d-479c-8488-cd76c32041ef
+  resourceVersion: "6592473250"
+  uid: cd2c4171-08bc-4e80-9b69-97a5b407913f
 spec:
   application: release-mce-29
   artifacts: {}
@@ -96,7 +101,7 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: 8854bc5532968fe8df674285a757f8eeb94fd4c2
         url: https://github.com/stolostron/clusterclaims-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-29@sha256:d6b53bf524ac3068d90cfe62d792bf140a74019944d5c4291609c5014865656e
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-29@sha256:9c1b0ad91fa22d13751d0476265a26a0e6448eeb44b00c50c80ecbf5d2b3a782
     name: hypershift-cli-mce-29
     source:
       git:
@@ -240,13 +245,11 @@ spec:
         dockerfileUrl: cmd/Dockerfile.rhtap
         revision: fc026c8c75d63a7ec57e542079afdef13ac83d3b
         url: https://github.com/stolostron/cluster-proxy
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-29@sha256:8125b393d0e3b5f18f29bda77cdf110c26a5b2baa7a7e11f10311c52d98b7503
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-29@sha256:5d8d2b6d23570dc8a383ccfe24d7da23498d70fcf86524f2bf8a5167e1054acc
     name: hypershift-release-mce-29
     source:
       git:
-        context: ./
-        dockerfileUrl: Containerfile.operator
-        revision: 5d58568fab9b7ba56badee0935490a0e071506fe
+        revision: ad856ee53f2dd8063ac710c9f1b1494975df8177
         url: https://github.com/openshift/hypershift
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-agent-mce-29@sha256:1df6ad9b97a140f1c4997d0071916e7e0ec45ae9d21d8a887cf971518845e91c
     name: cluster-api-provider-agent-mce-29
@@ -276,6 +279,8 @@ spec:
     name: image-based-install-operator-mce-29
     source:
       git:
+        context: ./
+        dockerfileUrl: Dockerfile
         revision: 69a9eebc090d474de332d6f4b39609dd383b21bf
         url: https://github.com/openshift/image-based-install-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/console-mce-mce-29@sha256:1dfc3d02bd7b82326f3e822028f441f95c00b1b28aeb180e275a9013c09f3d9f
@@ -312,18 +317,18 @@ spec:
         url: https://github.com/stolostron/ocm
 status:
   conditions:
-  - lastTransitionTime: "2026-01-09T00:03:44Z"
+  - lastTransitionTime: "2026-01-09T13:03:28Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-01-09T00:03:45Z"
+  - lastTransitionTime: "2026-01-09T13:03:28Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-01-09T00:03:45Z"
+  - lastTransitionTime: "2026-01-09T13:03:28Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
