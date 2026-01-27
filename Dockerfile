@@ -4,18 +4,18 @@ COPY ./manifests /manifests
 COPY ./metadata /metadata
 COPY ./extras /extras
 
-LABEL com.redhat.delivery.operator.bundle="true" \
+LABEL com.redhat.delivery.operator.bundle="true" \ \
       operators.operatorframework.io.bundle.mediatype.v1="registry+v1" \
       operators.operatorframework.io.bundle.manifests.v1="manifests/" \
       operators.operatorframework.io.bundle.metadata.v1="metadata/" \
       operators.operatorframework.io.bundle.package.v1="multicluster-engine" \
       operators.operatorframework.io.bundle.channels.v1="stable-2.10" \
-      com.redhat.openshift.versions="v4.17-v4.21" \
+      com.redhat.openshift.versions="v4.17-v4.21"
       cpe="cpe:/a:redhat:multicluster_engine:2.10::el9"
 
 LABEL com.redhat.component="multicluster-engine-operator-bundle-container" \
       name="multicluster-engine/mce-operator-bundle" \
-      version="2.10.1-350" \
+      version="2.10.1-351" \
       summary="multicluster-engine-operator-bundle" \
       io.openshift.expose-services="" \
       io.openshift.tags="data,images" \
@@ -23,8 +23,8 @@ LABEL com.redhat.component="multicluster-engine-operator-bundle-container" \
       io.k8s.description="Operator bundle for Red Hat Multicluster engine" \
       maintainer="['acm-component-maintainers@redhat.com']" \
       description="multicluster-engine-operator-bundle" \
-      konflux.additional-tags="v2.10.1-350,snapshot-release-mce-210-5l7vs" \
+      konflux.additional-tags="v2.10.1-351,snapshot-release-mce-210-m2wjh" \
       vendor="Red Hat, Inc." \
       url="https://github.com/stolostron/mce-operator-bundle" \
-      release="2.10.1-350" \
+      release="2.10.1-351" \
       distribution-scope="public"
