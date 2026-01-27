@@ -10,7 +10,7 @@ LABEL com.redhat.delivery.operator.bundle="true" \ \
       operators.operatorframework.io.bundle.metadata.v1="metadata/" \
       operators.operatorframework.io.bundle.package.v1="multicluster-engine" \
       operators.operatorframework.io.bundle.channels.v1="stable-2.7" \
-      com.redhat.openshift.versions="v4.12-v4.18"
+      com.redhat.openshift.versions="v4.12-v4.18" \
       cpe="cpe:/a:redhat:multicluster_engine:2.7::el9"
 
 LABEL com.redhat.component="multicluster-engine-operator-bundle-container" \
