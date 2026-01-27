@@ -11,7 +11,7 @@ LABEL com.redhat.delivery.operator.bundle="true" \ \
       operators.operatorframework.io.bundle.package.v1="multicluster-engine" \
       operators.operatorframework.io.bundle.channels.v1="stable-2.11" \
       operators.operatorframework.io.bundle.channel.default.v1="stable-2.11" \
-      com.redhat.openshift.versions="v4.18-v4.22"
+      com.redhat.openshift.versions="v4.18-v4.22" \
       cpe="cpe:/a:redhat:multicluster_engine:2.11::el9"
 
 LABEL com.redhat.component="multicluster-engine-operator-bundle-container" \
