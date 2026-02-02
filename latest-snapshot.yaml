@@ -2,60 +2,86 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/openshift/image-based-install-operator?rev=2e17b9413b58b131908ca601f7653b9cfd00b122
-    build.appstudio.redhat.com/commit_sha: 2e17b9413b58b131908ca601f7653b9cfd00b122
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/kube-rbac-proxy?rev=023a3a9b1a5111eac1ab3f3054641e96f64dfa61
+    build.appstudio.redhat.com/commit_sha: 023a3a9b1a5111eac1ab3f3054641e96f64dfa61
     build.appstudio.redhat.com/target_branch: backplane-2.9
     pac.test.appstudio.openshift.io/branch: backplane-2.9
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "62153785371"
+    pac.test.appstudio.openshift.io/check-run-id: "62215757639"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-wigmqw
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-lahulu
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35333059"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/image-based-install-operator-mce-29-on-push-fw5sj
+    pac.test.appstudio.openshift.io/installation-id: "35324288"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/kube-rbac-proxy-mce-29-on-push-dbpvb
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-2.9"
-    pac.test.appstudio.openshift.io/original-prname: image-based-install-operator-mce-29-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/image-based-install-operator
-    pac.test.appstudio.openshift.io/repository: image-based-install-operator-mce-27
+    pac.test.appstudio.openshift.io/original-prname: kube-rbac-proxy-mce-29-on-push
+    pac.test.appstudio.openshift.io/pull-request: "298"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/kube-rbac-proxy
+    pac.test.appstudio.openshift.io/repository: kube-rbac-proxy-mce-25
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
-    pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: 2e17b9413b58b131908ca601f7653b9cfd00b122
-    pac.test.appstudio.openshift.io/sha-title: 'NO-ISSUE: Update Konflux references'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/image-based-install-operator/commit/2e17b9413b58b131908ca601f7653b9cfd00b122
-    pac.test.appstudio.openshift.io/source-branch: backplane-2.9
-    pac.test.appstudio.openshift.io/source-repo-url: ""
+    pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
+    pac.test.appstudio.openshift.io/sha: 023a3a9b1a5111eac1ab3f3054641e96f64dfa61
+    pac.test.appstudio.openshift.io/sha-title: |-
+      [release-2.14] Add CPE labels for container images (#298)
+
+      * Add CPE labels for container images
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+      Signed-off-by: Subbarao Meduri <smeduri@redhat.com>
+
+      * Add GitHub Action to validate CPE labels
+
+      This workflow validates that:
+      - Containerfile.operator uses ARG variables for IMAGE_NAME and CPE_LABEL
+      - Tekton files have correct build-args matching COMPONENT_VERSION
+      - ACM builds use rhacm2/ image name and acm CPE
+      - MCE builds use multicluster-engine/ image name and multicluster_engine CPE
+
+      The validation runs on PRs targeting release-* and backplane-* branches.
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+      Signed-off-by: Subbarao Meduri <smeduri@redhat.com>
+
+      ---------
+
+      Signed-off-by: Subbarao Meduri <smeduri@redhat.com>
+      Co-authored-by: Claude Sonnet 4.5 <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/kube-rbac-proxy/commit/023a3a9b1a5111eac1ab3f3054641e96f64dfa61
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-2.9
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/kube-rbac-proxy
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: image-based-install-operator
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-02-02T00:34:59Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-20260202-000406-000":{"lastUpdateTime":"2026-02-02T00:35:32.564383997Z"}}}'
+    pac.test.appstudio.openshift.io/url-org: stolostron
+    pac.test.appstudio.openshift.io/url-repository: kube-rbac-proxy
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-02-02T13:51:42Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-20260202-134300-000":{"lastUpdateTime":"2026-02-02T13:52:15.246097532Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1769990646000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/image-based-install-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"TestPassed","lastUpdateTime":"2026-02-02T00:35:32.564383997Z","details":"Integration
-      test passed","startTime":"2026-02-02T00:34:59.562269335Z","completionTime":"2026-02-02T00:35:32.564383997Z","testPipelineRunName":"enterprise-contract-mce-29-cf9tn"}]'
-  creationTimestamp: "2026-02-02T00:34:59Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1770039780000"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/kube-rbac-proxy
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"TestPassed","lastUpdateTime":"2026-02-02T13:52:15.246097532Z","details":"Integration
+      test passed","startTime":"2026-02-02T13:51:42.357724854Z","completionTime":"2026-02-02T13:52:15.246097532Z","testPipelineRunName":"enterprise-contract-mce-29-652x6"}]'
+  creationTimestamp: "2026-02-02T13:51:42Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-29
-    appstudio.openshift.io/build-pipelinerun: image-based-install-operator-mce-29-on-push-fw5sj
-    appstudio.openshift.io/component: image-based-install-operator-mce-29
+    appstudio.openshift.io/build-pipelinerun: kube-rbac-proxy-mce-29-on-push-dbpvb
+    appstudio.openshift.io/component: kube-rbac-proxy-mce-29
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "62153785371"
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: image-based-install-operator-mce-29-on-push
-    pac.test.appstudio.openshift.io/repository: image-based-install-operator-mce-27
-    pac.test.appstudio.openshift.io/sha: 2e17b9413b58b131908ca601f7653b9cfd00b122
+    pac.test.appstudio.openshift.io/check-run-id: "62215757639"
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/original-prname: kube-rbac-proxy-mce-29-on-push
+    pac.test.appstudio.openshift.io/pull-request: "298"
+    pac.test.appstudio.openshift.io/repository: kube-rbac-proxy-mce-25
+    pac.test.appstudio.openshift.io/sha: 023a3a9b1a5111eac1ab3f3054641e96f64dfa61
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: image-based-install-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1769992494"
+    pac.test.appstudio.openshift.io/url-org: stolostron
+    pac.test.appstudio.openshift.io/url-repository: kube-rbac-proxy
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1770040296"
     test.appstudio.openshift.io/type: component
-  name: release-mce-29-20260202-000406-000
+  name: release-mce-29-20260202-134300-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -64,44 +90,12 @@ metadata:
     kind: Application
     name: release-mce-29
     uid: 20473971-c86b-40e3-8b15-f0637463a27d
-  resourceVersion: "7008137319"
-  uid: cac25cd6-38fe-48b4-9c52-e3fcb3952a50
+  resourceVersion: "7019904012"
+  uid: ad1441eb-346a-4fc9-a1b2-3589d488bbd8
 spec:
   application: release-mce-29
   artifacts: {}
   components:
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-29@sha256:291b8c1eff59e08f241004ac8e2241c43b4d3fcf43fde13df75dc56a39e7f37f
-    name: hive-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile
-        revision: e33d70397d57878e44d511ddc9ecee5521267d8a
-        url: https://github.com/openshift/hive
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-addon-operator-mce-29@sha256:6bce431c082538c1e1c6873ed90ba61ece04c3b546c81472a664ad5b6fffabed
-    name: hypershift-addon-operator-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 1a1446370771fbeb8112ad75ab136ce50f5c91c2
-        url: https://github.com/stolostron/hypershift-addon-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managed-serviceaccount-mce-29@sha256:5624377c3363065ca5dcaff2db4ad33358512329d7a815502df0cfe6a73e7f2e
-    name: managed-serviceaccount-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 960cde230fcfc17da8d679f89ff23b078e9ab92d
-        url: https://github.com/stolostron/managed-serviceaccount
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-29@sha256:d7ba9ff752d2b36b84a3c5d8fbeee181c88802ee5b57c69d245e9b7d37a40a2c
-    name: multicloud-manager-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 02b6f2d2561c73139852388463fbf02d10513ab5
-        url: https://github.com/stolostron/multicloud-operators-foundation
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-must-gather-mce-29@sha256:a7a912374abd942b5db99908ec5c0248db347ace1c170d89f6d5eb7948bddc4b
     name: backplane-must-gather-mce-29
     source:
@@ -178,6 +172,8 @@ spec:
     name: image-based-install-operator-mce-29
     source:
       git:
+        context: ./
+        dockerfileUrl: Dockerfile
         revision: 2e17b9413b58b131908ca601f7653b9cfd00b122
         url: https://github.com/openshift/image-based-install-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/placement-mce-29@sha256:a637e63670550e0f5bf84db6a69d429a32bc3fb079d2f546df12c08769985f9e
@@ -252,13 +248,11 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: a2f51b13648610133413123567b32f176f79f1d9
         url: https://github.com/stolostron/cluster-image-set-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-29@sha256:cc394e71774f05a8a91462cb37f8a40c61aa1f3abd7c2fd39cb3b97bf84fcb10
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-29@sha256:d6263188e44288cb5d3a1a8a11986ace1eb2a98e583ee95769fc007f8ebbab3d
     name: kube-rbac-proxy-mce-29
     source:
       git:
-        context: ./
-        dockerfileUrl: Containerfile.operator
-        revision: 29a69a6b98e99aa38fcc6b0ae3b77f883ab8b545
+        revision: 023a3a9b1a5111eac1ab3f3054641e96f64dfa61
         url: https://github.com/stolostron/kube-rbac-proxy
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managedcluster-import-controller-addon-mce-29@sha256:265f59fac9e0d3262c83b00ab934f985b6e89d311ebd0876593faccb0405ce48
     name: managedcluster-import-controller-addon-mce-29
@@ -308,20 +302,52 @@ spec:
         dockerfileUrl: build/Dockerfile.rhtap
         revision: 50e79cd7431dea3455b165136758cab7c793b8d2
         url: https://github.com/stolostron/clusterlifecycle-state-metrics
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-29@sha256:291b8c1eff59e08f241004ac8e2241c43b4d3fcf43fde13df75dc56a39e7f37f
+    name: hive-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile
+        revision: e33d70397d57878e44d511ddc9ecee5521267d8a
+        url: https://github.com/openshift/hive
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-addon-operator-mce-29@sha256:6bce431c082538c1e1c6873ed90ba61ece04c3b546c81472a664ad5b6fffabed
+    name: hypershift-addon-operator-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 1a1446370771fbeb8112ad75ab136ce50f5c91c2
+        url: https://github.com/stolostron/hypershift-addon-operator
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managed-serviceaccount-mce-29@sha256:5624377c3363065ca5dcaff2db4ad33358512329d7a815502df0cfe6a73e7f2e
+    name: managed-serviceaccount-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 960cde230fcfc17da8d679f89ff23b078e9ab92d
+        url: https://github.com/stolostron/managed-serviceaccount
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-29@sha256:d7ba9ff752d2b36b84a3c5d8fbeee181c88802ee5b57c69d245e9b7d37a40a2c
+    name: multicloud-manager-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 02b6f2d2561c73139852388463fbf02d10513ab5
+        url: https://github.com/stolostron/multicloud-operators-foundation
 status:
   conditions:
-  - lastTransitionTime: "2026-02-02T00:35:32Z"
+  - lastTransitionTime: "2026-02-02T13:52:15Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-02-02T00:35:32Z"
+  - lastTransitionTime: "2026-02-02T13:52:15Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-02-02T00:35:32Z"
+  - lastTransitionTime: "2026-02-02T13:52:15Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
