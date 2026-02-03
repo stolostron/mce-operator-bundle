@@ -2,101 +2,61 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/discovery?rev=bec5513e5764601f9b129d9f20df1ddbb4de8eed
-    build.appstudio.redhat.com/commit_sha: bec5513e5764601f9b129d9f20df1ddbb4de8eed
-    build.appstudio.redhat.com/target_branch: backplane-2.9
-    pac.test.appstudio.openshift.io/branch: backplane-2.9
+    build.appstudio.openshift.io/repo: https://github.com/openshift/cluster-api-provider-agent?rev=dcfb7c13c4381f8c1b8c702df6e5f8edc10e3ebb
+    build.appstudio.redhat.com/commit_sha: dcfb7c13c4381f8c1b8c702df6e5f8edc10e3ebb
+    build.appstudio.redhat.com/target_branch: release-ocm-2.14
+    pac.test.appstudio.openshift.io/branch: release-ocm-2.14
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "62255119782"
+    pac.test.appstudio.openshift.io/check-run-id: "62311322641"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-cpgtam
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-pmtphz
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/discovery-operator-mce-29-on-push-ttbdx
+    pac.test.appstudio.openshift.io/installation-id: "35333059"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/cluster-api-provider-agent-mce-29-on-push-645zf
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "backplane-2.9"
-    pac.test.appstudio.openshift.io/original-prname: discovery-operator-mce-29-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/discovery
-    pac.test.appstudio.openshift.io/repository: discovery-operator-mce-25
+      == "release-ocm-2.14"
+    pac.test.appstudio.openshift.io/original-prname: cluster-api-provider-agent-mce-29-on-push
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/cluster-api-provider-agent
+    pac.test.appstudio.openshift.io/repository: cluster-api-provider-agent-mce-29
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
-    pac.test.appstudio.openshift.io/sha: bec5513e5764601f9b129d9f20df1ddbb4de8eed
-    pac.test.appstudio.openshift.io/sha-title: |-
-      [backplane-2.9] [ACM-9771] Fix KinD integration tests (#1657)
-
-      * Fix KinD integration tests
-
-      This commit fixes the KinD workflow tests that were previously disabled.
-
-      Changes:
-      - Skip .venv directories in license test to avoid false failures
-      - Re-enable deployment and integration test steps in KinD workflow
-      - Disable webhooks for KinD tests to avoid webhook infrastructure requirements
-
-      The webhook validation was blocking DiscoveredCluster creation because the
-      webhook service and certificates were not configured in the test environment.
-      Disabling webhooks allows the integration tests to focus on testing the core
-      discovery functionality without requiring full webhook infrastructure.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-
-      * Create dummy webhook secret for KinD tests
-
-      The deployment spec includes a volume mount for the webhook certificate secret,
-      which must exist even when webhooks are disabled. Create an empty secret before
-      deployment to prevent pod mount failures.
-
-      This fixes the 'secret discovery-operator-webhook-service not found' error.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-
-      * Delete webhook config after deployment rollout
-
-      Move the webhook configuration deletion to after the deployment has fully
-      rolled out with ENABLE_WEBHOOKS=false. This ensures the operator is running
-      with webhooks disabled before we clean up any webhook configs that may have
-      been created during the initial deployment.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-
-      ---------
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-      Co-authored-by: dislbenn <dbennett@redhat.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/discovery/commit/bec5513e5764601f9b129d9f20df1ddbb4de8eed
-    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-2.9
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/discovery
+    pac.test.appstudio.openshift.io/sha: dcfb7c13c4381f8c1b8c702df6e5f8edc10e3ebb
+    pac.test.appstudio.openshift.io/sha-title: 'ACM-28050: Upgrade go to 1.24.11 to
+      mitigate CVE-2025-61729 (#812)'
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/cluster-api-provider-agent/commit/dcfb7c13c4381f8c1b8c702df6e5f8edc10e3ebb
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/release-ocm-2.14
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/cluster-api-provider-agent
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: discovery
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-02-02T19:10:44Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-20260202-190139-000":{"lastUpdateTime":"2026-02-02T19:11:19.427393066Z"}}}'
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: cluster-api-provider-agent
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-02-03T07:53:41Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-20260203-074201-000":{"lastUpdateTime":"2026-02-03T07:54:12.562238598Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1770058899000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/discovery
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"TestPassed","lastUpdateTime":"2026-02-02T19:11:19.427393066Z","details":"Integration
-      test passed","startTime":"2026-02-02T19:10:44.960561141Z","completionTime":"2026-02-02T19:11:19.427393066Z","testPipelineRunName":"enterprise-contract-mce-29-4gn9w"}]'
-  creationTimestamp: "2026-02-02T19:10:44Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1770104521000"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/cluster-api-provider-agent
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"TestPassed","lastUpdateTime":"2026-02-03T07:54:12.562238598Z","details":"Integration
+      test passed","startTime":"2026-02-03T07:53:41.211411802Z","completionTime":"2026-02-03T07:54:12.562238598Z","testPipelineRunName":"enterprise-contract-mce-29-s4bsx"}]'
+  creationTimestamp: "2026-02-03T07:53:41Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-29
-    appstudio.openshift.io/build-pipelinerun: discovery-operator-mce-29-on-push-ttbdx
-    appstudio.openshift.io/component: discovery-operator-mce-29
+    appstudio.openshift.io/build-pipelinerun: cluster-api-provider-agent-mce-29-on-push-645zf
+    appstudio.openshift.io/component: cluster-api-provider-agent-mce-29
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "62255119782"
+    pac.test.appstudio.openshift.io/check-run-id: "62311322641"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: discovery-operator-mce-29-on-push
-    pac.test.appstudio.openshift.io/repository: discovery-operator-mce-25
-    pac.test.appstudio.openshift.io/sha: bec5513e5764601f9b129d9f20df1ddbb4de8eed
+    pac.test.appstudio.openshift.io/original-prname: cluster-api-provider-agent-mce-29-on-push
+    pac.test.appstudio.openshift.io/repository: cluster-api-provider-agent-mce-29
+    pac.test.appstudio.openshift.io/sha: dcfb7c13c4381f8c1b8c702df6e5f8edc10e3ebb
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: discovery
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1770059437"
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: cluster-api-provider-agent
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1770105215"
     test.appstudio.openshift.io/type: component
-  name: release-mce-29-20260202-190139-000
+  name: release-mce-29-20260203-074201-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -105,12 +65,20 @@ metadata:
     kind: Application
     name: release-mce-29
     uid: 20473971-c86b-40e3-8b15-f0637463a27d
-  resourceVersion: "7025299294"
-  uid: 8879d554-32df-48f5-9bf2-4a13ca7d7c2c
+  resourceVersion: "7035687685"
+  uid: 1628cb31-dcac-464f-8c8b-bb53b1361c57
 spec:
   application: release-mce-29
   artifacts: {}
   components:
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-kubevirt-mce-29@sha256:639ed7205eae44b20bf810716775ff48ecebe05ea421c85c19710fbdc79c0599
+    name: cluster-api-provider-kubevirt-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 5d76db4010d1e65dc7d8a1f8b7a8c5ca28821f5e
+        url: https://github.com/openshift/cluster-api-provider-kubevirt
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-openshift-assisted-bootstrap-mce-29@sha256:ebe04809ba5e2cb6d427257fa419c2e472ea638dddcee7f07feacead64c5c533
     name: cluster-api-provider-openshift-assisted-bootstrap-mce-29
     source:
@@ -235,6 +203,8 @@ spec:
     name: discovery-operator-mce-29
     source:
       git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: bec5513e5764601f9b129d9f20df1ddbb4de8eed
         url: https://github.com/stolostron/discovery
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/provider-credential-controller-mce-29@sha256:00a83c4465ce876e4cfddda2a2bc9fceb3d10e1b45a13a7288aead8e6d1e2076
@@ -261,13 +231,11 @@ spec:
         dockerfileUrl: build/Dockerfile.work.rhtap
         revision: 441b4aae6de8d523ade4e2768c2399340cbabcb9
         url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-agent-mce-29@sha256:7d110f8a7f17ee48a85f750d056b77ab46012eacedb3e19ea93c773f4c6145ca
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-agent-mce-29@sha256:1d6678298483bb38bdc303584fe1821702c5bbc726f83a7cae028ea578d4afc0
     name: cluster-api-provider-agent-mce-29
     source:
       git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 6858b0fe05cdb81ca9d530be7e83ed507705405a
+        revision: dcfb7c13c4381f8c1b8c702df6e5f8edc10e3ebb
         url: https://github.com/openshift/cluster-api-provider-agent
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-proxy-addon-mce-29@sha256:4488901b848662336c0196d7991b22234bdbbad53c3f0d958c2e4c2f82692716
     name: cluster-proxy-addon-mce-29
@@ -341,28 +309,20 @@ spec:
         dockerfileUrl: Containerfile.mce.konflux
         revision: 551463c28230dd34d69673ab26a424007fd89de5
         url: https://github.com/stolostron/console
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-kubevirt-mce-29@sha256:639ed7205eae44b20bf810716775ff48ecebe05ea421c85c19710fbdc79c0599
-    name: cluster-api-provider-kubevirt-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 5d76db4010d1e65dc7d8a1f8b7a8c5ca28821f5e
-        url: https://github.com/openshift/cluster-api-provider-kubevirt
 status:
   conditions:
-  - lastTransitionTime: "2026-02-02T19:11:19Z"
+  - lastTransitionTime: "2026-02-03T07:54:12Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-02-02T19:11:19Z"
+  - lastTransitionTime: "2026-02-03T07:54:12Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-02-02T19:11:19Z"
+  - lastTransitionTime: "2026-02-03T07:54:12Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
