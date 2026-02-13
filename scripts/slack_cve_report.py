@@ -19,7 +19,7 @@ def load_previous_scan_results(previous_reports_dir, version):
 
     Args:
         previous_reports_dir: Directory containing previous scan JSON files
-        version: ACM version to match
+        version: MCE version to match
 
     Returns:
         Dict mapping image_key to CVE counts, or None if no previous results
@@ -252,7 +252,7 @@ def create_slack_message(version, results, format_type='summary', image_details=
     """Create Slack message
 
     Args:
-        version: ACM version
+        version: MCE version
         results: List of scan results
         format_type: 'summary' or 'detailed'
         image_details: Optional dict mapping image_key to full image reference
@@ -291,7 +291,7 @@ def create_slack_message(version, results, format_type='summary', image_details=
                 "type": "header",
                 "text": {
                     "type": "plain_text",
-                    "text": f"{severity_emoji} CVE ALERT - ACM {version} Scan Results",
+                    "text": f"{severity_emoji} CVE ALERT - MCE {version} Scan Results",
                     "emoji": True
                 }
             },
@@ -660,7 +660,7 @@ def create_slack_message(version, results, format_type='summary', image_details=
                 "type": "header",
                 "text": {
                     "type": "plain_text",
-                    "text": f"🔒 Detailed CVE Report - ACM {version}",
+                    "text": f"🔒 Detailed CVE Report - MCE {version}",
                     "emoji": True
                 }
             }
@@ -706,7 +706,7 @@ def send_to_slack(webhook_url, message):
     """Send message to Slack webhook"""
     try:
         # Add custom username and icon to match bot appearance
-        message['username'] = 'ACM Konflux Support'
+        message['username'] = 'MCE Konflux Support'
         message['icon_emoji'] = ':robot_face:'
 
         data = json.dumps(message).encode('utf-8')
@@ -853,7 +853,7 @@ def main():
     version = json_files[0].stem  # e.g., "2.17.0"
     
     # Parse results
-    console.print(f"[blue]Generating Slack report for ACM {version}...[/blue]")
+    console.print(f"[blue]Generating Slack report for MCE {version}...[/blue]")
     
     results = []
     image_details = {}  # Map image_key to full image reference
