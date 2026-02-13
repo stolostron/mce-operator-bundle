@@ -223,7 +223,7 @@ def main():
     output_json = os.getenv('OUTPUT_JSON', 'false').lower() == 'true'
     format_type = 'json' if output_json else 'table'
     icsp_config_path = os.getenv('ICSP_CONFIG', 'icsp-config.json')
-    acm_version = os.getenv('MCE_VERSION', '')
+    mce_version = os.getenv('MCE_VERSION', '')
 
     if not check_trivy_available():
         console.print("[red]Error: trivy is not installed[/red]")
@@ -251,16 +251,16 @@ def main():
         console.print("[yellow]No podman socket or auth detected (will try direct registry access)[/yellow]\n")
 
     # Determine version from extras files if not provided
-    if not acm_version:
+    if not mce_version:
         extras_path = Path(extras_dir)
         json_files = sorted(extras_path.glob('*.json'))
         if json_files:
-            acm_version = json_files[0].stem  # e.g., "2.17.0"
+            mce_version = json_files[0].stem  # e.g., "2.17.0"
 
     # Create organized reports directory structure
     # reports/2.17.0/json/ or reports/2.17.0/text/
-    if acm_version:
-        version_dir = Path(reports_dir) / acm_version
+    if mce_version:
+        version_dir = Path(reports_dir) / mce_version
         subdir = 'json' if format_type == 'json' else 'text'
         output_dir = version_dir / subdir
 
@@ -360,7 +360,7 @@ def main():
 
                     # Determine output file extension and path
                     ext = 'json' if format_type == 'json' else 'txt'
-                    if acm_version:
+                    if mce_version:
                         subdir = 'json' if format_type == 'json' else 'text'
                         scan_file = Path(reports_dir) / subdir / f"{base_name}_{image_key}_trivy.{ext}"
                     else:
