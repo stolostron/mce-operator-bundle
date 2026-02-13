@@ -79,28 +79,20 @@ def get_podman_socket():
 
 
 def scan_image_trivy(image_ref, output_file, severity, timeout, format_type, podman_socket=None):
-    """Scan image with Trivy (tries remote scan first, falls back to local download)"""
+    """Scan image with Trivy using remote scanning with authentication"""
 
-    # Set up environment with podman socket and auth if available
+    # Set up environment for Trivy with registry authentication
     env = os.environ.copy()
-    if podman_socket:
-        env['DOCKER_HOST'] = f'unix://{podman_socket}'
 
-    # Use podman's auth file for registry authentication
-    # Trivy uses Docker config format, so point DOCKER_CONFIG to containers dir
+    # Set REGISTRY_AUTH_FILE to point to podman's auth for remote scanning
     containers_dir = os.path.expanduser('~/.config/containers')
     auth_file = os.path.join(containers_dir, 'auth.json')
     if os.path.exists(auth_file):
-        # Copy auth.json to config.json if it doesn't exist
-        config_file = os.path.join(containers_dir, 'config.json')
-        if not os.path.exists(config_file):
-            import shutil
-            shutil.copy(auth_file, config_file)
-        env['DOCKER_CONFIG'] = containers_dir
+        env['REGISTRY_AUTH_FILE'] = auth_file
 
-    # Try remote scanning first (faster, no download)
+    # Try remote scanning (no pull required, uses registry auth)
     try:
-        cmd_remote = [
+        cmd = [
             'trivy', 'image',
             '--image-src', 'remote',
             '--severity', severity,
@@ -111,13 +103,13 @@ def scan_image_trivy(image_ref, output_file, severity, timeout, format_type, pod
 
         # Suppress INFO/WARN logs when using JSON format for clean JSON output
         if format_type == 'json':
-            cmd_remote.insert(2, '--quiet')
+            cmd.insert(2, '--quiet')
 
         with open(output_file, 'w') as f:
             result = subprocess.run(
-                cmd_remote,
+                cmd,
                 stdout=f,
-                stderr=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
                 timeout=600,  # 10 minute timeout
                 env=env
             )
@@ -125,34 +117,46 @@ def scan_image_trivy(image_ref, output_file, severity, timeout, format_type, pod
         if result.returncode == 0:
             return True
 
-        # Remote scan failed, try local scan (download image)
-        # console.print(f"[yellow]Remote scan failed, attempting local scan (downloading image)...[/yellow]")
-
+        # Remote scan failed, try with podman pull + scan as fallback
     except subprocess.TimeoutExpired:
-        pass  # Fall through to local scan
+        return False
     except Exception:
-        pass  # Fall through to local scan
+        pass  # Fall through to podman fallback
 
-    # Fall back to local scanning (downloads image)
+    # Fallback: Pull with podman then scan from local storage
     try:
-        cmd_local = [
+        pull_cmd = ['podman', 'pull', '--quiet', image_ref]
+        pull_result = subprocess.run(
+            pull_cmd,
+            capture_output=True,
+            timeout=300,  # 5 minute timeout for pull
+            text=True
+        )
+
+        if pull_result.returncode != 0:
+            with open(output_file, 'w') as f:
+                f.write(f"Failed to pull image: {pull_result.stderr}\n")
+            return False
+
+        # Scan from podman local storage (requires podman socket to be running)
+        cmd_podman = [
             'trivy', 'image',
+            '--image-src', 'podman',
             '--severity', severity,
             '--timeout', timeout,
             '--format', format_type,
             image_ref
         ]
 
-        # Suppress INFO/WARN logs when using JSON format for clean JSON output
         if format_type == 'json':
-            cmd_local.insert(2, '--quiet')
+            cmd_podman.insert(2, '--quiet')
 
         with open(output_file, 'w') as f:
             result = subprocess.run(
-                cmd_local,
+                cmd_podman,
                 stdout=f,
                 stderr=subprocess.STDOUT,
-                timeout=600,  # 10 minute timeout
+                timeout=600,
                 env=env
             )
 
@@ -324,17 +328,21 @@ def main():
                 summary.write(f"ICSP Mirrors: {len(icsp_mirrors)} configured\n")
             summary.write("=" * 60 + "\n\n")
 
+            # Detect if we're in CI to adjust output
+            in_ci = os.getenv('CI') == 'true' or os.getenv('GITHUB_ACTIONS') == 'true'
+
             with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
                 BarColumn(),
                 TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
                 TimeElapsedColumn(),
-                console=console
+                console=console,
+                disable=in_ci  # Disable rich progress in CI
             ) as progress:
                 task = progress.add_task("[cyan]Scanning images...", total=len(images))
 
-                for image in images:
+                for idx, image in enumerate(images, 1):
                     image_key = image.get('image-key', 'unknown')
                     image_remote = image.get('image-remote', '')
                     image_name = image.get('image-name', '')
@@ -345,6 +353,10 @@ def main():
                     scan_image, redirect_source = apply_icsp_redirect(full_image, icsp_mirrors)
 
                     progress.update(task, description=f"[cyan]Scanning {image_key}...")
+
+                    # Print plain progress in CI for visibility
+                    if in_ci:
+                        print(f"[{idx}/{len(images)}] Scanning {image_key}...", flush=True)
 
                     # Determine output file extension and path
                     ext = 'json' if format_type == 'json' else 'txt'
@@ -382,8 +394,22 @@ def main():
                                 summary.write(f"{vuln_data.get('high', 0)} HIGH, ")
                                 summary.write(f"{vuln_data.get('medium', 0)} MED, ")
                                 summary.write(f"{vuln_data.get('low', 0)} LOW\n")
+
+                                # Print in CI for visibility
+                                if in_ci:
+                                    print(f"  ✓ Completed in {elapsed:.1f}s - Found {total_vulns} vulns: "
+                                          f"{vuln_data.get('critical', 0)} CRIT, {vuln_data.get('high', 0)} HIGH, "
+                                          f"{vuln_data.get('medium', 0)} MED, {vuln_data.get('low', 0)} LOW", flush=True)
+                            else:
+                                if in_ci:
+                                    print(f"  ✓ Completed in {elapsed:.1f}s - No vulnerabilities found", flush=True)
                         elif vuln_data > 0:
                             summary.write(f"  Found {vuln_data} vulnerabilities\n")
+                            if in_ci:
+                                print(f"  ✓ Completed in {elapsed:.1f}s - Found {vuln_data} vulnerabilities", flush=True)
+                        else:
+                            if in_ci:
+                                print(f"  ✓ Completed in {elapsed:.1f}s", flush=True)
 
                         scanned += 1
                     else:
@@ -393,6 +419,11 @@ def main():
                             summary.write(f"  → Failed even with ICSP mirror: {scan_image}\n")
                         else:
                             summary.write(f"✗ {image_key}: {full_image} - Scan failed ({elapsed:.1f}s)\n")
+
+                        # Print failure in CI
+                        if in_ci:
+                            print(f"  ✗ FAILED in {elapsed:.1f}s", flush=True)
+
                         failed += 1
 
                     total_images += 1
