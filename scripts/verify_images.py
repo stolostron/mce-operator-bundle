@@ -114,19 +114,19 @@ def main():
     override_arch = os.getenv('OVERRIDE_ARCH')
     override_os = os.getenv('OVERRIDE_OS')
     icsp_config_path = os.getenv('ICSP_CONFIG', 'icsp-config.json')
-    acm_version = os.getenv('ACM_VERSION', '')
+    mce_version = os.getenv('MCE_VERSION', '')
 
     # Determine version from extras files if not provided
-    if not acm_version:
+    if not mce_version:
         extras_path = Path(extras_dir)
         if extras_path.exists():
             json_files = sorted(extras_path.glob('*.json'))
             if json_files:
-                acm_version = json_files[0].stem  # e.g., "2.17.0"
+                mce_version = json_files[0].stem  # e.g., "2.17.0"
 
     # Create organized reports directory structure
-    if acm_version:
-        version_dir = Path(reports_dir) / acm_version
+    if mce_version:
+        version_dir = Path(reports_dir) / mce_version
         version_dir.mkdir(parents=True, exist_ok=True)
         reports_dir = str(version_dir)
         console.print(f"[blue]Verification reports will be saved to: {version_dir}[/blue]\n")

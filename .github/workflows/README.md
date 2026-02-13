@@ -122,7 +122,7 @@ To run the scan manually:
 2. Click "Weekly CVE Scan" in the left sidebar
 3. Click "Run workflow" button
 4. (Optional) Override settings:
-   - **acm_version**: Scan a specific version (e.g., `2.17.0`)
+   - **mce_version**: Scan a specific version (e.g., `2.17.0`)
    - **severity**: Change severity filter (e.g., `CRITICAL` only)
 5. Select branch and click "Run workflow"
 
