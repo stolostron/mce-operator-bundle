@@ -223,7 +223,7 @@ def main():
     output_json = os.getenv('OUTPUT_JSON', 'false').lower() == 'true'
     format_type = 'json' if output_json else 'table'
     icsp_config_path = os.getenv('ICSP_CONFIG', 'icsp-config.json')
-    acm_version = os.getenv('ACM_VERSION', '')
+    acm_version = os.getenv('MCE_VERSION', '')
 
     if not check_trivy_available():
         console.print("[red]Error: trivy is not installed[/red]")
