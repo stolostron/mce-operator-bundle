@@ -32,6 +32,14 @@ cfg_supported_archs=("amd64" "ppc64le" "s390x" "arm64")
 cfg_first_eus_release_xy=2.6
 cfg_eus_release_cadence=2
 
+# Special configuration for version resync with ACM:
+# MCE is jumping from 2.11 to 2.17 to align with ACM versioning.
+# This sets the minimum upgrade version for skipRange calculation.
+#
+# NOTE: For normal sequential releases (e.g., 2.18), remove or comment out this
+# setting to use automatic skipRange calculation. Only set this for version jumps.
+cfg_min_upgrade_version="2.11.0"
+
 #-----------------------------------------------------------------
 # Config properties that are unique for each product (ACM vs. MCE)
 # but usually constant across releases of the product.
