@@ -1,4 +1,4 @@
-.PHONY: help list-images list-images-full check-dummy-shas verify-images verify-images-icsp verify-images-podman verify-images-arm64 verify-images-amd64 verify-images-ppc64le verify-images-s390x verify-images-latest verify-release scan-release scan-cves scan-cves-icsp scan-cves-json scan-cves-json-icsp image-report clean-reports check-tools install-deps all-checks all-checks-latest full-scan make-scripts-executable setup-release
+.PHONY: help list-images list-images-full check-dummy-shas verify-images verify-images-icsp verify-images-podman verify-images-arm64 verify-images-amd64 verify-images-ppc64le verify-images-s390x verify-release scan-release scan-cves scan-cves-icsp scan-cves-json scan-cves-json-icsp image-report clean-reports check-tools install-deps all-checks full-scan make-scripts-executable setup-release
 
 # Configuration
 export EXTRAS_DIR ?= extras
@@ -44,7 +44,9 @@ list-images-full: ## List all images with full SHA digests
 check-dummy-shas: ## Check for dummy or flagged SHA digests
 	@python3 $(SCRIPTS_DIR)/check_dummy_shas.py
 
-verify-images: ## Verify all images are pullable using skopeo
+verify-images: ## Pull latest changes and verify all images are pullable using skopeo
+	@echo "Pulling latest changes from current branch..."
+	@git pull origin $$(git branch --show-current)
 	@python3 $(SCRIPTS_DIR)/verify_images.py
 
 verify-images-icsp: ## Verify images using ICSP registry redirects (for pre-GA testing)
@@ -64,11 +66,6 @@ verify-images-ppc64le: ## Verify images for ppc64le architecture
 
 verify-images-s390x: ## Verify images for s390x architecture
 	@OVERRIDE_ARCH=s390x OVERRIDE_OS=linux python3 $(SCRIPTS_DIR)/verify_images.py
-
-verify-images-latest: ## Pull latest changes and verify images
-	@echo "Pulling latest changes from current branch..."
-	@git pull origin $$(git branch --show-current)
-	@$(MAKE) verify-images
 
 verify-release: setup-release verify-images ## Verify images for a release (Usage: make verify-release RELEASE=backplane-2.17)
 
@@ -102,13 +99,8 @@ slack-cve-report-detailed: ## Send detailed CVE report to Slack
 setup-release: ## Set up extras/ from a release branch (Usage: make setup-release RELEASE=backplane-2.17)
 	@bash $(SCRIPTS_DIR)/setup_release.sh $(RELEASE)
 
-all-checks: check-dummy-shas verify-images image-report ## Run all verification checks (no CVE scan)
+all-checks: check-dummy-shas verify-images image-report ## Pull latest changes and run all verification checks (no CVE scan)
 	@echo "All checks complete!"
-
-all-checks-latest: ## Pull latest changes and run all verification checks
-	@echo "Pulling latest changes from current branch..."
-	@git pull origin $$(git branch --show-current)
-	@$(MAKE) all-checks
 
 full-scan: all-checks scan-cves ## Run all checks including CVE scanning
 	@echo "Full scan complete!"
