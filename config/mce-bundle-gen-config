@@ -28,17 +28,22 @@ cfg_supported_op_syss=("linux")
 cfg_supported_archs=("amd64" "ppc64le" "s390x" "arm64")
 
 # Specify EUS-release configuration:
+#
+# MCE resynced with ACM at version 2.17, switching from an even EUS pattern
+# (2.6, 2.8, 2.10) to an odd EUS pattern (2.17, 2.19, 2.21...) to match ACM.
+# Version 2.17 represents a new baseline for the EUS cadence.
 
-cfg_first_eus_release_xy=2.6
+cfg_first_eus_release_xy=2.17
 cfg_eus_release_cadence=2
 
 # Special configuration for version resync with ACM:
-# MCE is jumping from 2.11 to 2.17 to align with ACM versioning.
-# This sets the minimum upgrade version for skipRange calculation.
+# MCE jumped from 2.11 to 2.17 to align with ACM versioning.
+# This sets the minimum upgrade version to allow EUS-to-EUS upgrades
+# from the last even-pattern EUS release (2.10) to the first odd-pattern
+# EUS release (2.17).
 #
-# NOTE: For normal sequential releases (e.g., 2.18), remove or comment out this
-# setting to use automatic skipRange calculation. Only set this for version jumps.
-cfg_min_upgrade_version="2.11.0"
+# NOTE: For 2.18+, adjust this value or remove to use automatic calculation.
+cfg_min_upgrade_version="2.10.0"
 
 #-----------------------------------------------------------------
 # Config properties that are unique for each product (ACM vs. MCE)
