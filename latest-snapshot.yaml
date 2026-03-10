@@ -2,61 +2,73 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/ocm?rev=9596f423bcb2de883a14a028ca31cb3f9db9ba2b
-    build.appstudio.redhat.com/commit_sha: 9596f423bcb2de883a14a028ca31cb3f9db9ba2b
+    build.appstudio.openshift.io/repo: https://github.com/openshift/image-based-install-operator?rev=4ad69a15bd9835ef669897a0bcc83cbd5b5681f2
+    build.appstudio.redhat.com/commit_sha: 4ad69a15bd9835ef669897a0bcc83cbd5b5681f2
     build.appstudio.redhat.com/target_branch: backplane-2.10
     pac.test.appstudio.openshift.io/branch: backplane-2.10
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "66390774381"
+    pac.test.appstudio.openshift.io/check-run-id: "66458820788"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-sevtos
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-fyfsqf
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/work-mce-210-on-push-wjlfq
+    pac.test.appstudio.openshift.io/installation-id: "35333059"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/image-based-install-operator-mce-210-on-push-24l86
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-2.10"
-    pac.test.appstudio.openshift.io/original-prname: work-mce-210-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/ocm
-    pac.test.appstudio.openshift.io/repository: addon-manager-mce-25
+    pac.test.appstudio.openshift.io/original-prname: image-based-install-operator-mce-210-on-push
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/image-based-install-operator
+    pac.test.appstudio.openshift.io/repository: image-based-install-operator-mce-27
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
-    pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: 9596f423bcb2de883a14a028ca31cb3f9db9ba2b
-    pac.test.appstudio.openshift.io/sha-title: 'chore: adopt shared lint scripts from
-      sdk-go (#638)'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/ocm/commit/9596f423bcb2de883a14a028ca31cb3f9db9ba2b
-    pac.test.appstudio.openshift.io/source-branch: backplane-2.10
-    pac.test.appstudio.openshift.io/source-repo-url: ""
+    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
+    pac.test.appstudio.openshift.io/sha: 4ad69a15bd9835ef669897a0bcc83cbd5b5681f2
+    pac.test.appstudio.openshift.io/sha-title: |-
+      Allow ICI status to be restored
+
+      Adds the restore status annotation to ICI CRs and also waits for the
+      status to be added to resources that are created by a restore operation.
+
+      Because the spec and status need to be set by two different API calls to
+      the API server the controller needs to know when to wait for the status
+      to be set before initializing the conditions.
+
+      Initializing the conditions in a restore scenario can lead to a conflict
+      where the restore fails and the old status doesn't get set.
+
+      https://issues.redhat.com/browse/MGMT-22276
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/image-based-install-operator/commit/4ad69a15bd9835ef669897a0bcc83cbd5b5681f2
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-2.10
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/image-based-install-operator
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: ocm
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-03-10T02:04:26Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-210-release-mce-210-20260310-015057-000":{"lastUpdateTime":"2026-03-10T02:05:05.746891152Z"}}}'
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: image-based-install-operator
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-03-10T13:47:27Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-210-release-mce-210-20260310-131715-000":{"lastUpdateTime":"2026-03-10T13:48:01.79398228Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1773107457000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/ocm
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-210","status":"TestPassed","lastUpdateTime":"2026-03-10T02:05:05.746891152Z","details":"Integration
-      test passed","startTime":"2026-03-10T02:04:27.141021069Z","completionTime":"2026-03-10T02:05:05.746891152Z","testPipelineRunName":"enterprise-contract-mce-210-4jrqw"}]'
-  creationTimestamp: "2026-03-10T02:04:26Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1773148635000"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/image-based-install-operator
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-210","status":"TestPassed","lastUpdateTime":"2026-03-10T13:48:01.79398228Z","details":"Integration
+      test passed","startTime":"2026-03-10T13:47:27.746240366Z","completionTime":"2026-03-10T13:48:01.79398228Z","testPipelineRunName":"enterprise-contract-mce-210-7zss4"}]'
+  creationTimestamp: "2026-03-10T13:47:27Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-210
-    appstudio.openshift.io/build-pipelinerun: work-mce-210-on-push-wjlfq
-    appstudio.openshift.io/component: work-mce-210
+    appstudio.openshift.io/build-pipelinerun: image-based-install-operator-mce-210-on-push-24l86
+    appstudio.openshift.io/component: image-based-install-operator-mce-210
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "66390774381"
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: work-mce-210-on-push
-    pac.test.appstudio.openshift.io/repository: addon-manager-mce-25
-    pac.test.appstudio.openshift.io/sha: 9596f423bcb2de883a14a028ca31cb3f9db9ba2b
+    pac.test.appstudio.openshift.io/check-run-id: "66458820788"
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/original-prname: image-based-install-operator-mce-210-on-push
+    pac.test.appstudio.openshift.io/repository: image-based-install-operator-mce-27
+    pac.test.appstudio.openshift.io/sha: 4ad69a15bd9835ef669897a0bcc83cbd5b5681f2
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: ocm
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1773108258"
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: image-based-install-operator
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1773150440"
     test.appstudio.openshift.io/type: component
-  name: release-mce-210-20260310-015057-000
+  name: release-mce-210-20260310-131715-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -65,12 +77,20 @@ metadata:
     kind: Application
     name: release-mce-210
     uid: 991ec411-638f-453f-837e-5b8d3562aa61
-  resourceVersion: "7665331508"
-  uid: ab61fda7-3bb8-4ace-b465-639619e0bd96
+  resourceVersion: "7674903882"
+  uid: d9c50555-cd9d-4db4-962b-8f79f5f65a3d
 spec:
   application: release-mce-210
   artifacts: {}
   components:
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/clusterclaims-controller-mce-210@sha256:f63eed4ca9a100454de9c49dbe1f6b84e240e28339e47cd5b71a2bc4d1ee2f9e
+    name: clusterclaims-controller-mce-210
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 970de14d21dffdbd59d22c5a5b6abe6e10f3e1ff
+        url: https://github.com/stolostron/clusterclaims-controller
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-210@sha256:3dc8311988962f2c21808ca0c55981758927a3e574055933f7a9934af7ac2ac3
     name: kube-rbac-proxy-mce-210
     source:
@@ -103,7 +123,7 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: cc613bcdb92a39c0d2253db723a71ee4c748287c
         url: https://github.com/stolostron/cluster-curator-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-210@sha256:d85d34c6ee2018a944a697cb9083eb43803a505569e6a839accf0965885050af
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-210@sha256:1bb7d3355248a4c23c41f788934653602147e6baacc1987e6309dee038a57b4b
     name: discovery-operator-mce-210
     source:
       git:
@@ -115,6 +135,8 @@ spec:
     name: work-mce-210
     source:
       git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.work.rhtap
         revision: 9596f423bcb2de883a14a028ca31cb3f9db9ba2b
         url: https://github.com/stolostron/ocm
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-agent-mce-210@sha256:885eb69f1ad9605d8641d10523e644abe33b382fb8501e8797f1d46d63db203a
@@ -285,13 +307,11 @@ spec:
         dockerfileUrl: Containerfile.cli
         revision: 809e35b3fbd22f10ee8478df7dfc283e9ff202cd
         url: https://github.com/openshift/hypershift
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/image-based-install-operator-mce-210@sha256:4f2b4b9dde09c886462f553694c2e9c175d17c4820980a93c1c21acfe0c205f8
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/image-based-install-operator-mce-210@sha256:2ee1032bad5c94e067cac39a2f2562d11e86a8f7e6e61401482358eda8235b74
     name: image-based-install-operator-mce-210
     source:
       git:
-        context: ./
-        dockerfileUrl: Dockerfile
-        revision: f95cece4713b974aadcd2a59aa627cc405f0ff82
+        revision: 4ad69a15bd9835ef669897a0bcc83cbd5b5681f2
         url: https://github.com/openshift/image-based-install-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-210@sha256:8d72fefd66e21686185032269b478983e1a95863b2dbbd7df5b4f89f7a3bede1
     name: multicloud-manager-mce-210
@@ -309,28 +329,20 @@ spec:
         dockerfileUrl: build/Dockerfile.placement.rhtap
         revision: 9596f423bcb2de883a14a028ca31cb3f9db9ba2b
         url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/clusterclaims-controller-mce-210@sha256:f63eed4ca9a100454de9c49dbe1f6b84e240e28339e47cd5b71a2bc4d1ee2f9e
-    name: clusterclaims-controller-mce-210
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 970de14d21dffdbd59d22c5a5b6abe6e10f3e1ff
-        url: https://github.com/stolostron/clusterclaims-controller
 status:
   conditions:
-  - lastTransitionTime: "2026-03-10T02:05:05Z"
+  - lastTransitionTime: "2026-03-10T13:48:01Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-03-10T02:05:05Z"
+  - lastTransitionTime: "2026-03-10T13:48:01Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-03-10T02:05:05Z"
+  - lastTransitionTime: "2026-03-10T13:48:02Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
