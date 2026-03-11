@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2026-03-11T16:28:55Z'
+    createdAt: '2026-03-11T22:04:51Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -29,9 +29,9 @@ metadata:
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
     olm.properties: '[{"type": "olm.maxOpenShiftVersion", "value": "4.22"}]'
-    olm.skipRange: '>=2.10.0 <2.11.0'
+    olm.skipRange: '>=2.10.0 <2.11.1'
     operators.openshift.io/must-gather-image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:5e54486e12633bee97a5f278f2c871ca12fc55998a275b1d9fea0e5c1c1197ad
-  name: multicluster-engine.v2.11.0
+  name: multicluster-engine.v2.11.1
   namespace: placeholder
   labels:
     operatorframework.io/arch.amd64: supported
@@ -41,7 +41,7 @@ metadata:
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 2.11.0
+  version: 2.11.1
   provider:
     name: Red Hat
   maintainers:
@@ -3560,7 +3560,7 @@ spec:
                 - name: OPERAND_IMAGE_CLUSTER_PROXY
                   value: registry.redhat.io/multicluster-engine/cluster-proxy-rhel9@sha256:a466baba07813dc92f12ff750d3888cb9abbdd63d09282ac307e19d6ba82e8f0
                 - name: OPERAND_IMAGE_CONSOLE_MCE
-                  value: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:392d2ecf316b38074f3cf282b60180bf34f3f247fd17ca6720378329555a5358
+                  value: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:7e59c34fccb1a8e92b938a969f86336e1f072dab8521a0721a9fc31b90fc4c5f
                 - name: OPERAND_IMAGE_DISCOVERY_OPERATOR
                   value: registry.redhat.io/multicluster-engine/discovery-rhel9@sha256:55098a756fc588c7f5cdf5803c330cd2c6c1193d4497de70af0930aedcf06423
                 - name: OPERAND_IMAGE_OPENSHIFT_HIVE
@@ -3608,7 +3608,7 @@ spec:
                 - name: OPERAND_IMAGE_POSTGRESQL_13
                   value: registry.redhat.io/rhel9/postgresql-13@sha256:0cdc22080abff4f4e82e369d1e36e3012a32c8b2d0fe88749ee82304a0546ed6
                 - name: OPERATOR_VERSION
-                  value: 2.11.0
+                  value: 2.11.1
                 - name: OPERATOR_PACKAGE
                   value: multicluster-engine
                 image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:dcf6d3d4d32b5e80ec4c377b266bc3ed0d7102125a8e94412723341b0c3fd1c3
@@ -3654,6 +3654,7 @@ spec:
                 secret:
                   defaultMode: 420
                   secretName: multicluster-engine-operator-webhook
+  replaces: multicluster-engine.v2.11.0
   relatedImages:
   - name: addon_manager
     image: registry.redhat.io/multicluster-engine/addon-manager-rhel9@sha256:e72db05b6745d10415548996736d11d5959988939bbc117e2a99cbecd8357bea
@@ -3686,7 +3687,7 @@ spec:
   - name: cluster_proxy
     image: registry.redhat.io/multicluster-engine/cluster-proxy-rhel9@sha256:a466baba07813dc92f12ff750d3888cb9abbdd63d09282ac307e19d6ba82e8f0
   - name: console_mce
-    image: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:392d2ecf316b38074f3cf282b60180bf34f3f247fd17ca6720378329555a5358
+    image: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:7e59c34fccb1a8e92b938a969f86336e1f072dab8521a0721a9fc31b90fc4c5f
   - name: discovery_operator
     image: registry.redhat.io/multicluster-engine/discovery-rhel9@sha256:55098a756fc588c7f5cdf5803c330cd2c6c1193d4497de70af0930aedcf06423
   - name: openshift_hive
