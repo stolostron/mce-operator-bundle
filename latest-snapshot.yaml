@@ -2,65 +2,76 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/ocm?rev=d4c1e6404f456cc7001fc95d517bf25d68095e4f
-    build.appstudio.redhat.com/commit_sha: d4c1e6404f456cc7001fc95d517bf25d68095e4f
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/managedcluster-import-controller?rev=64faf0abf5de5f7030969347cb9e5957e9bbe410
+    build.appstudio.redhat.com/commit_sha: 64faf0abf5de5f7030969347cb9e5957e9bbe410
     build.appstudio.redhat.com/target_branch: backplane-2.11
     pac.test.appstudio.openshift.io/branch: backplane-2.11
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "66747462781"
+    pac.test.appstudio.openshift.io/check-run-id: "66775435362"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-ihegvi
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-wgllaw
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/registration-operator-mce-211-on-push-nnzbn
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/managedcluster-import-controller-addon-mce-211-on-push-9btxn
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-2.11"
-    pac.test.appstudio.openshift.io/original-prname: registration-operator-mce-211-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/ocm
-    pac.test.appstudio.openshift.io/repository: addon-manager-mce-25
+    pac.test.appstudio.openshift.io/original-prname: managedcluster-import-controller-addon-mce-211-on-push
+    pac.test.appstudio.openshift.io/pull-request: "1023"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/managedcluster-import-controller
+    pac.test.appstudio.openshift.io/repository: managedcluster-import-controller
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: xuezhaojun
-    pac.test.appstudio.openshift.io/sha: d4c1e6404f456cc7001fc95d517bf25d68095e4f
-    pac.test.appstudio.openshift.io/sha-title: "\U0001F331 Use sdk-go ensure-envtest.sh
-      for envtest setup (#649)\n\nReplace the legacy inline setup-envtest installation
-      and kubebuilder-tools\ndownload with the reusable ensure-envtest.sh script from
-      sdk-go. The new\napproach auto-detects K8s and setup-envtest versions from go.mod,
-      includes\na three-tier version fallback, and stores binaries in _output/tools/bin.\n\nSigned-off-by:
-      xuezhaojun <zxue@redhat.com>\nCo-authored-by: Claude Opus 4.6 <noreply@anthropic.com>"
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/ocm/commit/d4c1e6404f456cc7001fc95d517bf25d68095e4f
+    pac.test.appstudio.openshift.io/sha: 64faf0abf5de5f7030969347cb9e5957e9bbe410
+    pac.test.appstudio.openshift.io/sha-title: |-
+      Fix e2e leader election race condition and improve debugging (#1023)
+
+      - Add more debugging info to E2E workflow failure logs: increase pod log
+        tail from 100 to 500 lines, collect previous container logs
+      - Fix e2e race condition by forcing agent pod restart before leader
+        election check
+      - Add delay before leader election check to avoid race with deployment
+        rollout
+      - Fix e2e leader election check by waiting for deployment rollout
+        completion (updatedReplicas and availableReplicas match desired)
+
+      Signed-off-by: xuezhaojun <zxue@redhat.com>
+      Co-authored-by: Claude Opus 4.6 <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/managedcluster-import-controller/commit/64faf0abf5de5f7030969347cb9e5957e9bbe410
     pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-2.11
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/ocm
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/managedcluster-import-controller
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: ocm
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-03-12T06:51:23Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-211-release-mce-211-20260312-063040-000":{"lastUpdateTime":"2026-03-12T06:51:54.712669439Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: managedcluster-import-controller
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-03-12T10:53:53Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-211-release-mce-211-20260312-104405-000":{"lastUpdateTime":"2026-03-12T10:54:25.220222329Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1773297040000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/ocm
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-211","status":"TestPassed","lastUpdateTime":"2026-03-12T06:51:54.712669439Z","details":"Integration
-      test passed","startTime":"2026-03-12T06:51:23.610922164Z","completionTime":"2026-03-12T06:51:54.712669439Z","testPipelineRunName":"enterprise-contract-mce-211-4k857"}]'
-  creationTimestamp: "2026-03-12T06:51:23Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1773312245000"
+    test.appstudio.openshift.io/pr-status: merged
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/managedcluster-import-controller
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-211","status":"TestPassed","lastUpdateTime":"2026-03-12T10:54:25.220222329Z","details":"Integration
+      test passed","startTime":"2026-03-12T10:53:53.156133151Z","completionTime":"2026-03-12T10:54:25.220222329Z","testPipelineRunName":"enterprise-contract-mce-211-wj8fh"}]'
+  creationTimestamp: "2026-03-12T10:53:53Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-211
-    appstudio.openshift.io/build-pipelinerun: registration-operator-mce-211-on-push-nnzbn
-    appstudio.openshift.io/component: registration-operator-mce-211
+    appstudio.openshift.io/build-pipelinerun: managedcluster-import-controller-addon-mce-211-on-push-9btxn
+    appstudio.openshift.io/component: managedcluster-import-controller-addon-mce-211
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "66747462781"
+    pac.test.appstudio.openshift.io/check-run-id: "66775435362"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: registration-operator-mce-211-on-push
-    pac.test.appstudio.openshift.io/repository: addon-manager-mce-25
-    pac.test.appstudio.openshift.io/sha: d4c1e6404f456cc7001fc95d517bf25d68095e4f
+    pac.test.appstudio.openshift.io/original-prname: managedcluster-import-controller-addon-mce-211-on-push
+    pac.test.appstudio.openshift.io/pull-request: "1023"
+    pac.test.appstudio.openshift.io/repository: managedcluster-import-controller
+    pac.test.appstudio.openshift.io/sha: 64faf0abf5de5f7030969347cb9e5957e9bbe410
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: ocm
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1773298278"
+    pac.test.appstudio.openshift.io/url-repository: managedcluster-import-controller
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1773312826"
     test.appstudio.openshift.io/type: component
-  name: release-mce-211-20260312-063040-000
+  name: release-mce-211-20260312-104405-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -69,8 +80,8 @@ metadata:
     kind: Application
     name: release-mce-211
     uid: 921a3f28-4836-45b7-a77b-5415074a8225
-  resourceVersion: "7711075753"
-  uid: a3bbafc5-5cbc-4e78-a3bb-6923b7414bce
+  resourceVersion: "7714353618"
+  uid: e8a7e78b-e10c-42a1-ac6b-c26d563dc62b
 spec:
   application: release-mce-211
   artifacts: {}
@@ -255,6 +266,8 @@ spec:
     name: registration-operator-mce-211
     source:
       git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.registration-operator.rhtap
         revision: d4c1e6404f456cc7001fc95d517bf25d68095e4f
         url: https://github.com/stolostron/ocm
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-webhook-config-mce-211@sha256:4f1ad92e21d3c5ff4c2cfb90e8c3d4e43e997d7809734bdca4e10c942f618876
@@ -321,28 +334,26 @@ spec:
         dockerfileUrl: Containerfile.operator
         revision: 259151d15cdfddab66e557cd40878bd0aefe78f4
         url: https://github.com/stolostron/kube-rbac-proxy
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managedcluster-import-controller-addon-mce-211@sha256:dee4c736b50c130d9b118b184f9fca147bc42ecb080b79ea44cf18f5884f7e24
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managedcluster-import-controller-addon-mce-211@sha256:1c1eb1b8e8915ebb27af7d501b5c405d10f4a733e764b5d830f96ed0b5fee4f2
     name: managedcluster-import-controller-addon-mce-211
     source:
       git:
-        context: ./
-        dockerfileUrl: build/Dockerfile.rhtap
-        revision: 742df1683e90a52155cf893d6be822676afb184b
+        revision: 64faf0abf5de5f7030969347cb9e5957e9bbe410
         url: https://github.com/stolostron/managedcluster-import-controller
 status:
   conditions:
-  - lastTransitionTime: "2026-03-12T06:51:54Z"
+  - lastTransitionTime: "2026-03-12T10:54:25Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-03-12T06:51:54Z"
+  - lastTransitionTime: "2026-03-12T10:54:25Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-03-12T06:51:55Z"
+  - lastTransitionTime: "2026-03-12T10:54:26Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
