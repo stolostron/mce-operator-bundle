@@ -2,59 +2,66 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/openshift/image-based-install-operator?rev=6ce0bd53eaca0b5b0ad6d2665fb381894b397113
-    build.appstudio.redhat.com/commit_sha: 6ce0bd53eaca0b5b0ad6d2665fb381894b397113
-    build.appstudio.redhat.com/target_branch: backplane-2.8
-    pac.test.appstudio.openshift.io/branch: backplane-2.8
-    pac.test.appstudio.openshift.io/check-run-id: "68276884874"
+    build.appstudio.openshift.io/repo: https://github.com/openshift/hive?rev=14bd5ee6b2a5f9af375f5eafc6a7d21c814b082d
+    build.appstudio.redhat.com/commit_sha: 14bd5ee6b2a5f9af375f5eafc6a7d21c814b082d
+    build.appstudio.redhat.com/target_branch: master
+    pac.test.appstudio.openshift.io/branch: master
+    pac.test.appstudio.openshift.io/cancel-in-progress: "false"
+    pac.test.appstudio.openshift.io/check-run-id: "68375128429"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-qdxjgq
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-jqotue
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35333059"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/image-based-install-operator-mce-28-on-push-9vtmc
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hive-mce-28-on-push-cr42v
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "backplane-2.8"
-    pac.test.appstudio.openshift.io/original-prname: image-based-install-operator-mce-28-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/image-based-install-operator
-    pac.test.appstudio.openshift.io/repository: image-based-install-operator-mce-27
+      == "master" && !files.all.all(x, x.matches('^docs/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
+    pac.test.appstudio.openshift.io/original-prname: hive-mce-28-on-push
+    pac.test.appstudio.openshift.io/pull-request: "2876"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hive
+    pac.test.appstudio.openshift.io/repository: hive-master
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
-    pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: 6ce0bd53eaca0b5b0ad6d2665fb381894b397113
-    pac.test.appstudio.openshift.io/sha-title: 'NO-ISSUE: bumping to to 1.25 in the
-      backplane-2.8 branch'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/image-based-install-operator/commit/6ce0bd53eaca0b5b0ad6d2665fb381894b397113
-    pac.test.appstudio.openshift.io/source-branch: backplane-2.8
-    pac.test.appstudio.openshift.io/source-repo-url: ""
+    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
+    pac.test.appstudio.openshift.io/sha: 14bd5ee6b2a5f9af375f5eafc6a7d21c814b082d
+    pac.test.appstudio.openshift.io/sha-title: |-
+      Merge pull request #2876 from 2uasimojo/HIVE-3128/cve-golang-grpc
+
+      HIVE-3128: CVE-2026-33186: Bump golang/grpc
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hive/commit/14bd5ee6b2a5f9af375f5eafc6a7d21c814b082d
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/master
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: image-based-install-operator
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-03-24T00:33:11Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-28-release-mce-28-20260324-000314-000":{"lastUpdateTime":"2026-03-24T00:34:02.664068368Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: hive
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-03-24T15:26:24Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-28-release-mce-28-20260324-144242-000":{"lastUpdateTime":"2026-03-24T15:27:05.858698591Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1774310594000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/image-based-install-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-28","status":"TestPassed","lastUpdateTime":"2026-03-24T00:34:02.664068368Z","details":"Integration
-      test passed","startTime":"2026-03-24T00:33:12.026415084Z","completionTime":"2026-03-24T00:34:02.664068368Z","testPipelineRunName":"enterprise-contract-mce-28-d9tr4"}]'
-  creationTimestamp: "2026-03-24T00:33:11Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1774363362000"
+    test.appstudio.openshift.io/pr-status: merged
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-28","status":"TestPassed","lastUpdateTime":"2026-03-24T15:27:05.858698591Z","details":"Integration
+      test passed","startTime":"2026-03-24T15:26:24.369687131Z","completionTime":"2026-03-24T15:27:05.858698591Z","testPipelineRunName":"enterprise-contract-mce-28-jkxn2"}]'
+  creationTimestamp: "2026-03-24T15:26:24Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-28
-    appstudio.openshift.io/build-pipelinerun: image-based-install-operator-mce-28-on-push-9vtmc
-    appstudio.openshift.io/component: image-based-install-operator-mce-28
-    pac.test.appstudio.openshift.io/check-run-id: "68276884874"
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: image-based-install-operator-mce-28-on-push
-    pac.test.appstudio.openshift.io/repository: image-based-install-operator-mce-27
-    pac.test.appstudio.openshift.io/sha: 6ce0bd53eaca0b5b0ad6d2665fb381894b397113
+    appstudio.openshift.io/build-pipelinerun: hive-mce-28-on-push-cr42v
+    appstudio.openshift.io/component: hive-mce-28
+    pac.test.appstudio.openshift.io/cancel-in-progress: "false"
+    pac.test.appstudio.openshift.io/check-run-id: "68375128429"
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/original-prname: hive-mce-28-on-push
+    pac.test.appstudio.openshift.io/pull-request: "2876"
+    pac.test.appstudio.openshift.io/repository: hive-master
+    pac.test.appstudio.openshift.io/sha: 14bd5ee6b2a5f9af375f5eafc6a7d21c814b082d
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: image-based-install-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1774312384"
+    pac.test.appstudio.openshift.io/url-repository: hive
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1774365977"
     test.appstudio.openshift.io/type: component
-  name: release-mce-28-20260324-000314-000
+  name: release-mce-28-20260324-144242-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -63,8 +70,8 @@ metadata:
     kind: Application
     name: release-mce-28
     uid: 1bb16185-3532-42f1-8819-a53d8cfd38dc
-  resourceVersion: "7891132587"
-  uid: 7a555bcc-91fb-48a2-a8ea-88c924e8b499
+  resourceVersion: "7904484570"
+  uid: 0e05d77b-c2f3-432f-bb0e-94d74c51f1af
 spec:
   application: release-mce-28
   artifacts: {}
@@ -161,6 +168,8 @@ spec:
     name: image-based-install-operator-mce-28
     source:
       git:
+        context: ./
+        dockerfileUrl: Dockerfile
         revision: 6ce0bd53eaca0b5b0ad6d2665fb381894b397113
         url: https://github.com/openshift/image-based-install-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-28@sha256:555ec826ef26af4c71a3e4e03fab6313469d9d94156d12286554028a42aaa82f
@@ -179,13 +188,11 @@ spec:
         dockerfileUrl: build/Dockerfile.registration.rhtap
         revision: d507cc0ef619dc2f8abc677757149f4842ceab80
         url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-28@sha256:1b5c840c288b5c82a36b65ff4bdb96240353d8b92d5580297b89977c0695f46b
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-28@sha256:2d2fece9ca11f8cbe9d4de97f8433f3551a2665e7f7fc62a5c4b469e9c1112c4
     name: hive-mce-28
     source:
       git:
-        context: ./
-        dockerfileUrl: Dockerfile
-        revision: d1a088c1c8b19894cc4faa2e673889e806d8df2d
+        revision: 14bd5ee6b2a5f9af375f5eafc6a7d21c814b082d
         url: https://github.com/openshift/hive
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-28@sha256:def27750deb832633a0e3752827d4dac0bb3c4b1eaae2a9b8c05bf238ed343c6
     name: backplane-operator-mce-28
@@ -285,18 +292,18 @@ spec:
         url: https://github.com/stolostron/ocm
 status:
   conditions:
-  - lastTransitionTime: "2026-03-24T00:34:02Z"
+  - lastTransitionTime: "2026-03-24T15:27:05Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-03-24T00:34:02Z"
+  - lastTransitionTime: "2026-03-24T15:27:05Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-03-24T00:34:02Z"
+  - lastTransitionTime: "2026-03-24T15:27:05Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
