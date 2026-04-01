@@ -2,11 +2,11 @@
 
 ## Weekly CVE Scan Workflow
 
-The `weekly-cve-scan.yml` workflow automatically scans all MCE images for CVEs and posts results to Slack.
+The `weekly-cve-scan.yml` workflow automatically scans all ACM images for CVEs and posts results to Slack.
 
 ### Schedule
 - **Runs:** Every Friday at 9 AM UTC (4 AM EST / 5 AM EDT)
-- **Scans:** Automatically scans the 3 most recent releases (2.17, 2.11, 2.10)
+- **Scans:** Automatically scans the 3 most recent releases (2.17, 2.16, 2.15)
 - **Result:** 3 separate Slack notifications (one per release with trend data)
 - **Manual Trigger:** Can be triggered manually from the Actions tab for any single release
 
@@ -16,12 +16,12 @@ The `weekly-cve-scan.yml` workflow automatically scans all MCE images for CVEs a
 
 These can be configured at the repository level and changed without modifying the workflow:
 
-**`MCE_VERSION`** (optional)
+**`ACM_VERSION`** (optional)
 - Default: `2.17.0`
-- Description: MCE version to scan (should match your extras/*.json filename)
+- Description: ACM version to scan (should match your extras/*.json filename)
 - Example: `2.17.0`
 
-**`TRIVY_SEVERITY`** (optional)
+**`SCAN_SEVERITY`** (optional)
 - Default: `HIGH,CRITICAL`
 - Description: CVE severity levels to scan for
 - Example: `CRITICAL`, `HIGH,CRITICAL`, `HIGH,CRITICAL,MEDIUM`
@@ -102,14 +102,14 @@ The workflow supports two Slack integration modes:
 
 **Note:** If both `SLACK_CVE_WEBHOOK_URL` and `SLACK_BOT_OAUTH_TOKEN` are configured, the workflow will use threaded mode (bot token takes precedence).
 
-#### 2. `QUAY_IO_MCED_RGY_PASSWORD`
+#### 2. `QUAY_IO_ACMD_RGY_PASSWORD`
 
 Your quay.io service account password for pulling images.
 
 **To add to GitHub:**
 1. Go to your repo → Settings → Secrets and variables → Actions
 2. Click "New repository secret"
-3. Name: `QUAY_IO_MCED_RGY_PASSWORD`
+3. Name: `QUAY_IO_ACMD_RGY_PASSWORD`
 4. Value: Paste your quay.io password for the `acmd+rgy` service account
 5. Click "Add secret"
 
@@ -122,7 +122,7 @@ To run the scan manually:
 2. Click "Weekly CVE Scan" in the left sidebar
 3. Click "Run workflow" button
 4. (Optional) Override settings:
-   - **mce_version**: Scan a specific version (e.g., `2.17.0`)
+   - **acm_version**: Scan a specific version (e.g., `2.17.0`)
    - **severity**: Change severity filter (e.g., `CRITICAL` only)
 5. Select branch and click "Run workflow"
 
@@ -132,7 +132,7 @@ Manual runs allow you to override the repository variables for one-time scans.
 
 1. ✅ Checks out scripts from main branch and image data from release branch
 2. ✅ Installs Python dependencies (rich library)
-3. ✅ Installs Trivy (CVE scanner)
+3. ✅ Installs Grype (CVE scanner)
 4. ✅ Installs Skopeo (image verification)
 5. ✅ Sets up authentication for quay.io using podman
 6. ✅ Verifies images are accessible with ICSP mirrors
@@ -201,7 +201,7 @@ reports/
 ├── 2.17.0/
 │   ├── 2.17.0_cve_summary.txt          # Summary of all scans
 │   └── json/                            # Machine-readable reports
-│       ├── 2.17.0_component_trivy.json
+│       ├── 2.17.0_component_grype.json
 │       └── ...
 ├── 2.16.0/
 │   ├── 2.16.0_cve_summary.txt
@@ -220,7 +220,7 @@ reports/
 Edit `.github/workflows/weekly-cve-scan.yml` to customize:
 
 - **Schedule:** Change the `cron` expression
-- **Severity filter:** Modify `TRIVY_SEVERITY` (default: `HIGH,CRITICAL`)
+- **Severity filter:** Modify `SCAN_SEVERITY` (default: `HIGH,CRITICAL`)
 - **Critical threshold:** Adjust the check in the last step
 - **Artifact retention:** Change `retention-days` (default: 90)
 - **Slack format:** Use `slack-cve-report-detailed` for more details
@@ -228,7 +228,7 @@ Edit `.github/workflows/weekly-cve-scan.yml` to customize:
 ### Troubleshooting
 
 **Workflow fails with authentication error:**
-- Verify `QUAY_IO_MCED_RGY_PASSWORD` secret is set correctly
+- Verify `QUAY_IO_ACMD_RGY_PASSWORD` secret is set correctly
 - Check if your quay.io credentials are still valid
 - Verify the service account username is `acmd+rgy`
 
