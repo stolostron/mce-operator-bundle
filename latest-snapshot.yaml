@@ -2,80 +2,142 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/discovery?rev=ae40f2346e2b023001695c28665922367eb37ccd
-    build.appstudio.redhat.com/commit_sha: ae40f2346e2b023001695c28665922367eb37ccd
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/discovery?rev=6e340acf726f4a31faa7fbefac8422ef52183ca8
+    build.appstudio.redhat.com/commit_sha: 6e340acf726f4a31faa7fbefac8422ef52183ca8
     build.appstudio.redhat.com/target_branch: backplane-5.0
     pac.test.appstudio.openshift.io/branch: backplane-5.0
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "69370623529"
+    pac.test.appstudio.openshift.io/check-run-id: "69587643605"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-ukyhzv
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-wlerkj
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/discovery-operator-mce-50-on-push-fs5mv
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/discovery-operator-mce-50-on-push-98ch9
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-5.0"
     pac.test.appstudio.openshift.io/original-prname: discovery-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "1911"
+    pac.test.appstudio.openshift.io/pull-request: "1915"
     pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/discovery
     pac.test.appstudio.openshift.io/repository: discovery-operator-mce-25
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
-    pac.test.appstudio.openshift.io/sha: ae40f2346e2b023001695c28665922367eb37ccd
+    pac.test.appstudio.openshift.io/sha: 6e340acf726f4a31faa7fbefac8422ef52183ca8
     pac.test.appstudio.openshift.io/sha-title: |-
-      fix(deps): update kubernetes packages to v0.35.3 (#1911)
+      [ACM-32357] Disable WatchListClient to fix cache sync timeouts (#1915)
 
-      Signed-off-by: red-hat-konflux <126015336+red-hat-konflux[bot]@users.noreply.github.com>
-      Co-authored-by: red-hat-konflux[bot] <126015336+red-hat-konflux[bot]@users.noreply.github.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/discovery/commit/ae40f2346e2b023001695c28665922367eb37ccd
+      ## Description
+
+      This PR fixes controller cache sync timeout errors caused by the
+      WatchListClient feature in Kubernetes client-go v0.35.3. The operator
+      was failing to start due to missing bookmark events required by the
+      new WatchList semantics.
+
+      ## Related Issue
+
+      https://redhat.atlassian.net/browse/ACM-32357
+
+      ## Changes Made
+
+      - Added KUBE_FEATURE_WatchListClient=false environment variable to the
+        discovery-operator deployment in config/manager/manager.yaml
+      - Updated bundle/manifests/discovery.clusterserviceversion.yaml with
+        the same environment variable to ensure consistency
+
+      This disables the WatchListClient feature and falls back to the
+      traditional List+Watch pattern, which resolves the cache sync timeout
+      errors with the following controllers:
+      - discoveryconfig
+      - discoveredcluster
+      - managedcluster
+
+      ## Root Cause
+
+      After merging upstream changes that updated k8s.io packages from v0.31.0
+      to v0.35.3, the WatchListClient feature became enabled by default. This
+      feature requires the Kubernetes API server to send bookmark events with
+      k8s.io/initial-events-end: "true" annotation. When these events are not
+      received within 2 minutes, the reflector times out causing cache sync
+      failures.
+
+      Error symptoms:
+      - "awaiting required bookmark event for initial events stream"
+      - "failed to wait for caches to sync: timed out waiting for cache to be synced"
+      - All three controllers (discoveryconfig, discoveredcluster, managedcluster) failing to start
+
+      ## Checklist
+
+      - [x] I have tested the changes locally and they are functioning as expected.
+      - [x] I have updated the documentation (if necessary) to reflect the changes.
+      - [ ] I have added/updated relevant unit tests (if applicable).
+      - [x] I have ensured that my code follows the project's coding standards.
+      - [x] I have checked for any potential security issues and addressed them.
+      - [x] I have added necessary comments to the code, especially in complex or unclear sections.
+      - [x] I have rebased my branch on top of the latest main/master branch.
+
+      ## Additional Notes
+
+      This is a temporary workaround for a known issue with client-go v0.35.x
+      and WatchList feature. Future solutions may include:
+      - Upgrading Kubernetes cluster to ensure proper bookmark event support
+      - Waiting for upstream fixes in kubernetes/kubernetes issues #135895, #126958
+      - Reverting to client-go v0.31.0 if necessary
+
+      References:
+      - https://github.com/kubernetes/kubernetes/issues/135895
+      - https://github.com/gravitational/teleport/issues/64188
+      - https://github.com/kubernetes/kubernetes/issues/126958
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+      Co-authored-by: Claude Sonnet 4.5 <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/discovery/commit/6e340acf726f4a31faa7fbefac8422ef52183ca8
     pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.0
     pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/discovery
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
     pac.test.appstudio.openshift.io/url-repository: discovery
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-03-31T14:57:26Z"}'
-    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'addon-manager-mce-50,
-      cluster-api-provider-agent-mce-50, cluster-curator-controller-mce-50, cluster-image-set-controller-mce-50,
-      console-mce-mce-50, kube-rbac-proxy-mce-50, managed-serviceaccount-mce-50, cloudevents-conductor-mce-50,
-      cluster-api-provider-aws-mce-50, hypershift-cli-mce-50, provider-credential-controller-mce-50,
-      azure-service-operator-mce-50, cluster-api-provider-azure-mce-50, image-based-install-operator-mce-50,
-      cluster-api-provider-kubevirt-mce-50, cluster-api-webhook-config-mce-50, cluster-proxy-mce-50,
-      clusterlifecycle-state-metrics-mce-50, hypershift-addon-operator-mce-50, placement-mce-50,
-      hive-mce-50, registration-operator-mce-50, backplane-must-gather-mce-50, cluster-api-provider-openshift-assisted-control-plane-mce-50,
-      managedcluster-import-controller-addon-mce-50, multicloud-manager-mce-50, cluster-permission-mce-50,
-      registration-mce-50, work-mce-50, hypershift-release-mce-50, maestro-mce-50,
-      cluster-api-provider-openshift-assisted-bootstrap-mce-50, clusterclaims-controller-mce-50'
-      is(are) not included in snapshot due to missing valid containerImage or git
-      source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260331-144756-000":{"lastUpdateTime":"2026-03-31T14:58:15.042637076Z"}}}'
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-01T19:35:34Z"}'
+    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'multicloud-manager-mce-50,
+      cluster-permission-mce-50, registration-mce-50, work-mce-50, hypershift-release-mce-50,
+      maestro-mce-50, cluster-api-provider-openshift-assisted-bootstrap-mce-50, clusterclaims-controller-mce-50,
+      addon-manager-mce-50, cluster-api-provider-agent-mce-50, cluster-curator-controller-mce-50,
+      cluster-image-set-controller-mce-50, console-mce-mce-50, kube-rbac-proxy-mce-50,
+      managed-serviceaccount-mce-50, cloudevents-conductor-mce-50, cluster-api-provider-aws-mce-50,
+      hypershift-cli-mce-50, provider-credential-controller-mce-50, azure-service-operator-mce-50,
+      cluster-api-provider-azure-mce-50, image-based-install-operator-mce-50, cluster-api-provider-kubevirt-mce-50,
+      cluster-api-webhook-config-mce-50, cluster-proxy-mce-50, clusterlifecycle-state-metrics-mce-50,
+      hypershift-addon-operator-mce-50, placement-mce-50, hive-mce-50, registration-operator-mce-50,
+      backplane-must-gather-mce-50, cluster-api-provider-openshift-assisted-control-plane-mce-50,
+      managedcluster-import-controller-addon-mce-50' is(are) not included in snapshot
+      due to missing valid containerImage or git source
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260401-192528-000":{"lastUpdateTime":"2026-04-01T19:36:18.498330245Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1774968476000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1775071528000"
     test.appstudio.openshift.io/pr-status: merged
     test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/discovery
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-03-31T14:58:15.042637076Z","details":"Integration
-      test passed","startTime":"2026-03-31T14:57:26.746479714Z","completionTime":"2026-03-31T14:58:15.042637076Z","testPipelineRunName":"enterprise-contract-mce-50-kns4l"}]'
-  creationTimestamp: "2026-03-31T14:57:26Z"
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-04-01T19:36:18.498330245Z","details":"Integration
+      test passed","startTime":"2026-04-01T19:35:34.445112974Z","completionTime":"2026-04-01T19:36:18.498330245Z","testPipelineRunName":"enterprise-contract-mce-50-5b8f6"}]'
+  creationTimestamp: "2026-04-01T19:35:34Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: discovery-operator-mce-50-on-push-fs5mv
+    appstudio.openshift.io/build-pipelinerun: discovery-operator-mce-50-on-push-98ch9
     appstudio.openshift.io/component: discovery-operator-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "69370623529"
+    pac.test.appstudio.openshift.io/check-run-id: "69587643605"
     pac.test.appstudio.openshift.io/event-type: push
     pac.test.appstudio.openshift.io/original-prname: discovery-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "1911"
+    pac.test.appstudio.openshift.io/pull-request: "1915"
     pac.test.appstudio.openshift.io/repository: discovery-operator-mce-25
-    pac.test.appstudio.openshift.io/sha: ae40f2346e2b023001695c28665922367eb37ccd
+    pac.test.appstudio.openshift.io/sha: 6e340acf726f4a31faa7fbefac8422ef52183ca8
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
     pac.test.appstudio.openshift.io/url-repository: discovery
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1774969040"
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1775072129"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20260331-144756-000
+  name: release-mce-50-20260401-192528-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -84,40 +146,40 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "8021657954"
-  uid: ffae18d2-4a50-43eb-88fe-f926d667d572
+  resourceVersion: "8046780509"
+  uid: fe1e6ee5-f91f-4882-a28d-45c331eecacf
 spec:
   application: release-mce-50
   artifacts: {}
   components:
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:920c8883f1ad1b3fc1007d2ac2bca6a3170b6fd75265dd3970ae330f2ffa5246
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:c957ad7be2e5b96a49c3f314994e74328bcdcd70ac3aaea37293f8bb6373715d
     name: backplane-operator-mce-50
     source:
       git:
         context: ./
         dockerfileUrl: Dockerfile.rhtap
-        revision: 6179df7a76ed39bf7aed4858d2eb6279c6b8fe89
+        revision: 35f046cb1236dc450d4eabcbf2296b8b0de66ba0
         url: https://github.com/stolostron/backplane-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:d98b74a2f6f29845a67d66d758501f415a6d7b6538d76c5e60866fa2c18206e2
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:5183de2e7efdcddeb3ae3248876654af795724a1a475e2110057f852190b4ec8
     name: discovery-operator-mce-50
     source:
       git:
-        revision: ae40f2346e2b023001695c28665922367eb37ccd
+        revision: 6e340acf726f4a31faa7fbefac8422ef52183ca8
         url: https://github.com/stolostron/discovery
 status:
   conditions:
-  - lastTransitionTime: "2026-03-31T14:58:15Z"
+  - lastTransitionTime: "2026-04-01T19:36:18Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-03-31T14:58:15Z"
+  - lastTransitionTime: "2026-04-01T19:36:18Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-03-31T14:58:15Z"
+  - lastTransitionTime: "2026-04-01T19:36:18Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
