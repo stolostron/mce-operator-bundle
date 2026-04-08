@@ -2,60 +2,71 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/openshift/hive?rev=a325b87ee9af26fbc344895761f69198dc132f32
-    build.appstudio.redhat.com/commit_sha: a325b87ee9af26fbc344895761f69198dc132f32
-    build.appstudio.redhat.com/target_branch: master
-    pac.test.appstudio.openshift.io/branch: master
+    build.appstudio.openshift.io/repo: https://github.com/openshift-assisted/cluster-api-provider-openshift-assisted?rev=8904c775f053acd6bb0e3907d128d247d0d992d5
+    build.appstudio.redhat.com/commit_sha: 8904c775f053acd6bb0e3907d128d247d0d992d5
+    build.appstudio.redhat.com/target_branch: backplane-2.9
+    pac.test.appstudio.openshift.io/branch: backplane-2.9
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "70169495103"
+    pac.test.appstudio.openshift.io/check-run-id: "70272495999"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-mpkkim
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-mrjazm
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35333059"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hive-mce-29-on-push-4bql7
+    pac.test.appstudio.openshift.io/installation-id: "37784342"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/cluster-api-provider-openshift-assisted-control-plane-mce-xrldh
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "master" && !files.all.all(x, x.matches('^docs/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
-    pac.test.appstudio.openshift.io/original-prname: hive-mce-29-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hive
-    pac.test.appstudio.openshift.io/repository: hive-master
+      == "backplane-2.9"
+    pac.test.appstudio.openshift.io/original-prname: cluster-api-provider-openshift-assisted-control-plane-mce-29-on-push
+    pac.test.appstudio.openshift.io/pull-request: "593"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift-assisted/cluster-api-provider-openshift-assisted
+    pac.test.appstudio.openshift.io/repository: cluster-api-provider-openshift-assisted-bootstrap-mce-29
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
-    pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: a325b87ee9af26fbc344895761f69198dc132f32
-    pac.test.appstudio.openshift.io/sha-title: 'Merge pull request #2883 from suhanime/HIVE-3045'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hive/commit/a325b87ee9af26fbc344895761f69198dc132f32
-    pac.test.appstudio.openshift.io/source-branch: master
-    pac.test.appstudio.openshift.io/source-repo-url: ""
+    pac.test.appstudio.openshift.io/sender: rccrdpccl
+    pac.test.appstudio.openshift.io/sha: 8904c775f053acd6bb0e3907d128d247d0d992d5
+    pac.test.appstudio.openshift.io/sha-title: |-
+      Update security-scan.yaml to match master branch configuration (#593)
+
+      Backport security scan improvements from master:
+      - Update trivy-action to v0.35.0
+      - Add proper upload step for repo scan results
+      - Fix bootstrap scan results upload (was using controlplane.sarif)
+
+      Co-authored-by: Claude Sonnet 4.5 <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift-assisted/cluster-api-provider-openshift-assisted/commit/8904c775f053acd6bb0e3907d128d247d0d992d5
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-2.9
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift-assisted/cluster-api-provider-openshift-assisted
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: hive
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-07T01:25:00Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-20260407-004139-000":{"lastUpdateTime":"2026-04-07T01:25:43.517004727Z"}}}'
+    pac.test.appstudio.openshift.io/url-org: openshift-assisted
+    pac.test.appstudio.openshift.io/url-repository: cluster-api-provider-openshift-assisted
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-07T15:41:02Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-20260407-152915-000":{"lastUpdateTime":"2026-04-07T15:41:51.420430684Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1775522499000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"TestPassed","lastUpdateTime":"2026-04-07T01:25:43.517004727Z","details":"Integration
-      test passed","startTime":"2026-04-07T01:25:00.337249848Z","completionTime":"2026-04-07T01:25:43.517004727Z","testPipelineRunName":"enterprise-contract-mce-29-vztzc"}]'
-  creationTimestamp: "2026-04-07T01:25:00Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1775575755000"
+    test.appstudio.openshift.io/pr-status: merged
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift-assisted/cluster-api-provider-openshift-assisted
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"TestPassed","lastUpdateTime":"2026-04-07T15:41:51.420430684Z","details":"Integration
+      test passed","startTime":"2026-04-07T15:41:03.140751136Z","completionTime":"2026-04-07T15:41:51.420430684Z","testPipelineRunName":"enterprise-contract-mce-29-gq4m4"}]'
+  creationTimestamp: "2026-04-07T15:41:02Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-29
-    appstudio.openshift.io/build-pipelinerun: hive-mce-29-on-push-4bql7
-    appstudio.openshift.io/component: hive-mce-29
+    appstudio.openshift.io/build-pipelinerun: cluster-api-provider-openshift-assisted-control-plane-mce-xrldh
+    appstudio.openshift.io/component: cluster-api-provider-openshift-assisted-control-plane-mce-29
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "70169495103"
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: hive-mce-29-on-push
-    pac.test.appstudio.openshift.io/repository: hive-master
-    pac.test.appstudio.openshift.io/sha: a325b87ee9af26fbc344895761f69198dc132f32
+    pac.test.appstudio.openshift.io/check-run-id: "70272495999"
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/original-prname: r-api-provider-openshift-assisted-control-plane-mce-29-on-push
+    pac.test.appstudio.openshift.io/pull-request: "593"
+    pac.test.appstudio.openshift.io/repository: cluster-api-provider-openshift-assisted-bootstrap-mce-29
+    pac.test.appstudio.openshift.io/sha: 8904c775f053acd6bb0e3907d128d247d0d992d5
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: hive
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1775525095"
+    pac.test.appstudio.openshift.io/url-org: openshift-assisted
+    pac.test.appstudio.openshift.io/url-repository: cluster-api-provider-openshift-assisted
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1775576455"
     test.appstudio.openshift.io/type: component
-  name: release-mce-29-20260407-004139-000
+  name: release-mce-29-20260407-152915-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -64,114 +75,12 @@ metadata:
     kind: Application
     name: release-mce-29
     uid: 20473971-c86b-40e3-8b15-f0637463a27d
-  resourceVersion: "8117452069"
-  uid: c8e703f9-9367-45a8-ba6f-2442055ab0ac
+  resourceVersion: "8129888820"
+  uid: 1f1fd22c-0e66-4aa3-84d3-fd65ffe5ec7d
 spec:
   application: release-mce-29
   artifacts: {}
   components:
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-29@sha256:77354e0f7bb6ed19c6137141e3f9d30e62e5c202d92b6d71cab4a7d49643aa86
-    name: hypershift-release-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Containerfile.operator
-        revision: 5b151f06d8bfaa8a4594d8c2c748b8d4463163dd
-        url: https://github.com/openshift/hypershift
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-29@sha256:97fb8e666abf0d5cfa8e54b8fc0c0ec447307549ccc0b4a3b3a5f7453b09b204
-    name: multicloud-manager-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: efdc2972e23ee6f525df1f70742c2ef98a3692cc
-        url: https://github.com/stolostron/multicloud-operators-foundation
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/addon-manager-mce-29@sha256:d60f45e7bf8d4031712e2c3c6f8b54c7d8355a8c1f96efaf06e9f75f0b64b7ba
-    name: addon-manager-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: build/Dockerfile.addon.rhtap
-        revision: 024f5975236267ca6f98354ece23e72db516d8f1
-        url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-must-gather-mce-29@sha256:f35fc83825c0aeb0a8181ac0e1d19d405f6db945fc3bf4fb0243471f0dbf4984
-    name: backplane-must-gather-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: df23db4833bea51c4b4f0d98b1e33da61b770abe
-        url: https://github.com/stolostron/backplane-must-gather
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-kubevirt-mce-29@sha256:edb1bc08a36ee1699c91165324f8e7698a7806993ad1543c2ebf2dda86630835
-    name: cluster-api-provider-kubevirt-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: a9a522bd34215e5b131179283db4d0a91ca38d7a
-        url: https://github.com/openshift/cluster-api-provider-kubevirt
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-proxy-mce-29@sha256:994ea15a9270db76a4cd8cb48e71221db33993f672bfa99da6a9c58423a464e5
-    name: cluster-proxy-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: cmd/Dockerfile.rhtap
-        revision: 2a739e25e43dd197fe631dd56dfbfb460dbb68ca
-        url: https://github.com/stolostron/cluster-proxy
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-29@sha256:a8d3fec929d6bcdc1c747348ad0a3e51d6bc9eec1a65da700bb2dae74c1c6959
-    name: backplane-operator-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: f93d90c3d5eb96692e98aa8413c374503aa3ab8f
-        url: https://github.com/stolostron/backplane-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-curator-controller-mce-29@sha256:bfb8c8ee5c2c54fe811578d04c3d9a60dd648cc1ce17d047fcb3a1b7ce58e272
-    name: cluster-curator-controller-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: b8011c319b4d606fbf27dd4b3cedcee590d089fb
-        url: https://github.com/stolostron/cluster-curator-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-29@sha256:ac681486029c5d26eed0435e208c3dee33d3b6b41cdf1c2e418d933438f66419
-    name: hive-mce-29
-    source:
-      git:
-        revision: a325b87ee9af26fbc344895761f69198dc132f32
-        url: https://github.com/openshift/hive
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-29@sha256:1677d4479195ec6d17c28868a11e28d156ead81e0b2f4393b2f5a4a3f01c561b
-    name: hypershift-cli-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Containerfile.cli
-        revision: 5b151f06d8bfaa8a4594d8c2c748b8d4463163dd
-        url: https://github.com/openshift/hypershift
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/provider-credential-controller-mce-29@sha256:c7ad6d92dd168c217cc55716359b746b88beb83f115a7e8a15ab02198aad9cbb
-    name: provider-credential-controller-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: cce536e39e0aec35e60cadd6153a565fad9dbad8
-        url: https://github.com/stolostron/provider-credential-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-openshift-assisted-bootstrap-mce-29@sha256:48e274f1ad7586afb5de9d813085fb9a9fce00e095831f52c8a1371e9ec80bce
-    name: cluster-api-provider-openshift-assisted-bootstrap-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.bootstrap-provider
-        revision: 31c476b586604ce5296b55938e04bb35113fab20
-        url: https://github.com/openshift-assisted/cluster-api-provider-openshift-assisted
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-image-set-controller-mce-29@sha256:6b9911a572efe1a8badced31c81e1c201fc24f74c3263fc1acc257255c91ce28
-    name: cluster-image-set-controller-mce-29
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: a2f51b13648610133413123567b32f176f79f1d9
-        url: https://github.com/stolostron/cluster-image-set-controller
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/clusterclaims-controller-mce-29@sha256:c0d0c27715022bb1a1bafb877a7e3f270831e12eea92a8aab5d7cc5ba825c768
     name: clusterclaims-controller-mce-29
     source:
@@ -260,13 +169,11 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: 5b9024f5216af25fa929d5edbd658e966eecd409
         url: https://github.com/openshift/cluster-api-provider-agent
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-openshift-assisted-control-plane-mce-29@sha256:0419e46293f5f4bd02e407bb892f25f7fda3b74478a618a52b901043e7e4a329
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-openshift-assisted-control-plane-mce-29@sha256:134cd8505b96e44cf7cc8505a505e50cf7ac5004527bec6a9075d79d27e6a9cc
     name: cluster-api-provider-openshift-assisted-control-plane-mce-29
     source:
       git:
-        context: ./
-        dockerfileUrl: Dockerfile.controlplane-provider
-        revision: 31c476b586604ce5296b55938e04bb35113fab20
+        revision: 8904c775f053acd6bb0e3907d128d247d0d992d5
         url: https://github.com/openshift-assisted/cluster-api-provider-openshift-assisted
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-webhook-config-mce-29@sha256:64ce3dc740bb0f101902ae128014c96d95dfa79e0cb7193ec8b43cebe3defd9e
     name: cluster-api-webhook-config-mce-29
@@ -308,20 +215,124 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: a60b4cea1f47e350b5c10aa67409f10e6eb74888
         url: https://github.com/stolostron/discovery
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-29@sha256:77354e0f7bb6ed19c6137141e3f9d30e62e5c202d92b6d71cab4a7d49643aa86
+    name: hypershift-release-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Containerfile.operator
+        revision: 5b151f06d8bfaa8a4594d8c2c748b8d4463163dd
+        url: https://github.com/openshift/hypershift
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-29@sha256:97fb8e666abf0d5cfa8e54b8fc0c0ec447307549ccc0b4a3b3a5f7453b09b204
+    name: multicloud-manager-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: efdc2972e23ee6f525df1f70742c2ef98a3692cc
+        url: https://github.com/stolostron/multicloud-operators-foundation
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/addon-manager-mce-29@sha256:d60f45e7bf8d4031712e2c3c6f8b54c7d8355a8c1f96efaf06e9f75f0b64b7ba
+    name: addon-manager-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.addon.rhtap
+        revision: 024f5975236267ca6f98354ece23e72db516d8f1
+        url: https://github.com/stolostron/ocm
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-must-gather-mce-29@sha256:f35fc83825c0aeb0a8181ac0e1d19d405f6db945fc3bf4fb0243471f0dbf4984
+    name: backplane-must-gather-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: df23db4833bea51c4b4f0d98b1e33da61b770abe
+        url: https://github.com/stolostron/backplane-must-gather
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-kubevirt-mce-29@sha256:edb1bc08a36ee1699c91165324f8e7698a7806993ad1543c2ebf2dda86630835
+    name: cluster-api-provider-kubevirt-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: a9a522bd34215e5b131179283db4d0a91ca38d7a
+        url: https://github.com/openshift/cluster-api-provider-kubevirt
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-proxy-mce-29@sha256:994ea15a9270db76a4cd8cb48e71221db33993f672bfa99da6a9c58423a464e5
+    name: cluster-proxy-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: cmd/Dockerfile.rhtap
+        revision: 2a739e25e43dd197fe631dd56dfbfb460dbb68ca
+        url: https://github.com/stolostron/cluster-proxy
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-29@sha256:a8d3fec929d6bcdc1c747348ad0a3e51d6bc9eec1a65da700bb2dae74c1c6959
+    name: backplane-operator-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: f93d90c3d5eb96692e98aa8413c374503aa3ab8f
+        url: https://github.com/stolostron/backplane-operator
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-curator-controller-mce-29@sha256:bfb8c8ee5c2c54fe811578d04c3d9a60dd648cc1ce17d047fcb3a1b7ce58e272
+    name: cluster-curator-controller-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: b8011c319b4d606fbf27dd4b3cedcee590d089fb
+        url: https://github.com/stolostron/cluster-curator-controller
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-29@sha256:ac681486029c5d26eed0435e208c3dee33d3b6b41cdf1c2e418d933438f66419
+    name: hive-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile
+        revision: a325b87ee9af26fbc344895761f69198dc132f32
+        url: https://github.com/openshift/hive
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-29@sha256:1677d4479195ec6d17c28868a11e28d156ead81e0b2f4393b2f5a4a3f01c561b
+    name: hypershift-cli-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Containerfile.cli
+        revision: 5b151f06d8bfaa8a4594d8c2c748b8d4463163dd
+        url: https://github.com/openshift/hypershift
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/provider-credential-controller-mce-29@sha256:c7ad6d92dd168c217cc55716359b746b88beb83f115a7e8a15ab02198aad9cbb
+    name: provider-credential-controller-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: cce536e39e0aec35e60cadd6153a565fad9dbad8
+        url: https://github.com/stolostron/provider-credential-controller
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-openshift-assisted-bootstrap-mce-29@sha256:8b0979adcf87ebd4077340dad4fed0c2d4077fde964649c5dc46d8152739bd44
+    name: cluster-api-provider-openshift-assisted-bootstrap-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.bootstrap-provider
+        revision: 8904c775f053acd6bb0e3907d128d247d0d992d5
+        url: https://github.com/openshift-assisted/cluster-api-provider-openshift-assisted
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-image-set-controller-mce-29@sha256:6b9911a572efe1a8badced31c81e1c201fc24f74c3263fc1acc257255c91ce28
+    name: cluster-image-set-controller-mce-29
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: a2f51b13648610133413123567b32f176f79f1d9
+        url: https://github.com/stolostron/cluster-image-set-controller
 status:
   conditions:
-  - lastTransitionTime: "2026-04-07T01:25:43Z"
+  - lastTransitionTime: "2026-04-07T15:41:51Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-04-07T01:25:43Z"
+  - lastTransitionTime: "2026-04-07T15:41:51Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-04-07T01:25:43Z"
+  - lastTransitionTime: "2026-04-07T15:41:51Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
