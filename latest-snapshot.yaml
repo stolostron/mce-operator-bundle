@@ -2,134 +2,154 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/backplane-operator?rev=607d6e9cb8568428efc7919ff96814a6a76d98fe
-    build.appstudio.redhat.com/commit_sha: 607d6e9cb8568428efc7919ff96814a6a76d98fe
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/backplane-operator?rev=d7078d325f95096f6e8feada18328772f51e3783
+    build.appstudio.redhat.com/commit_sha: d7078d325f95096f6e8feada18328772f51e3783
     build.appstudio.redhat.com/target_branch: backplane-5.0
     pac.test.appstudio.openshift.io/branch: backplane-5.0
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "70319561852"
+    pac.test.appstudio.openshift.io/check-run-id: "70487573193"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-dehisd
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-zmsxzz
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/backplane-operator-mce-50-on-push-qbx7l
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/backplane-operator-mce-50-on-push-kbpfj
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-5.0"
     pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "3025"
+    pac.test.appstudio.openshift.io/pull-request: "3064"
     pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/backplane-operator
     pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
-    pac.test.appstudio.openshift.io/sha: 607d6e9cb8568428efc7919ff96814a6a76d98fe
+    pac.test.appstudio.openshift.io/sha: d7078d325f95096f6e8feada18328772f51e3783
     pac.test.appstudio.openshift.io/sha-title: |-
-      Add annotation-based resource adoption policy for MCE (#3025)
+      Improve bundle-automation dependency handling (#3064)
 
-      * Add annotation-based resource adoption policy for MCE
+      * Improve bundle-automation dependency handling
 
-      Implements resource adoption policy annotation for multiclusterengine
-      to control how the operator handles existing resources without
-      backplaneconfig labels.
+      Refactors hack/bundle-automation/generate-shell.py to automatically copy
+      all Python files from the installer-dev-tools bundle-generation directory
+      using glob patterns, eliminating the need for manual dependency tracking.
 
-      Changes:
-      - Add AnnotationResourceAdoptionPolicy constant to pkg/utils/annotations.go
-      - Add ensureResourceOwnership() function to check and adopt resources
-      - Add getAdoptionPolicy() function to retrieve policy from MCE annotations
-      - Update applyTemplate() to call ensureResourceOwnership() before updates
-      - Update deleteTemplate() to call ensureResourceOwnership() before deletions
-      - Add comprehensive unit tests for new functionality
-
-      Valid policy values:
-      - "Strict" (default): Only manage resources with backplaneconfig.name label
-      - "Adopt": Adopt unlabeled resources by adding backplaneconfig.name label
-
-      The annotation key is:
-      installer.multicluster.openshift.io/resource-adoption-policy
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-
-      * Add generic setDefaultAnnotations helper function
-
-      Create a reusable function for setting default annotations on MCE instances.
-      This makes it easy to add new default annotations in the future by simply
-      adding them to the defaultAnnotations map.
-
-      Currently sets resource-adoption-policy to "Strict" by default, making the
-      default behavior explicit and allowing users to easily discover and modify
-      the policy.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-
-      * Fix resource ownership check to prevent cross-MCE conflicts
-
-      Update ensureResourceOwnership to verify that the backplaneconfig.name
-      label value matches the current MCE instance, not just check for label
-      presence. This prevents conflicts when multiple MCE instances coexist
-      in Hosted mode with different targetNamespaces.
+      This change is required for the OWNERS file automation feature being added
+      in stolostron/installer-dev-tools#142, which introduces a new helper.py
+      module that needs to be automatically included.
 
       Changes:
-      - Check label value matches mce.GetName() before managing resource
-      - Skip resources owned by different MCE instances with log message
-      - Add test coverage for cross-MCE ownership scenarios
+      - Use *.py glob pattern to automatically copy all Python files
+      - Remove manual dependency tracking (script_dependencies list)
+      - Remove unused copy_scripts() and cleanup_scripts() functions
+      - Add PYTHONPATH environment variable for proper imports
+      - Simplify code: 59 deletions, 41 additions
 
-      Addresses CodeRabbit feedback on PR #3025
+      Signed-off-by: Dislene Bennett <dislbenn@redhat.com>
 
       Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      * Refactor to use helper functions with rglob
+
+      Improves code organization by extracting file copy/cleanup logic into
+      dedicated helper functions and using rglob() to recursively find all
+      Python files while preserving directory structure.
+
+      Changes:
+      - Add copy_bundle_generation_files() helper function
+      - Add cleanup_bundle_generation_files() helper function
+      - Use rglob("*.py") to recursively find all Python files
+      - Preserve directory structure when copying files
+      - Simplify prepare_and_execute() function
+
+      Signed-off-by: Dislene Bennett <dislbenn@redhat.com>
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+      * Fix script dependencies to support both bundle-generation and release directories
+
+      The previous implementation only copied files from bundle-generation/,
+      but operations like onboard-new-components and refresh-image-aliases
+      reference scripts in release/ directory. This caused "Script not found"
+      errors when running those operations.
+
+      Changes:
+      - Rename functions to copy_script_dependencies() and cleanup_script_dependencies()
+      - Extract parent directory dynamically from script path
+      - Support any subdirectory (bundle-generation/, release/, etc.)
+      - More generic and maintainable than hardcoded directory checks
+
+      Fixes issue where release/ scripts would fail to execute.
+
+      Signed-off-by: Dislene Bennett <dislbenn@redhat.com>
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+      * Fix cleanup by tracking copied files before script execution
+
+      The previous cleanup logic tried to rglob files from the source directory
+      after script execution, but the executed scripts delete the tmp/ directory,
+      so cleanup never ran. This left copied Python files in the directory.
+
+      Changes:
+      - copy_script_dependencies() now returns list of copied file paths
+      - cleanup_script_dependencies() takes list of files to clean up
+      - Files are tracked during copy phase, before tmp/ is deleted
+      - Cleanup now runs successfully and removes all copied files
+
+      Signed-off-by: Dislene Bennett <dislbenn@redhat.com>
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
       ---------
 
-      Signed-off-by: dislbenn <dbennett@redhat.com>
       Co-authored-by: Claude Sonnet 4.5 <noreply@anthropic.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/backplane-operator/commit/607d6e9cb8568428efc7919ff96814a6a76d98fe
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/backplane-operator/commit/d7078d325f95096f6e8feada18328772f51e3783
     pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.0
     pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
     pac.test.appstudio.openshift.io/url-repository: backplane-operator
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-07T20:46:14Z"}'
-    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'hypershift-cli-mce-50,
-      provider-credential-controller-mce-50, azure-service-operator-mce-50, cluster-api-provider-azure-mce-50,
-      image-based-install-operator-mce-50, cluster-api-provider-kubevirt-mce-50, cluster-api-webhook-config-mce-50,
-      cluster-proxy-mce-50, clusterlifecycle-state-metrics-mce-50, hypershift-addon-operator-mce-50,
-      placement-mce-50, hive-mce-50, registration-operator-mce-50, backplane-must-gather-mce-50,
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-08T19:27:21Z"}'
+    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'backplane-must-gather-mce-50,
       cluster-api-provider-openshift-assisted-control-plane-mce-50, managedcluster-import-controller-addon-mce-50,
       multicloud-manager-mce-50, cluster-permission-mce-50, registration-mce-50, work-mce-50,
       hypershift-release-mce-50, maestro-mce-50, cluster-api-provider-openshift-assisted-bootstrap-mce-50,
       clusterclaims-controller-mce-50, addon-manager-mce-50, cluster-api-provider-agent-mce-50,
       cluster-curator-controller-mce-50, cluster-image-set-controller-mce-50, console-mce-mce-50,
       kube-rbac-proxy-mce-50, managed-serviceaccount-mce-50, cloudevents-conductor-mce-50,
-      cluster-api-provider-aws-mce-50' is(are) not included in snapshot due to missing
-      valid containerImage or git source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260407-203607-000":{"lastUpdateTime":"2026-04-07T20:46:55.670760811Z"}}}'
+      cluster-api-provider-aws-mce-50, hypershift-cli-mce-50, provider-credential-controller-mce-50,
+      azure-service-operator-mce-50, cluster-api-provider-azure-mce-50, image-based-install-operator-mce-50,
+      cluster-api-provider-kubevirt-mce-50, cluster-api-webhook-config-mce-50, cluster-proxy-mce-50,
+      clusterlifecycle-state-metrics-mce-50, hypershift-addon-operator-mce-50, placement-mce-50,
+      hive-mce-50, registration-operator-mce-50' is(are) not included in snapshot
+      due to missing valid containerImage or git source
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260408-191640-000":{"lastUpdateTime":"2026-04-08T19:28:06.028564508Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1775594167000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1775675800000"
     test.appstudio.openshift.io/pr-status: merged
     test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-04-07T20:46:55.670760811Z","details":"Integration
-      test passed","startTime":"2026-04-07T20:46:14.297742874Z","completionTime":"2026-04-07T20:46:55.670760811Z","testPipelineRunName":"enterprise-contract-mce-50-9xp5z"}]'
-  creationTimestamp: "2026-04-07T20:46:14Z"
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-04-08T19:28:06.028564508Z","details":"Integration
+      test passed","startTime":"2026-04-08T19:27:21.450008073Z","completionTime":"2026-04-08T19:28:06.028564508Z","testPipelineRunName":"enterprise-contract-mce-50-vrg2r"}]'
+  creationTimestamp: "2026-04-08T19:27:21Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: backplane-operator-mce-50-on-push-qbx7l
+    appstudio.openshift.io/build-pipelinerun: backplane-operator-mce-50-on-push-kbpfj
     appstudio.openshift.io/component: backplane-operator-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "70319561852"
+    pac.test.appstudio.openshift.io/check-run-id: "70487573193"
     pac.test.appstudio.openshift.io/event-type: push
     pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "3025"
+    pac.test.appstudio.openshift.io/pull-request: "3064"
     pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
-    pac.test.appstudio.openshift.io/sha: 607d6e9cb8568428efc7919ff96814a6a76d98fe
+    pac.test.appstudio.openshift.io/sha: d7078d325f95096f6e8feada18328772f51e3783
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
     pac.test.appstudio.openshift.io/url-repository: backplane-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1775594769"
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1775676436"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20260407-203607-000
+  name: release-mce-50-20260408-191640-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -138,12 +158,18 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "8135456527"
-  uid: cec69e3b-d786-4d13-9f10-474a479b79e8
+  resourceVersion: "8159286369"
+  uid: 0083c9e5-80ca-4285-aff7-5163eba33463
 spec:
   application: release-mce-50
   artifacts: {}
   components:
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:fe50378059db02f596fffc3c4d0fa24bec1e8545fefc2305ae681ffc5eefb936
+    name: backplane-operator-mce-50
+    source:
+      git:
+        revision: d7078d325f95096f6e8feada18328772f51e3783
+        url: https://github.com/stolostron/backplane-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:5183de2e7efdcddeb3ae3248876654af795724a1a475e2110057f852190b4ec8
     name: discovery-operator-mce-50
     source:
@@ -152,26 +178,20 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: 6e340acf726f4a31faa7fbefac8422ef52183ca8
         url: https://github.com/stolostron/discovery
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:2ef38ad87df798558d04d0c16d776fec32d9d94f5ad2dda1d90df7bd227bfe56
-    name: backplane-operator-mce-50
-    source:
-      git:
-        revision: 607d6e9cb8568428efc7919ff96814a6a76d98fe
-        url: https://github.com/stolostron/backplane-operator
 status:
   conditions:
-  - lastTransitionTime: "2026-04-07T20:46:56Z"
+  - lastTransitionTime: "2026-04-08T19:28:06Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-04-07T20:46:56Z"
+  - lastTransitionTime: "2026-04-08T19:28:06Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-04-07T20:46:56Z"
+  - lastTransitionTime: "2026-04-08T19:28:06Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
