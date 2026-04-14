@@ -2,79 +2,200 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/backplane-operator?rev=4283348963c24967370b80bfbadc5b5a2c2d1707
-    build.appstudio.redhat.com/commit_sha: 4283348963c24967370b80bfbadc5b5a2c2d1707
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/discovery?rev=45c3491bf3312fcadd422784a2ff3e567b8d58e6
+    build.appstudio.redhat.com/commit_sha: 45c3491bf3312fcadd422784a2ff3e567b8d58e6
     build.appstudio.redhat.com/target_branch: backplane-5.0
     pac.test.appstudio.openshift.io/branch: backplane-5.0
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "70819674327"
+    pac.test.appstudio.openshift.io/check-run-id: "71162230819"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-kjbdyk
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-icwaui
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/backplane-operator-mce-50-on-push-vwjnh
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/discovery-operator-mce-50-on-push-6d5sj
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-5.0"
-    pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "3102"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/backplane-operator
-    pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
+    pac.test.appstudio.openshift.io/original-prname: discovery-operator-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "1944"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/discovery
+    pac.test.appstudio.openshift.io/repository: discovery-operator-mce-25
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
-    pac.test.appstudio.openshift.io/sha: 4283348963c24967370b80bfbadc5b5a2c2d1707
+    pac.test.appstudio.openshift.io/sha: 45c3491bf3312fcadd422784a2ff3e567b8d58e6
     pac.test.appstudio.openshift.io/sha-title: |-
-      added PostgreSQL 15 to MCE (#3102)
+      Update Go to 1.25.8 to fix CVE-2026-25679 (#1944)
+
+      * Update Go to 1.25.8 to fix CVE-2026-25679
+
+      This update addresses CVE-2026-25679 in the Go stdlib net/url package.
+      CVE-2026-32280 still requires Go 1.25.9 which is not yet available.
+
+      Related: ACM-31123, ACM-32834
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      * Add note about known GCS authentication issue in KinD workflow
+
+      The setup-envtest tool used in unit tests cannot authenticate with Google
+      Cloud Storage in CI, resulting in 401 Unauthorized errors when downloading
+      Kubernetes test binaries. This is a CI infrastructure issue. Local tests
+      pass successfully.
 
       Signed-off-by: dislbenn <dbennett@redhat.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/backplane-operator/commit/4283348963c24967370b80bfbadc5b5a2c2d1707
+
+      * Disable WatchListClient in unit tests to fix cache sync timeouts
+
+      The controller tests were failing with cache sync timeouts when using
+      k8s.io v0.35.3 with controller-runtime v0.19.4. This is the same issue
+      fixed in PR #1915 for the deployed controller.
+
+      The WatchListClient feature in k8s.io v0.35.3 requires bookmark events
+      that cause timeouts in the test environment. Setting the feature gate
+      to false in suite_test.go makes the test environment consistent with
+      the deployment configuration.
+
+      Fixes unit test failures:
+      - failed to wait for discoveryconfig caches to sync
+      - failed to wait for managedcluster caches to sync
+
+      Related: ACM-32357
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      * Restore setup-envtest flags to fix KinD workflow
+
+      The KinD workflow was failing with 'exec: etcd: executable file not found'
+      because we had removed the --arch=amd64 and --bin-dir flags from the
+      setup-envtest command.
+
+      Restoring the original flags:
+      - --arch=amd64: specifies architecture for binary download
+      - --bin-dir=$(LOCALBIN): tells setup-envtest where to store binaries
+
+      Also restoring setup-envtest@latest instead of @release-0.17 since the
+      @latest version (which requires Go 1.26) only applies when installing
+      the tool itself, not when downloading the K8s test binaries.
+
+      This should fix the test failures seen in GitHub Actions KinD workflow.
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      * Fix CodeRabbit issues: GOTOOLCHAIN fallback and setup-envtest version
+
+      Addressed two critical issues identified by CodeRabbit:
+
+      1. Fixed GOTOOLCHAIN fallback logic (line 53):
+         - Previous: grep | cut || echo pipeline failed because cut succeeds
+           on empty input, preventing fallback from triggering
+         - Result: GOTOOLCHAIN became empty string when no toolchain directive
+         - Fixed: Use awk to handle both cases in one pass, correctly producing
+           'go1.25.8' when toolchain directive is absent
+
+      2. Pinned setup-envtest to Go 1.25-compatible version:
+         - setup-envtest@latest now requires Go 1.26+
+         - Exported GOTOOLCHAIN forces Go 1.25.8, causing install failure
+         - Pinned to v0.0.0-20260404204528-885e77d7d9fc (last version
+           compatible with Go 1.25.x)
+
+      This ensures the Makefile works correctly when go.mod lacks a toolchain
+      directive and prevents CI failures from version incompatibilities.
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      * Fix setup-envtest version: use release-0.17 tag instead of pseudo-version
+
+      CodeRabbit's suggested version v0.0.0-20260404204528-885e77d7d9fc still
+      requires Go 1.26.0, causing the build to fail:
+
+        sigs.k8s.io/controller-runtime/tools/setup-envtest@v0.0.0-20260404204528-885e77d7d9fc
+        requires go >= 1.26.0 (running go 1.25.8; GOTOOLCHAIN=go1.25.8)
+
+      Using the release-0.17 tag instead, which is compatible with Go 1.25.x.
+      Tested locally and confirmed it installs successfully with Go 1.25.8.
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      * Use new index-based download for setup-envtest to avoid GCS 401 error
+
+      The setup-envtest tool defaults to downloading binaries from Google Cloud
+      Storage (GCS), which requires authentication and causes 401 Unauthorized
+      errors in GitHub Actions:
+
+        unable to list versions to find latest one: unable list bucket items
+        -- got status "401 Unauthorized" from GCS
+
+      Added --use-deprecated-gcs=false flag to use the new index-based download
+      method from the controller-tools repository instead:
+        https://raw.githubusercontent.com/kubernetes-sigs/controller-tools/HEAD/envtest-releases.yaml
+
+      This successfully downloads etcd, kube-apiserver, and kubectl without
+      authentication issues.
+
+      Tested locally and confirmed binaries download correctly.
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      * Remove outdated GCS authentication issue comment from KinD workflow
+
+      The GCS 401 Unauthorized error has been resolved by using the new
+      index-based download method (--use-deprecated-gcs=false) in the
+      Makefile test target. The workflow should now pass successfully.
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      ---------
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+      Co-authored-by: Claude Sonnet 4.5 <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/discovery/commit/45c3491bf3312fcadd422784a2ff3e567b8d58e6
     pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.0
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/discovery
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: backplane-operator
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-10T16:52:49Z"}'
-    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'addon-manager-mce-50,
-      cluster-api-provider-agent-mce-50, cluster-curator-controller-mce-50, cluster-image-set-controller-mce-50,
-      console-mce-mce-50, kube-rbac-proxy-mce-50, managed-serviceaccount-mce-50, cloudevents-conductor-mce-50,
-      cluster-api-provider-aws-mce-50, hypershift-cli-mce-50, provider-credential-controller-mce-50,
-      azure-service-operator-mce-50, cluster-api-provider-azure-mce-50, image-based-install-operator-mce-50,
-      cluster-api-provider-kubevirt-mce-50, cluster-api-webhook-config-mce-50, cluster-proxy-mce-50,
-      clusterlifecycle-state-metrics-mce-50, hypershift-addon-operator-mce-50, placement-mce-50,
-      hive-mce-50, registration-operator-mce-50, backplane-must-gather-mce-50, cluster-api-provider-openshift-assisted-control-plane-mce-50,
-      managedcluster-import-controller-addon-mce-50, multicloud-manager-mce-50, cluster-permission-mce-50,
-      registration-mce-50, work-mce-50, hypershift-release-mce-50, maestro-mce-50,
-      cluster-api-provider-openshift-assisted-bootstrap-mce-50, clusterclaims-controller-mce-50'
-      is(are) not included in snapshot due to missing valid containerImage or git
-      source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260410-164343-000":{"lastUpdateTime":"2026-04-10T16:53:29.971811161Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: discovery
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-13T21:27:16Z"}'
+    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'maestro-mce-50,
+      cluster-proxy-mce-50, hive-mce-50, hypershift-cli-mce-50, cluster-curator-controller-mce-50,
+      cluster-api-provider-kubevirt-mce-50, cluster-api-provider-openshift-assisted-control-plane-mce-50,
+      managedcluster-import-controller-addon-mce-50, managed-serviceaccount-mce-50,
+      azure-service-operator-mce-50, cluster-api-provider-agent-mce-50, cluster-api-provider-aws-mce-50,
+      cluster-api-webhook-config-mce-50, cluster-permission-mce-50, clusterclaims-controller-mce-50,
+      multicloud-manager-mce-50, cloudevents-conductor-mce-50, cluster-api-provider-openshift-assisted-bootstrap-mce-50,
+      console-mce-mce-50, provider-credential-controller-mce-50, work-mce-50, addon-manager-mce-50,
+      hypershift-addon-operator-mce-50, registration-mce-50, placement-mce-50, registration-operator-mce-50,
+      backplane-must-gather-mce-50, cluster-api-provider-azure-mce-50, cluster-image-set-controller-mce-50,
+      clusterlifecycle-state-metrics-mce-50, hypershift-release-mce-50, image-based-install-operator-mce-50,
+      kube-rbac-proxy-mce-50' is(are) not included in snapshot due to missing valid
+      containerImage or git source
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260413-211759-000":{"lastUpdateTime":"2026-04-13T21:28:17.029753214Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1775839423000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1776115079000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-04-10T16:53:29.971811161Z","details":"Integration
-      test passed","startTime":"2026-04-10T16:52:49.143926406Z","completionTime":"2026-04-10T16:53:29.971811161Z","testPipelineRunName":"enterprise-contract-mce-50-gpc6g"}]'
-  creationTimestamp: "2026-04-10T16:52:49Z"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/discovery
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-04-13T21:28:17.029753214Z","details":"Integration
+      test passed","startTime":"2026-04-13T21:27:16.766439546Z","completionTime":"2026-04-13T21:28:17.029753214Z","testPipelineRunName":"enterprise-contract-mce-50-9dlgf"}]'
+  creationTimestamp: "2026-04-13T21:27:16Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: backplane-operator-mce-50-on-push-vwjnh
-    appstudio.openshift.io/component: backplane-operator-mce-50
+    appstudio.openshift.io/build-pipelinerun: discovery-operator-mce-50-on-push-6d5sj
+    appstudio.openshift.io/component: discovery-operator-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "70819674327"
+    pac.test.appstudio.openshift.io/check-run-id: "71162230819"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "3102"
-    pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
-    pac.test.appstudio.openshift.io/sha: 4283348963c24967370b80bfbadc5b5a2c2d1707
+    pac.test.appstudio.openshift.io/original-prname: discovery-operator-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "1944"
+    pac.test.appstudio.openshift.io/repository: discovery-operator-mce-25
+    pac.test.appstudio.openshift.io/sha: 45c3491bf3312fcadd422784a2ff3e567b8d58e6
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: backplane-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1775839964"
+    pac.test.appstudio.openshift.io/url-repository: discovery
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1776115631"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20260410-164343-000
+  name: release-mce-50-20260413-211759-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -83,40 +204,40 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "8200593706"
-  uid: 9758490f-fbe0-4ad9-a3b7-28dc92b0c615
+  resourceVersion: "8239669939"
+  uid: b673e86f-e709-4b88-96f8-1008d5d03d1d
 spec:
   application: release-mce-50
   artifacts: {}
   components:
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:1e4bd41bd5ae4a7f11b4dd7d7c3976591db587174a165df5e0438cf6612c0ac9
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:0f858eaf137d9390c22551a746aab1329fd34abf23d7f54248768c38065f7050
     name: backplane-operator-mce-50
-    source:
-      git:
-        revision: 4283348963c24967370b80bfbadc5b5a2c2d1707
-        url: https://github.com/stolostron/backplane-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:5183de2e7efdcddeb3ae3248876654af795724a1a475e2110057f852190b4ec8
-    name: discovery-operator-mce-50
     source:
       git:
         context: ./
         dockerfileUrl: Dockerfile.rhtap
-        revision: 6e340acf726f4a31faa7fbefac8422ef52183ca8
+        revision: 8f443fe8e977aa0eb49f40c6cc9c07fda97572e0
+        url: https://github.com/stolostron/backplane-operator
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:d21e368f832d6cbb5595dfe768c5a0bff1d380d46e1e3572fd69e1d5719fa97f
+    name: discovery-operator-mce-50
+    source:
+      git:
+        revision: 45c3491bf3312fcadd422784a2ff3e567b8d58e6
         url: https://github.com/stolostron/discovery
 status:
   conditions:
-  - lastTransitionTime: "2026-04-10T16:53:29Z"
+  - lastTransitionTime: "2026-04-13T21:28:17Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-04-10T16:53:30Z"
+  - lastTransitionTime: "2026-04-13T21:28:17Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-04-10T16:53:30Z"
+  - lastTransitionTime: "2026-04-13T21:28:17Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
