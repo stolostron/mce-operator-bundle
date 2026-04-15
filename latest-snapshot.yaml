@@ -2,256 +2,79 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/discovery?rev=64e76328f51dd02865c8669723a8f827228f4dd6
-    build.appstudio.redhat.com/commit_sha: 64e76328f51dd02865c8669723a8f827228f4dd6
-    build.appstudio.redhat.com/target_branch: backplane-5.0
-    pac.test.appstudio.openshift.io/branch: backplane-5.0
+    build.appstudio.openshift.io/repo: https://github.com/openshift/hive?rev=76f9a996844f2559abb4a9b60e562beb35004f60
+    build.appstudio.redhat.com/commit_sha: 76f9a996844f2559abb4a9b60e562beb35004f60
+    build.appstudio.redhat.com/target_branch: master
+    pac.test.appstudio.openshift.io/branch: master
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "71325918909"
+    pac.test.appstudio.openshift.io/check-run-id: "71358098262"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-vyilcp
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-pslaib
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/discovery-operator-mce-50-on-push-ggzgg
+    pac.test.appstudio.openshift.io/installation-id: "35333059"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hive-mce-50-on-push-mgf9p
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "backplane-5.0"
-    pac.test.appstudio.openshift.io/original-prname: discovery-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "1960"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/discovery
-    pac.test.appstudio.openshift.io/repository: discovery-operator-mce-25
+      == "master" && !files.all.all(x, x.matches('^docs/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
+    pac.test.appstudio.openshift.io/original-prname: hive-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "2892"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hive
+    pac.test.appstudio.openshift.io/repository: hive-master
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
-    pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
-    pac.test.appstudio.openshift.io/sha: 64e76328f51dd02865c8669723a8f827228f4dd6
+    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
+    pac.test.appstudio.openshift.io/sha: 76f9a996844f2559abb4a9b60e562beb35004f60
     pac.test.appstudio.openshift.io/sha-title: |-
-      [ACM-30945] Detect secret changes during cluster creation (#1960)
+      Merge pull request #2892 from 2uasimojo/HIVE-3147/konflux-mce-50
 
-      * [ACM-30945] Detect secret changes during cluster creation
-
-      Check if credentials changed every 100 clusters during apply phase to enable
-      quick detection and response to credential revocation. This limits exposure
-      when credentials are invalidated mid-reconciliation.
-
-      - Store original secret data at reconciliation start
-      - Check every 100 clusters if secret changed
-      - Abort cluster creation if credentials changed or deleted
-      - Log clusters created before abort for observability
-
-      Jira: https://redhat.atlassian.net/browse/ACM-30945
-
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-
-      * Add tests and address CodeRabbit feedback
-
-      - Add comprehensive tests for secret change detection
-        - Test secret credential changes during cluster creation
-        - Test secret deletion during cluster creation
-        - Test normal operation with no secret changes
-
-      - Address CodeRabbit review feedback:
-        - Fail-closed on secret read errors (abort instead of continue)
-        - Implement complete bidirectional secret comparison
-        - Detect additions, deletions, and value changes
-
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-
-      * Fix KinD test failure - use proper integer to string conversion
-
-      The tests were using string(rune(i)) which converts integers to Unicode
-      characters instead of string representations. For example, string(rune(44))
-      produces "," instead of "44", resulting in invalid cluster names like
-      "stable-cluster-," that violate RFC 1123 subdomain naming requirements.
-
-      Changed all test cluster name generation to use fmt.Sprintf("cluster-%d", i)
-      to properly convert integers to strings.
-
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-
-      * Fix unit tests for secret change detection
-
-      Added test hook mechanism to coordinate secret changes during cluster
-      creation in tests. The reconciliation loop processes clusters too quickly
-      in the test environment, so tests need to inject secret changes at a
-      precise point (after 100 clusters) using a callback.
-
-      Changes:
-      - Added testClusterApplyHook variable to allow tests to inject actions
-        during cluster creation
-      - Hook is called after each cluster is applied with the current count
-      - Updated tests to use the hook to trigger secret changes at exactly
-        100 clusters
-      - Fixed test expectations to expect exactly 100 clusters (check happens
-        when clusterCount % 100 == 0)
-      - Added debug logging to help diagnose test behavior
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-
-      * Address CodeRabbit review feedback on tests
-
-      Improved test assertions and coverage based on CodeRabbit feedback:
-
-      1. Test assertions now verify secret mutation took effect:
-         - Secret change test verifies ocmAPIToken was actually changed
-         - Secret deletion test verifies secret is NotFound
-         - Both tests use polling loop to ensure count stabilizes at 100
-         - Prevents spurious passes from timing issues
-
-      2. Happy path now exercises the check at 100:
-         - Changed from 50 to 150 clusters in no-change test
-         - Now tests the "secret unchanged, continue after check" path
-         - Ensures the periodic check logic works when no changes detected
-
-      3. Added missing apierrors import for IsNotFound check
-
-      These changes ensure tests properly validate the secret change detection
-      behavior and provide better coverage of the new code paths.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-
-      * Simplify test polling logic to fix CI timeout
-
-      The complex stability detection with polling was causing timeouts in CI
-      (69 seconds). Simplified to use standard Eventually/Consistently pattern:
-      - Eventually waits for count to reach 100
-      - Consistently verifies it stays at 100 for 2 seconds
-
-      This matches Ginkgo best practices and should be more reliable in CI.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-
-      * Fix test race condition: set up hook before creating DiscoveryConfig
-
-      The tests were failing because the mock and hook were being set up AFTER
-      creating the DiscoveryConfig. This created a race condition:
-
-      1. DiscoveryConfig created
-      2. Reconciliation immediately triggered and runs
-      3. Mock and hook set up (too late!)
-
-      This caused all 150 clusters to be created instead of aborting at 100.
-
-      Fixed by reordering test setup:
-      1. Create namespace
-      2. Create secret
-      3. Set up mock (returns 150 clusters)
-      4. Set up hook (changes/deletes secret at count 100)
-      5. Create DiscoveryConfig (triggers reconciliation with hook ready)
-
-      This ensures the hook is in place when reconciliation starts, so it can
-      properly intercept at cluster 100 and change the secret.
-
-      Also removed verbose debug logging from deletion test for cleaner output.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-
-      * Mark hook-based tests as Pending to fix KinD flakiness
-
-      The secret change and deletion tests use hooks to trigger mutations
-      mid-reconciliation. While these work in envtest (test-unit), they are
-      inherently racy in real K8s environments like KinD where reconciliation
-      completes too quickly (~1 second) for the hook to trigger reliably.
-
-      Changed to PIt (Pending It) to skip these tests in CI while keeping them
-      available for local development/debugging. The core secret comparison
-      logic is still validated by:
-      1. test-unit (envtest) where timing is controlled
-      2. The happy path test that verifies secret checks work correctly
-
-      This pragmatic approach balances test coverage with CI reliability.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-
-      * Remove flaky hook-based tests, keep only reliable happy path test
-
-      After discussion, removed the problematic secret change/deletion tests
-      that relied on timing coordination between test hooks and reconciliation.
-
-      WHY REMOVED:
-      - These tests tried to simulate async behavior (secret changes during
-        reconciliation) but our test setup is fundamentally synchronous
-      - Production: reconciliation takes 8+ minutes (plenty of time for detection)
-      - Tests: reconciliation takes <1 second (too fast to coordinate changes)
-      - This timing mismatch made tests inherently flaky in CI environments
-
-      WHAT REMAINS:
-      - Happy path test: validates the check at 100 clusters runs correctly
-        when no secret changes are detected (exercises the core logic)
-      - The implementation is sound and will work in production
-      - QE can validate end-to-end behavior in staging environments
-
-      REMOVED:
-      - testClusterApplyHook mechanism (no longer needed)
-      - Secret change test (flaky)
-      - Secret deletion test (flaky)
-      - Unused apierrors import
-
-      The core feature (detect credential changes every 100 clusters) is
-      implemented correctly. The limitation is in testing async scenarios,
-      not in the feature itself.
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
-
-      ---------
-
-      Signed-off-by: dislbenn <dbennett@redhat.com>
-      Co-authored-by: Claude Sonnet 4.5 <noreply@anthropic.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/discovery/commit/64e76328f51dd02865c8669723a8f827228f4dd6
-    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.0
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/discovery
+      HIVE-3147: Add konflux configs for MCE 5.0
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hive/commit/76f9a996844f2559abb4a9b60e562beb35004f60
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/master
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: discovery
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-14T18:40:09Z"}'
-    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'hypershift-release-mce-50,
-      image-based-install-operator-mce-50, kube-rbac-proxy-mce-50, maestro-mce-50,
-      cluster-proxy-mce-50, hive-mce-50, hypershift-cli-mce-50, cluster-curator-controller-mce-50,
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: hive
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-14T22:50:35Z"}'
+    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'placement-mce-50,
+      registration-operator-mce-50, backplane-must-gather-mce-50, cluster-api-provider-azure-mce-50,
+      cluster-image-set-controller-mce-50, clusterlifecycle-state-metrics-mce-50,
+      hypershift-release-mce-50, image-based-install-operator-mce-50, kube-rbac-proxy-mce-50,
+      maestro-mce-50, cluster-proxy-mce-50, hypershift-cli-mce-50, cluster-curator-controller-mce-50,
       cluster-api-provider-kubevirt-mce-50, cluster-api-provider-openshift-assisted-control-plane-mce-50,
       managedcluster-import-controller-addon-mce-50, managed-serviceaccount-mce-50,
       azure-service-operator-mce-50, cluster-api-provider-agent-mce-50, cluster-api-provider-aws-mce-50,
       cluster-api-webhook-config-mce-50, cluster-permission-mce-50, clusterclaims-controller-mce-50,
       multicloud-manager-mce-50, cloudevents-conductor-mce-50, cluster-api-provider-openshift-assisted-bootstrap-mce-50,
       console-mce-mce-50, provider-credential-controller-mce-50, work-mce-50, addon-manager-mce-50,
-      hypershift-addon-operator-mce-50, registration-mce-50, placement-mce-50, registration-operator-mce-50,
-      backplane-must-gather-mce-50, cluster-api-provider-azure-mce-50, cluster-image-set-controller-mce-50,
-      clusterlifecycle-state-metrics-mce-50' is(are) not included in snapshot due
-      to missing valid containerImage or git source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260414-183136-000":{"lastUpdateTime":"2026-04-14T18:41:08.566399198Z"}}}'
+      hypershift-addon-operator-mce-50, registration-mce-50' is(are) not included
+      in snapshot due to missing valid containerImage or git source
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260414-220931-000":{"lastUpdateTime":"2026-04-14T22:51:33.264283018Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1776191496000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1776204571000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/discovery
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-04-14T18:41:08.566399198Z","details":"Integration
-      test passed","startTime":"2026-04-14T18:40:09.939647623Z","completionTime":"2026-04-14T18:41:08.566399198Z","testPipelineRunName":"enterprise-contract-mce-50-ngpvj"}]'
-  creationTimestamp: "2026-04-14T18:40:09Z"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-04-14T22:51:33.264283018Z","details":"Integration
+      test passed","startTime":"2026-04-14T22:50:35.97470587Z","completionTime":"2026-04-14T22:51:33.264283018Z","testPipelineRunName":"enterprise-contract-mce-50-mzzj2"}]'
+  creationTimestamp: "2026-04-14T22:50:35Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: discovery-operator-mce-50-on-push-ggzgg
-    appstudio.openshift.io/component: discovery-operator-mce-50
+    appstudio.openshift.io/build-pipelinerun: hive-mce-50-on-push-mgf9p
+    appstudio.openshift.io/component: hive-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "71325918909"
+    pac.test.appstudio.openshift.io/check-run-id: "71358098262"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: discovery-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "1960"
-    pac.test.appstudio.openshift.io/repository: discovery-operator-mce-25
-    pac.test.appstudio.openshift.io/sha: 64e76328f51dd02865c8669723a8f827228f4dd6
+    pac.test.appstudio.openshift.io/original-prname: hive-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "2892"
+    pac.test.appstudio.openshift.io/repository: hive-master
+    pac.test.appstudio.openshift.io/sha: 76f9a996844f2559abb4a9b60e562beb35004f60
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: discovery
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1776192004"
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: hive
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1776207030"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20260414-183136-000
+  name: release-mce-50-20260414-220931-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -260,12 +83,18 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "8263711425"
-  uid: 65489a55-8e89-4381-b489-b5f5c70a1371
+  resourceVersion: "8267513589"
+  uid: d8aeb272-68af-4d3c-b780-056afffd3e61
 spec:
   application: release-mce-50
   artifacts: {}
   components:
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-50@sha256:dbf504eaa9e06fe8a6a93fd02a6297a7ac5392ad26588b2d369d48d410fcb56b
+    name: hive-mce-50
+    source:
+      git:
+        revision: 76f9a996844f2559abb4a9b60e562beb35004f60
+        url: https://github.com/openshift/hive
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:0f858eaf137d9390c22551a746aab1329fd34abf23d7f54248768c38065f7050
     name: backplane-operator-mce-50
     source:
@@ -278,22 +107,24 @@ spec:
     name: discovery-operator-mce-50
     source:
       git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: 64e76328f51dd02865c8669723a8f827228f4dd6
         url: https://github.com/stolostron/discovery
 status:
   conditions:
-  - lastTransitionTime: "2026-04-14T18:41:09Z"
+  - lastTransitionTime: "2026-04-14T22:51:33Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-04-14T18:41:09Z"
+  - lastTransitionTime: "2026-04-14T22:51:33Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-04-14T18:41:09Z"
+  - lastTransitionTime: "2026-04-14T22:51:33Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
