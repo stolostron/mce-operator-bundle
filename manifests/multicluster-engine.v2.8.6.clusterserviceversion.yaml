@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2026-04-16T19:28:31Z'
+    createdAt: '2026-04-17T19:23:00Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -26,9 +26,9 @@ metadata:
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
     olm.properties: '[{"type": "olm.maxOpenShiftVersion", "value": "4.19"}]'
-    olm.skipRange: '>=2.6.0 <2.8.5'
-    operators.openshift.io/must-gather-image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:f273c6b80b32a3963648f6961d3e19b231ef99d17a9aca0a4bf5a2cdd220a9f7
-  name: multicluster-engine.v2.8.5
+    olm.skipRange: '>=2.6.0 <2.8.6'
+    operators.openshift.io/must-gather-image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:5b87e1cddf92233b14dbb7000742bc06f8e4b3c1661128bef899bfd6e435c36c
+  name: multicluster-engine.v2.8.6
   namespace: placeholder
   labels:
     operatorframework.io/arch.amd64: supported
@@ -38,7 +38,7 @@ metadata:
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 2.8.5
+  version: 2.8.6
   provider:
     name: Red Hat
   maintainers:
@@ -1762,7 +1762,7 @@ spec:
                 - name: OPERAND_IMAGE_ADDON_MANAGER
                   value: registry.redhat.io/multicluster-engine/addon-manager-rhel9@sha256:d26491760151eff38f53579569cb979b82cae42f9900fa3b50e566acd2f1c295
                 - name: OPERAND_IMAGE_BACKPLANE_MUST_GATHER
-                  value: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:f273c6b80b32a3963648f6961d3e19b231ef99d17a9aca0a4bf5a2cdd220a9f7
+                  value: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:5b87e1cddf92233b14dbb7000742bc06f8e4b3c1661128bef899bfd6e435c36c
                 - name: OPERAND_IMAGE_BACKPLANE_OPERATOR
                   value: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:14a3f2ddbb38b606253f79c343113838f90eecc468b705a4a15a880d02b75b75
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_AGENT
@@ -1832,7 +1832,7 @@ spec:
                 - name: OPERAND_IMAGE_POSTGRESQL_12
                   value: registry.redhat.io/rhel8/postgresql-12@sha256:d87e3802c121291daa517145c4704c96987c6163e044399110208985ef21783a
                 - name: OPERATOR_VERSION
-                  value: 2.8.5
+                  value: 2.8.6
                 - name: OPERATOR_PACKAGE
                   value: multicluster-engine
                 image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:14a3f2ddbb38b606253f79c343113838f90eecc468b705a4a15a880d02b75b75
@@ -1878,12 +1878,12 @@ spec:
                 secret:
                   defaultMode: 420
                   secretName: multicluster-engine-operator-webhook
-  replaces: multicluster-engine.v2.8.4
+  replaces: multicluster-engine.v2.8.5
   relatedImages:
   - name: addon_manager
     image: registry.redhat.io/multicluster-engine/addon-manager-rhel9@sha256:d26491760151eff38f53579569cb979b82cae42f9900fa3b50e566acd2f1c295
   - name: backplane_must_gather
-    image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:f273c6b80b32a3963648f6961d3e19b231ef99d17a9aca0a4bf5a2cdd220a9f7
+    image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:5b87e1cddf92233b14dbb7000742bc06f8e4b3c1661128bef899bfd6e435c36c
   - name: cluster_api_provider_agent
     image: registry.redhat.io/multicluster-engine/cluster-api-provider-agent-rhel9@sha256:ce115d944f95f5c485965d83a628ba65b1118703420e417d097c576829a5c41a
   - name: cluster_api_provider_kubevirt
