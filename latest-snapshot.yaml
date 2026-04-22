@@ -2,78 +2,257 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/backplane-operator?rev=9b62f4785b69e9cd0642088690e4f676aa27146c
-    build.appstudio.redhat.com/commit_sha: 9b62f4785b69e9cd0642088690e4f676aa27146c
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/backplane-operator?rev=4e29071561798efe4b7cc3914218a5e8289032d3
+    build.appstudio.redhat.com/commit_sha: 4e29071561798efe4b7cc3914218a5e8289032d3
     build.appstudio.redhat.com/target_branch: backplane-5.0
     pac.test.appstudio.openshift.io/branch: backplane-5.0
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "72134622860"
+    pac.test.appstudio.openshift.io/check-run-id: "72402922179"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-neqfxg
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-xlwwpx
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/backplane-operator-mce-50-on-push-mcrpd
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/backplane-operator-mce-50-on-push-bzqm7
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-5.0"
     pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "3151"
+    pac.test.appstudio.openshift.io/pull-request: "3106"
     pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/backplane-operator
     pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
-    pac.test.appstudio.openshift.io/sha: 9b62f4785b69e9cd0642088690e4f676aa27146c
+    pac.test.appstudio.openshift.io/sha: 4e29071561798efe4b7cc3914218a5e8289032d3
     pac.test.appstudio.openshift.io/sha-title: |-
-      [create-pull-request] automated change (#3151)
+      ACM-30181 ACM-31240  Inherit TLS profile from OpenShift APIServer (#3106)
 
-      Signed-off-by: GitHub <noreply@github.com>
-      Co-authored-by: openshift-merge-bot <openshift-merge-bot@users.noreply.github.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/backplane-operator/commit/9b62f4785b69e9cd0642088690e4f676aa27146c
+      * Add TLS profile ConfigMap infrastructure
+
+      Add utility functions and rendering support for creating TLS profile
+      ConfigMaps in OCM namespaces. Includes:
+      - GetAPIServerTLSProfile() to read OpenShift APIServer TLS config
+      - OpenSSL to IANA cipher suite conversion with lookup table
+      - EnsureTLSProfileConfigMap() to create/update ConfigMap
+      - Namespace lookup table for open-cluster-management-hub and
+        open-cluster-management-agent
+
+      The ConfigMap will contain minTLSVersion and cipherSuites in IANA
+      format, sourced from the cluster's APIServer TLS security profile.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Integrate TLS profile ConfigMap into reconcile loop
+
+      Add TLS profile ConfigMap creation in the applyTemplate function
+      after namespace existence check. The ConfigMap is created in
+      open-cluster-management-hub and open-cluster-management-agent
+      namespaces when templates are applied to those namespaces.
+
+      Also add RBAC annotation for reading APIServer resources from
+      config.openshift.io API group.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Add unit tests for TLS profile ConfigMap functionality
+
+      Add comprehensive unit tests for:
+      - ConvertCipherSuitesToIANA: Tests OpenSSL to IANA cipher conversion
+        including TLS 1.3, TLS 1.2, Old profile, unknown ciphers, and
+        empty lists
+      - GetAPIServerTLSProfile: Tests unit test mode returning Intermediate
+        profile
+      - NamespaceRequiresTLSProfile: Tests namespace lookup for both OCM
+        hub and agent namespaces
+      - EnsureTLSProfileConfigMap: Basic test verifying function exists
+
+      All tests pass successfully.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * refactored configmap to be specific to cluster-manager
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * debug line
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Fix TLS ConfigMap namespace to use operator namespace
+
+      Deploy ocm-tls-profile ConfigMap to operator namespace (mce.Spec.TargetNamespace)
+      instead of hardcoded "open-cluster-management-hub". Cluster-manager operator runs
+      in multicluster-engine namespace and watches ConfigMap there.
+
+      Fixes unit test failures where hardcoded namespace didn't exist.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+      * Inherit TLS profile from OpenShift APIServer
+
+      Remove hardcoded TLS 1.2 configuration from webhook server.
+      Fetch TLS security profile dynamically from OpenShift APIServer resource.
+      Defaults to Intermediate profile if not set.
+      Adds RBAC permission to read config.openshift.io/apiservers.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Fix ctx redeclaration in main.go
+
+      Change ctx := to ctx = at line 232 since ctx already declared at line 182.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Add RBAC permission for discovery-operator to read APIServer TLS profile
+
+      Discovery operator now reads OpenShift APIServer TLS profile to configure
+      webhook server TLS settings. Updated ClusterRole template to grant
+      apiservers.config.openshift.io read permissions.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+      * Run go generate to update RBAC permissions
+
+      Added apiserver RBAC rule from discovery template.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+      * Add cipher suite configuration from TLS profile
+
+      Enhanced TLS profile inheritance to include cipher suites in addition
+      to minimum TLS version. Updates webhook server configuration to:
+
+      - Convert OpenShift cipher suite names to crypto/tls constants
+      - Apply cipher suites for TLS ≤ 1.2 (TLS 1.3 ciphers auto-managed)
+      - Use secure default cipher list in fallback TLSProfileSpec
+
+      Implements ConvertCipherSuites() utility to map OpenSSL cipher names
+      to Go crypto/tls uint16 constants, handling only supported ciphers.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+
+      * Add unit tests for TLS conversion functions
+
+      Add comprehensive unit tests for ConvertTLSVersion and ConvertCipherSuites:
+      - Test all TLS version conversions (1.0, 1.1, 1.2, 1.3)
+      - Test default fallback to TLS 1.2 for unknown versions
+      - Test OpenSSL to crypto/tls cipher suite conversion
+      - Test TLS 1.3 cipher filtering (auto-managed by Go)
+      - Test DHE cipher filtering (not supported in crypto/tls)
+      - Test unknown cipher handling
+      - Test CBC and GCM cipher conversions
+
+      Coverage for pkg/utils increased from 67.5% to 73.1%.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Add comprehensive unit tests for EnsureTLSProfileConfigMaps
+
+      Replace placeholder test with proper unit tests using fake Kubernetes client:
+      - Test ConfigMap creation in single namespace
+      - Test ConfigMap creation across multiple namespaces
+      - Test handling of empty namespace list
+      - Verify ConfigMap data contains minTLSVersion and cipherSuites
+      - Verify cipherSuites is comma-separated IANA format
+      - Verify controller reference to MultiClusterEngine is set correctly
+      - Verify owner reference has controller=true flag
+
+      Uses controller-runtime fake client builder for realistic testing
+      without requiring live cluster.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Add nosec comments for false positive security warnings
+
+      - Add #nosec G101 to ServiceMonitor BearerTokenFile: standard k8s
+        service account token path, not a hardcoded credential
+      - Add #nosec G122 to renderer.go filepath operation: reads from
+        operator's own template directory (baked into image), not user input
+
+      These are false positives blocking SonarCloud checks.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Fix GetAPIServerTLSProfile to work on non-OpenShift clusters
+
+      Add check for DeployOnOCP() before attempting to query OpenShift
+      APIServer resource. On non-OpenShift (vanilla Kubernetes) clusters,
+      return default Intermediate TLS profile instead of failing with
+      resource not found error.
+
+      This allows EnsureTLSProfileConfigMaps to work on both OpenShift
+      and vanilla Kubernetes clusters without breaking reconciliation.
+
+      Add test coverage for non-OCP scenario.
+
+      Coverage for pkg/utils increased from 73.1% to 73.7%.
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Fixed detectNonOCP ordering bug
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      * Fixed tests
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+
+      ---------
+
+      Signed-off-by: Nathaniel Graham <ngraham@redhat.com>
+      Co-authored-by: Claude Sonnet 4.5 <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/backplane-operator/commit/4e29071561798efe4b7cc3914218a5e8289032d3
     pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.0
     pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
     pac.test.appstudio.openshift.io/url-repository: backplane-operator
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-20T13:39:14Z"}'
-    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'managedcluster-import-controller-addon-mce-50,
-      cluster-api-webhook-config-mce-50, cluster-permission-mce-50, hypershift-release-mce-50,
-      managed-serviceaccount-mce-50, azure-service-operator-mce-50, cluster-api-provider-azure-mce-50,
-      console-mce-mce-50, registration-operator-mce-50, cluster-api-provider-openshift-assisted-bootstrap-mce-50,
-      clusterlifecycle-state-metrics-mce-50, cloudevents-conductor-mce-50, cluster-api-provider-aws-mce-50,
-      image-based-install-operator-mce-50, maestro-mce-50, registration-mce-50, work-mce-50,
-      hypershift-addon-operator-mce-50, hypershift-cli-mce-50, addon-manager-mce-50,
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-21T21:41:57Z"}'
+    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'cloudevents-conductor-mce-50,
+      cluster-api-provider-aws-mce-50, image-based-install-operator-mce-50, maestro-mce-50,
+      registration-mce-50, work-mce-50, hypershift-addon-operator-mce-50, addon-manager-mce-50,
       cluster-api-provider-kubevirt-mce-50, cluster-proxy-mce-50, cluster-api-provider-agent-mce-50,
-      multicloud-manager-mce-50, placement-mce-50, cluster-api-provider-openshift-assisted-control-plane-mce-50'
+      multicloud-manager-mce-50, placement-mce-50, cluster-api-provider-openshift-assisted-control-plane-mce-50,
+      managedcluster-import-controller-addon-mce-50, cluster-api-webhook-config-mce-50,
+      cluster-permission-mce-50, managed-serviceaccount-mce-50, azure-service-operator-mce-50,
+      cluster-api-provider-azure-mce-50, console-mce-mce-50, registration-operator-mce-50,
+      cluster-api-provider-openshift-assisted-bootstrap-mce-50, clusterlifecycle-state-metrics-mce-50'
       is(are) not included in snapshot due to missing valid containerImage or git
       source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260420-132651-000":{"lastUpdateTime":"2026-04-20T13:40:18.885771637Z"}}}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260421-213312-000":{"lastUpdateTime":"2026-04-21T21:42:54.980411482Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1776691611000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1776807192000"
     test.appstudio.openshift.io/pr-status: merged
     test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-04-20T13:40:18.885771637Z","details":"Integration
-      test passed with warnings","startTime":"2026-04-20T13:39:14.317565923Z","completionTime":"2026-04-20T13:40:18.885771637Z","testPipelineRunName":"enterprise-contract-mce-50-2mx2t"}]'
-  creationTimestamp: "2026-04-20T13:39:14Z"
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-04-21T21:42:54.980411482Z","details":"Integration
+      test passed with warnings","startTime":"2026-04-21T21:41:57.448056309Z","completionTime":"2026-04-21T21:42:54.980411482Z","testPipelineRunName":"enterprise-contract-mce-50-99jjr"}]'
+  creationTimestamp: "2026-04-21T21:41:57Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: backplane-operator-mce-50-on-push-mcrpd
+    appstudio.openshift.io/build-pipelinerun: backplane-operator-mce-50-on-push-bzqm7
     appstudio.openshift.io/component: backplane-operator-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "72134622860"
+    pac.test.appstudio.openshift.io/check-run-id: "72402922179"
     pac.test.appstudio.openshift.io/event-type: push
     pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "3151"
+    pac.test.appstudio.openshift.io/pull-request: "3106"
     pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
-    pac.test.appstudio.openshift.io/sha: 9b62f4785b69e9cd0642088690e4f676aa27146c
+    pac.test.appstudio.openshift.io/sha: 4e29071561798efe4b7cc3914218a5e8289032d3
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
     pac.test.appstudio.openshift.io/url-repository: backplane-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1776692342"
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1776807712"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20260420-132651-000
+  name: release-mce-50-20260421-213312-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -82,13 +261,65 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "8355262006"
-  uid: b73b749a-248f-45f5-b2f2-ce91ac37afbb
+  resourceVersion: "8387089142"
+  uid: 786c1967-ad79-41bc-88ae-c97adbb7aed0
 spec:
   application: release-mce-50
   artifacts: {}
   componentGroup: ""
   components:
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-image-set-controller-mce-50@sha256:89cf3338a5b6efc8f3697e07de25114fc7db02b653b7c9678802a08f464ac9d4
+    name: cluster-image-set-controller-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 7bf4f29e2fb488109bd793d80258edd83397f729
+        url: https://github.com/stolostron/cluster-image-set-controller
+    version: ""
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-50@sha256:772e94fce98cc47c7a8995aa4548292c9bd05c94835f31d4da14f96803cce739
+    name: kube-rbac-proxy-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Containerfile.operator
+        revision: 9e2dd1053b6a7e7052ccc733fa207fae0ccb1f89
+        url: https://github.com/stolostron/kube-rbac-proxy
+    version: ""
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-50@sha256:216773f323b05bd601cc418e37cdd9ec7544e8b3c7cc82b09165ba0804627dc6
+    name: hypershift-cli-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Containerfile.cli
+        revision: 1a009ae95b8cfab19050a675d24c3a22fb23d67b
+        url: https://github.com/openshift/hypershift
+    version: ""
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-must-gather-mce-50@sha256:789901eb3fda9c528055a860e46cbf84004d8a934831d02a0c7e2d9e04893a1f
+    name: backplane-must-gather-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: f54193dae49da76cfd2557d97ee2c77c00a2e1e6
+        url: https://github.com/stolostron/backplane-must-gather
+    version: ""
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:e4c61bcf5a1ad9e373f30d5d1a80acae56a5f6bfd3d6baac14a7d07651dc921b
+    name: discovery-operator-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 6a3d75c485fce8ee652949054241f9af50a11f34
+        url: https://github.com/stolostron/discovery
+    version: ""
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:c1e0eda4cd1c8110586ba377b109ad8205ebd3ac3a7014c51fd73abe3f3c7a8d
+    name: backplane-operator-mce-50
+    source:
+      git:
+        revision: 4e29071561798efe4b7cc3914218a5e8289032d3
+        url: https://github.com/stolostron/backplane-operator
+    version: ""
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-curator-controller-mce-50@sha256:283473d789a2ebd0a186d9a81f98ed30785079cb3fb38f98d6f013d765427783
     name: cluster-curator-controller-mce-50
     source:
@@ -97,6 +328,15 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: d5e150d5524f364917d17d40b71863be17df1969
         url: https://github.com/stolostron/cluster-curator-controller
+    version: ""
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-50@sha256:9b128aeb80947c2bfa073cb5cc0ada7a48c9e89ee6a10d83cad11ca2ca8cecc0
+    name: hypershift-release-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Containerfile.operator
+        revision: 1a009ae95b8cfab19050a675d24c3a22fb23d67b
+        url: https://github.com/openshift/hypershift
     version: ""
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/provider-credential-controller-mce-50@sha256:a7969fc4219eba4efff0bc5b95be9e3d40e9509b5919ad41cd86b24d328259f2
     name: provider-credential-controller-mce-50
@@ -125,63 +365,20 @@ spec:
         revision: 8d6b6361a9d55eabdaee25cf87b3cd364ad7ad20
         url: https://github.com/stolostron/clusterclaims-controller
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-image-set-controller-mce-50@sha256:89cf3338a5b6efc8f3697e07de25114fc7db02b653b7c9678802a08f464ac9d4
-    name: cluster-image-set-controller-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 7bf4f29e2fb488109bd793d80258edd83397f729
-        url: https://github.com/stolostron/cluster-image-set-controller
-    version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-50@sha256:772e94fce98cc47c7a8995aa4548292c9bd05c94835f31d4da14f96803cce739
-    name: kube-rbac-proxy-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Containerfile.operator
-        revision: 9e2dd1053b6a7e7052ccc733fa207fae0ccb1f89
-        url: https://github.com/stolostron/kube-rbac-proxy
-    version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-must-gather-mce-50@sha256:789901eb3fda9c528055a860e46cbf84004d8a934831d02a0c7e2d9e04893a1f
-    name: backplane-must-gather-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: f54193dae49da76cfd2557d97ee2c77c00a2e1e6
-        url: https://github.com/stolostron/backplane-must-gather
-    version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:e4c61bcf5a1ad9e373f30d5d1a80acae56a5f6bfd3d6baac14a7d07651dc921b
-    name: discovery-operator-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 6a3d75c485fce8ee652949054241f9af50a11f34
-        url: https://github.com/stolostron/discovery
-    version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:ffe0816c12eccb91642b0fcf97cfed782cbf5ca4a0d15cfa9b227e1daa7e0175
-    name: backplane-operator-mce-50
-    source:
-      git:
-        revision: 9b62f4785b69e9cd0642088690e4f676aa27146c
-        url: https://github.com/stolostron/backplane-operator
-    version: ""
 status:
   conditions:
-  - lastTransitionTime: "2026-04-20T13:40:19Z"
+  - lastTransitionTime: "2026-04-21T21:42:54Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-04-20T13:40:19Z"
+  - lastTransitionTime: "2026-04-21T21:42:55Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-04-20T13:40:19Z"
+  - lastTransitionTime: "2026-04-21T21:42:55Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
