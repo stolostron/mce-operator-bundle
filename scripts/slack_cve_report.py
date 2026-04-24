@@ -321,7 +321,7 @@ def create_slack_message(version, results, format_type='summary', image_details=
                 "type": "header",
                 "text": {
                     "type": "plain_text",
-                    "text": f"{severity_emoji} CVE Gate Report – MCE {version}",
+                    "text": f"{severity_emoji} CVE Gate Report - MCE {version}",
                     "emoji": True
                 }
             },
