@@ -2,59 +2,60 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/clusterlifecycle-state-metrics?rev=5abb4be1e15dbcf3848e8521d6afeda33ce07d87
-    build.appstudio.redhat.com/commit_sha: 5abb4be1e15dbcf3848e8521d6afeda33ce07d87
-    build.appstudio.redhat.com/target_branch: backplane-2.6
-    pac.test.appstudio.openshift.io/branch: backplane-2.6
-    pac.test.appstudio.openshift.io/check-run-id: "72797141524"
+    build.appstudio.openshift.io/repo: https://github.com/openshift/hypershift?rev=6b8567c72c5ddeef57b3c69d990bcb99ebd834e2
+    build.appstudio.redhat.com/commit_sha: 6b8567c72c5ddeef57b3c69d990bcb99ebd834e2
+    build.appstudio.redhat.com/target_branch: release-4.16
+    pac.test.appstudio.openshift.io/branch: release-4.16
+    pac.test.appstudio.openshift.io/check-run-id: "72970064121"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-dlgpvv
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-xplkkx
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/clusterlifecycle-state-metrics-mce-26-on-push-pqfwj
+    pac.test.appstudio.openshift.io/installation-id: "35333059"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hypershift-release-mce-26-on-push-sh76w
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
-    pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "backplane-2.6"
-    pac.test.appstudio.openshift.io/original-prname: clusterlifecycle-state-metrics-mce-26-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/clusterlifecycle-state-metrics
-    pac.test.appstudio.openshift.io/repository: clusterlifecycle-state-metrics-1tww
+    pac.test.appstudio.openshift.io/on-cel-expression: |
+      event == "push"
+      && target_branch == "release-4.16"
+      && files.all.exists(x, !x.matches('^(?:docs|examples|enhancements|contrib)/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
+    pac.test.appstudio.openshift.io/original-prname: hypershift-release-mce-26-on-push
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hypershift
+    pac.test.appstudio.openshift.io/repository: hypershift-manual-merge
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: 5abb4be1e15dbcf3848e8521d6afeda33ce07d87
-    pac.test.appstudio.openshift.io/sha-title: 'chore(deps): update module golang.org/x/crypto
-      to v0.45.0 [security] (#579)'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/clusterlifecycle-state-metrics/commit/5abb4be1e15dbcf3848e8521d6afeda33ce07d87
-    pac.test.appstudio.openshift.io/source-branch: backplane-2.6
+    pac.test.appstudio.openshift.io/sha: 6b8567c72c5ddeef57b3c69d990bcb99ebd834e2
+    pac.test.appstudio.openshift.io/sha-title: 'Merge pull request #7704 from gaol/416_cvo_obo'
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hypershift/commit/6b8567c72c5ddeef57b3c69d990bcb99ebd834e2
+    pac.test.appstudio.openshift.io/source-branch: release-4.16
     pac.test.appstudio.openshift.io/source-repo-url: ""
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: clusterlifecycle-state-metrics
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-23T23:48:01Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-26-release-mce-26-20260423-234102-000":{"lastUpdateTime":"2026-04-23T23:48:55.103032226Z"}}}'
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: hypershift
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-24T23:50:11Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-26-release-mce-26-20260424-233609-000":{"lastUpdateTime":"2026-04-24T23:51:07.2722251Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1776987662000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/clusterlifecycle-state-metrics
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-26","status":"BuildPLRInProgress","lastUpdateTime":"2026-04-23T23:48:55.103032226Z","details":"Integration
-      test passed with warnings","startTime":"2026-04-23T23:48:01.416001447Z","completionTime":"2026-04-23T23:48:55.103032226Z","testPipelineRunName":"enterprise-contract-mce-26-zldwl"}]'
-  creationTimestamp: "2026-04-23T23:48:01Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1777073769000"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hypershift
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-26","status":"BuildPLRInProgress","lastUpdateTime":"2026-04-24T23:51:07.2722251Z","details":"Integration
+      test passed with warnings","startTime":"2026-04-24T23:50:11.481470622Z","completionTime":"2026-04-24T23:51:07.2722251Z","testPipelineRunName":"enterprise-contract-mce-26-mr4t7"}]'
+  creationTimestamp: "2026-04-24T23:50:11Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-26
-    appstudio.openshift.io/build-pipelinerun: clusterlifecycle-state-metrics-mce-26-on-push-pqfwj
-    appstudio.openshift.io/component: clusterlifecycle-state-metrics-mce-26
-    pac.test.appstudio.openshift.io/check-run-id: "72797141524"
+    appstudio.openshift.io/build-pipelinerun: hypershift-release-mce-26-on-push-sh76w
+    appstudio.openshift.io/component: hypershift-release-mce-26
+    pac.test.appstudio.openshift.io/check-run-id: "72970064121"
     pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: clusterlifecycle-state-metrics-mce-26-on-push
-    pac.test.appstudio.openshift.io/repository: clusterlifecycle-state-metrics-1tww
-    pac.test.appstudio.openshift.io/sha: 5abb4be1e15dbcf3848e8521d6afeda33ce07d87
+    pac.test.appstudio.openshift.io/original-prname: hypershift-release-mce-26-on-push
+    pac.test.appstudio.openshift.io/repository: hypershift-manual-merge
+    pac.test.appstudio.openshift.io/sha: 6b8567c72c5ddeef57b3c69d990bcb99ebd834e2
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: clusterlifecycle-state-metrics
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1776988076"
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: hypershift
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1777074605"
     test.appstudio.openshift.io/type: component
-  name: release-mce-26-20260423-234102-000
+  name: release-mce-26-20260424-233609-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -63,13 +64,31 @@ metadata:
     kind: Application
     name: release-mce-26
     uid: 43345c03-0b85-4096-aa0c-17856575797d
-  resourceVersion: "8432183567"
-  uid: 495776ec-76af-41e9-9c8d-ebe9868a1b7d
+  resourceVersion: "8449597171"
+  uid: 78ae47fa-14a3-4dad-a70b-7e155c79b645
 spec:
   application: release-mce-26
   artifacts: {}
   componentGroup: ""
   components:
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/clusterlifecycle-state-metrics-mce-26@sha256:fe391ed4585d8e29ac7153dcd2dd2f4671463ca06f177aecb91aacedbc9b1f80
+    name: clusterlifecycle-state-metrics-mce-26
+    source:
+      git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.rhtap
+        revision: 5abb4be1e15dbcf3848e8521d6afeda33ce07d87
+        url: https://github.com/stolostron/clusterlifecycle-state-metrics
+    version: ""
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/discovery-operator-mce-26@sha256:9f6db57c603af9a525ab76fd5ca017b245c2ff1fedf845edf3963098e58acbe0
+    name: discovery-operator-mce-26
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: a4492d88a391f6aa82f25305fd45b0e5d7001b2f
+        url: https://github.com/stolostron/discovery
+    version: ""
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-26@sha256:e73a07b8b23db946f0bba623080825422e61c9955479f9b05332572116b4076c
     name: hypershift-cli-mce-26
     source:
@@ -151,7 +170,7 @@ spec:
         revision: c5c94d13594bd5c5c89af33942ee585703ec5500
         url: https://github.com/stolostron/multicloud-operators-foundation
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/placement-mce-26@sha256:d1cb34a0c80f17bb85256a3498afcf73629ea86182092b5fde6a235de71a8e33
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/placement-mce-26@sha256:8787305c1f17e12c05ed197d007022634ecd1ec57c4521ef05df5a56614a1f52
     name: placement-mce-26
     source:
       git:
@@ -178,21 +197,19 @@ spec:
         revision: 6c033d8c4555acf9bb3c1db49dda1a9b0e4533a2
         url: https://github.com/stolostron/cluster-image-set-controller
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/hive-mce-26@sha256:cd67b3b4e3b6fe7d9b3cbfb55d4b239b4dfd539b04042888c7f4e0cf944a7293
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/hive-mce-26@sha256:edc633a24518564545da41bb272d220a4c42ca356d18c8b71181d7e8e372214c
     name: hive-mce-26
     source:
       git:
         context: ./
         dockerfileUrl: Dockerfile
-        revision: 72bdf2d9ae7e0fb8dcecd847d01b44e3df81882b
+        revision: 6c66e2052422fed30f1533df70e713c02170653b
         url: https://github.com/openshift/hive
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/hypershift-release-mce-26@sha256:8c76df895af0d7c336b59f32a36dea17f7d0c0133463f7ad3ce11e1a5f563e9e
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/hypershift-release-mce-26@sha256:bdad24b3b37e35b963dff4ae07de6136a1a384b6ae14a56fe8e12aeb952d4da5
     name: hypershift-release-mce-26
     source:
       git:
-        context: ./
-        dockerfileUrl: Containerfile.operator
         revision: 6b8567c72c5ddeef57b3c69d990bcb99ebd834e2
         url: https://github.com/openshift/hypershift
     version: ""
@@ -214,7 +231,7 @@ spec:
         revision: 3f310b9c37d2d497462996dfbc8845a8e0aa1689
         url: https://github.com/stolostron/managedcluster-import-controller
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/registration-mce-26@sha256:d0d5879664e384e29af64af103525582e11b77defe5c5373ceaa1aa5720794e3
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/registration-mce-26@sha256:036915331992d524d03bf722bbf63fe5472510c08b6f794f98c21619e19cec93
     name: registration-mce-26
     source:
       git:
@@ -232,7 +249,7 @@ spec:
         revision: 5fc2c0bde567f01bb9b1d919ed5760d8cb0261e7
         url: https://github.com/stolostron/ocm
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/addon-manager-mce-26@sha256:63dd3fdc6f851ea825704fb85fd867c0a2c287adbf2045e7602093ae8baf05cf
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/addon-manager-mce-26@sha256:06baafdac1773ea4941126c0d653d2ac963ecd27a745c225f95aa712644c58dc
     name: addon-manager-mce-26
     source:
       git:
@@ -295,36 +312,20 @@ spec:
         revision: a902ccb6acc96f9041a639ff43e047da313ceae9
         url: https://github.com/stolostron/provider-credential-controller
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/clusterlifecycle-state-metrics-mce-26@sha256:fe391ed4585d8e29ac7153dcd2dd2f4671463ca06f177aecb91aacedbc9b1f80
-    name: clusterlifecycle-state-metrics-mce-26
-    source:
-      git:
-        revision: 5abb4be1e15dbcf3848e8521d6afeda33ce07d87
-        url: https://github.com/stolostron/clusterlifecycle-state-metrics
-    version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/release-mce-26/discovery-operator-mce-26@sha256:9f6db57c603af9a525ab76fd5ca017b245c2ff1fedf845edf3963098e58acbe0
-    name: discovery-operator-mce-26
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: a4492d88a391f6aa82f25305fd45b0e5d7001b2f
-        url: https://github.com/stolostron/discovery
-    version: ""
 status:
   conditions:
-  - lastTransitionTime: "2026-04-23T23:48:55Z"
+  - lastTransitionTime: "2026-04-24T23:51:07Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-04-23T23:48:55Z"
+  - lastTransitionTime: "2026-04-24T23:51:07Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-04-23T23:48:55Z"
+  - lastTransitionTime: "2026-04-24T23:51:07Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
