@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2026-04-28T14:16:38Z'
+    createdAt: '2026-04-28T15:25:10Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -29,9 +29,9 @@ metadata:
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
     olm.properties: '[{"type": "olm.maxOpenShiftVersion", "value": "5.1"}]'
-    olm.skipRange: '>=2.17.0-0 <5.0.0-40'
+    olm.skipRange: '>=2.17.0-0 <5.0.0-41'
     operators.openshift.io/must-gather-image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:c1c296e9e4a62736d523c2a86dadabe81dd704c9afe6efed0800a908c692d563
-  name: multicluster-engine.v5.0.0-40
+  name: multicluster-engine.v5.0.0-41
   namespace: placeholder
   labels:
     operatorframework.io/arch.amd64: supported
@@ -41,7 +41,7 @@ metadata:
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 5.0.0-40
+  version: 5.0.0-41
   provider:
     name: Red Hat
   maintainers:
@@ -3565,7 +3565,7 @@ spec:
                 - name: OPERAND_IMAGE_CLUSTER_PROXY
                   value: registry.redhat.io/multicluster-engine/cluster-proxy-rhel9@sha256:cbfa013f437e9f8183f58863248a107718bbf48c6aac0d6190d0473bdcfa1f1b
                 - name: OPERAND_IMAGE_CONSOLE_MCE
-                  value: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:bf37f022dcada3d54d9f6223d3c120467a557e175837aa1f235892fb79149f83
+                  value: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:7cae7adf4250e914fadeb19ff0dde9924d4d26e05c628ecd84a3c8404233d612
                 - name: OPERAND_IMAGE_DISCOVERY_OPERATOR
                   value: registry.redhat.io/multicluster-engine/discovery-rhel9@sha256:b3f937407b9b1f2bed49fe481876a4ef82661499be5eee974e7bb4a132cf6ea6
                 - name: OPERAND_IMAGE_OPENSHIFT_HIVE
@@ -3601,13 +3601,13 @@ spec:
                 - name: OPERAND_IMAGE_ASSISTED_IMAGE_SERVICE
                   value: registry.redhat.io/multicluster-engine/assisted-image-service-rhel9@sha256:8e45317475d5e5c83106ad4ee4f5ab636f11ecbb45c47ba2ff1b8aa7f4a3f227
                 - name: OPERAND_IMAGE_ASSISTED_INSTALLER
-                  value: registry.redhat.io/multicluster-engine/assisted-installer-rhel9@sha256:9dc2f69d92a59061995d0eb5a8e16f069399a5d6fffec813cf9a662d4929c5a9
+                  value: registry.redhat.io/multicluster-engine/assisted-installer-rhel9@sha256:58370405ab51dc8710ede59c65aec1fba1608f37a41493e5046a27555b2c6a13
                 - name: OPERAND_IMAGE_ASSISTED_INSTALLER_AGENT
-                  value: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:11d3628ce65f42d47a36320871f81ce161b9041bb8f56f131041882620d9fc77
+                  value: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:d1a74716b90cb49620bab7699657d9bc794775dad21e0fe9107afd871903a260
                 - name: OPERAND_IMAGE_ASSISTED_INSTALLER_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:f2264ec242dff3e57a9d2a604ebe0e0d053e2967ef03120e33a6fe15c1021c04
+                  value: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:94340fb7de6f5f276b186b6ea06a98ac1f91292954db395f92d7bce7efab5ad6
                 - name: OPERAND_IMAGE_ASSISTED_SERVICE_9
-                  value: registry.redhat.io/multicluster-engine/assisted-service-9-rhel9@sha256:2c8ededd7ab3b173715c68e08fc4d3e1a4b091549ee89fada50fa17b2092e636
+                  value: registry.redhat.io/multicluster-engine/assisted-service-9-rhel9@sha256:fdb614169671ce75c478498af9709d924274eab9d6be5e07d1a912668cd051cb
                 - name: OPERAND_IMAGE_OSE_CLUSTER_API_RHEL9
                   value: registry.stage.redhat.io/openshift4/ose-cluster-api-rhel9@sha256:e79b5e1b5e6b6bc604007d421b056f3cb3ac1d8a034e2f2ed45031c90664aa6f
                 - name: OPERAND_IMAGE_OSE_BAREMETAL_CLUSTER_API_CONTROLLERS_RHEL9
@@ -3616,6 +3616,10 @@ spec:
                   value: registry.redhat.io/rhel9/postgresql-13@sha256:87efd49e2cb5ad857dffb126f4b365bd790fd722bcd4acf1e936287ec46d2816
                 - name: OPERAND_IMAGE_POSTGRESQL_15
                   value: registry.redhat.io/rhel9/postgresql-15@sha256:17d8f73eefb3492386bf1984ca32a6c5556d559ab19bdbccb5bc01bcf6d435ab
+                - name: OPERATOR_VERSION
+                  value: 5.0.0-41
+                - name: OPERATOR_PACKAGE
+                  value: multicluster-engine
                 image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:5a092a6168ec754c6ce724411e352a1bac0ad04a1c1f75162c27994721561bae
                 livenessProbe:
                   httpGet:
@@ -3695,7 +3699,7 @@ spec:
   - name: cluster_proxy
     image: registry.redhat.io/multicluster-engine/cluster-proxy-rhel9@sha256:cbfa013f437e9f8183f58863248a107718bbf48c6aac0d6190d0473bdcfa1f1b
   - name: console_mce
-    image: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:bf37f022dcada3d54d9f6223d3c120467a557e175837aa1f235892fb79149f83
+    image: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:7cae7adf4250e914fadeb19ff0dde9924d4d26e05c628ecd84a3c8404233d612
   - name: discovery_operator
     image: registry.redhat.io/multicluster-engine/discovery-rhel9@sha256:b3f937407b9b1f2bed49fe481876a4ef82661499be5eee974e7bb4a132cf6ea6
   - name: openshift_hive
@@ -3731,13 +3735,13 @@ spec:
   - name: assisted_image_service
     image: registry.redhat.io/multicluster-engine/assisted-image-service-rhel9@sha256:8e45317475d5e5c83106ad4ee4f5ab636f11ecbb45c47ba2ff1b8aa7f4a3f227
   - name: assisted_installer
-    image: registry.redhat.io/multicluster-engine/assisted-installer-rhel9@sha256:9dc2f69d92a59061995d0eb5a8e16f069399a5d6fffec813cf9a662d4929c5a9
+    image: registry.redhat.io/multicluster-engine/assisted-installer-rhel9@sha256:58370405ab51dc8710ede59c65aec1fba1608f37a41493e5046a27555b2c6a13
   - name: assisted_installer_agent
-    image: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:11d3628ce65f42d47a36320871f81ce161b9041bb8f56f131041882620d9fc77
+    image: registry.redhat.io/multicluster-engine/assisted-installer-agent-rhel9@sha256:d1a74716b90cb49620bab7699657d9bc794775dad21e0fe9107afd871903a260
   - name: assisted_installer_controller
-    image: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:f2264ec242dff3e57a9d2a604ebe0e0d053e2967ef03120e33a6fe15c1021c04
+    image: registry.redhat.io/multicluster-engine/assisted-installer-controller-rhel9@sha256:94340fb7de6f5f276b186b6ea06a98ac1f91292954db395f92d7bce7efab5ad6
   - name: assisted_service_9
-    image: registry.redhat.io/multicluster-engine/assisted-service-9-rhel9@sha256:2c8ededd7ab3b173715c68e08fc4d3e1a4b091549ee89fada50fa17b2092e636
+    image: registry.redhat.io/multicluster-engine/assisted-service-9-rhel9@sha256:fdb614169671ce75c478498af9709d924274eab9d6be5e07d1a912668cd051cb
   - name: ose_cluster_api_rhel9
     image: registry.stage.redhat.io/openshift4/ose-cluster-api-rhel9@sha256:e79b5e1b5e6b6bc604007d421b056f3cb3ac1d8a034e2f2ed45031c90664aa6f
   - name: ose_baremetal_cluster_api_controllers_rhel9
