@@ -2,61 +2,63 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/openshift/cluster-api-provider-agent?rev=5b9024f5216af25fa929d5edbd658e966eecd409
-    build.appstudio.redhat.com/commit_sha: 5b9024f5216af25fa929d5edbd658e966eecd409
-    build.appstudio.redhat.com/target_branch: release-ocm-2.14
-    pac.test.appstudio.openshift.io/branch: release-ocm-2.14
+    build.appstudio.openshift.io/component-nudge-processed: "true"
+    build.appstudio.openshift.io/repo: https://github.com/openshift/hypershift?rev=b22d1d795cbabc0d3b53955cf3ff2788e0115467
+    build.appstudio.redhat.com/commit_sha: b22d1d795cbabc0d3b53955cf3ff2788e0115467
+    build.appstudio.redhat.com/target_branch: release-4.19
+    pac.test.appstudio.openshift.io/branch: release-4.19
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "73492867400"
+    pac.test.appstudio.openshift.io/check-run-id: "73596011044"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-efhple
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-xkwkta
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35333059"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/cluster-api-provider-agent-mce-29-on-push-5mxk7
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hypershift-release-mce-29-on-push-4d7kb
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
-    pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "release-ocm-2.14"
-    pac.test.appstudio.openshift.io/original-prname: cluster-api-provider-agent-mce-29-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/cluster-api-provider-agent
-    pac.test.appstudio.openshift.io/repository: cluster-api-provider-agent-mce-29
+    pac.test.appstudio.openshift.io/on-cel-expression: |
+      event == "push"
+      && target_branch == "release-4.19"
+      && files.all.exists(x, !x.matches('^(?:docs|examples|enhancements|contrib)/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
+    pac.test.appstudio.openshift.io/original-prname: hypershift-release-mce-29-on-push
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hypershift
+    pac.test.appstudio.openshift.io/repository: hypershift-manual-merge
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: 5b9024f5216af25fa929d5edbd658e966eecd409
-    pac.test.appstudio.openshift.io/sha-title: 'ACM-29476: Upgrade go to v1.25.7 to
-      mitigate CVE-2025-61726 (#820)'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/cluster-api-provider-agent/commit/5b9024f5216af25fa929d5edbd658e966eecd409
-    pac.test.appstudio.openshift.io/source-branch: release-ocm-2.14
+    pac.test.appstudio.openshift.io/sha: b22d1d795cbabc0d3b53955cf3ff2788e0115467
+    pac.test.appstudio.openshift.io/sha-title: 'Merge pull request #8345 from devguyio/cherry-pick-7461-to-release-4.19'
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hypershift/commit/b22d1d795cbabc0d3b53955cf3ff2788e0115467
+    pac.test.appstudio.openshift.io/source-branch: release-4.19
     pac.test.appstudio.openshift.io/source-repo-url: ""
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: cluster-api-provider-agent
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-28T23:47:02Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-20260428-233613-000":{"lastUpdateTime":"2026-04-28T23:47:55.314145964Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: hypershift
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-04-29T14:30:54Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-29-release-mce-29-20260429-141401-000":{"lastUpdateTime":"2026-04-29T14:34:07.258134006Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1777419373000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/cluster-api-provider-agent
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"BuildPLRInProgress","lastUpdateTime":"2026-04-28T23:47:55.314145964Z","details":"Integration
-      test passed with warnings","startTime":"2026-04-28T23:47:02.474009836Z","completionTime":"2026-04-28T23:47:55.314145964Z","testPipelineRunName":"enterprise-contract-mce-29-4hj46"}]'
-  creationTimestamp: "2026-04-28T23:47:02Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1777472041000"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hypershift
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"BuildPLRInProgress","lastUpdateTime":"2026-04-29T14:34:07.258134006Z","details":"Integration
+      test passed with warnings","startTime":"2026-04-29T14:30:54.767220738Z","completionTime":"2026-04-29T14:34:07.258134006Z","testPipelineRunName":"enterprise-contract-mce-29-gdwkd"}]'
+  creationTimestamp: "2026-04-29T14:30:54Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-29
-    appstudio.openshift.io/build-pipelinerun: cluster-api-provider-agent-mce-29-on-push-5mxk7
-    appstudio.openshift.io/component: cluster-api-provider-agent-mce-29
+    appstudio.openshift.io/build-pipelinerun: hypershift-release-mce-29-on-push-4d7kb
+    appstudio.openshift.io/component: hypershift-release-mce-29
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "73492867400"
+    pac.test.appstudio.openshift.io/check-run-id: "73596011044"
     pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: cluster-api-provider-agent-mce-29-on-push
-    pac.test.appstudio.openshift.io/repository: cluster-api-provider-agent-mce-29
-    pac.test.appstudio.openshift.io/sha: 5b9024f5216af25fa929d5edbd658e966eecd409
+    pac.test.appstudio.openshift.io/original-prname: hypershift-release-mce-29-on-push
+    pac.test.appstudio.openshift.io/repository: hypershift-manual-merge
+    pac.test.appstudio.openshift.io/sha: b22d1d795cbabc0d3b53955cf3ff2788e0115467
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: cluster-api-provider-agent
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1777420017"
+    pac.test.appstudio.openshift.io/url-repository: hypershift
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1777473032"
     test.appstudio.openshift.io/type: component
-  name: release-mce-29-20260428-233613-000
+  name: release-mce-29-20260429-141401-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -65,8 +67,8 @@ metadata:
     kind: Application
     name: release-mce-29
     uid: 20473971-c86b-40e3-8b15-f0637463a27d
-  resourceVersion: "8514247601"
-  uid: 0c305e49-1c0f-4816-b403-c90ac16ed6cd
+  resourceVersion: "8525200093"
+  uid: fe8ee046-31fe-406c-84c4-d218e6fd0daf
 spec:
   application: release-mce-29
   artifacts: {}
@@ -135,13 +137,11 @@ spec:
         revision: 70649cd8bf5577ca77388ac82fef71469c0b37db
         url: https://github.com/stolostron/discovery
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-29@sha256:2e7f11b2e08138ca2c35ae9297f5a92c9e7c21ccecf9de1e46d870c7f33b8142
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-29@sha256:662d7e2c26747b0da8e4cc20e207a18e6dc42d6c6a4185f55c58d2fb48e86e72
     name: hypershift-release-mce-29
     source:
       git:
-        context: ./
-        dockerfileUrl: Containerfile.operator
-        revision: 5b151f06d8bfaa8a4594d8c2c748b8d4463163dd
+        revision: b22d1d795cbabc0d3b53955cf3ff2788e0115467
         url: https://github.com/openshift/hypershift
     version: ""
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-29@sha256:fdd5b3a1438e0a593a4f2883226506afb90f0f2150a4e45f85422538291e43b3
@@ -301,6 +301,8 @@ spec:
     name: cluster-api-provider-agent-mce-29
     source:
       git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: 5b9024f5216af25fa929d5edbd658e966eecd409
         url: https://github.com/openshift/cluster-api-provider-agent
     version: ""
@@ -342,18 +344,18 @@ spec:
     version: ""
 status:
   conditions:
-  - lastTransitionTime: "2026-04-28T23:47:55Z"
+  - lastTransitionTime: "2026-04-29T14:34:07Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-04-28T23:47:55Z"
+  - lastTransitionTime: "2026-04-29T14:34:07Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-04-28T23:47:55Z"
+  - lastTransitionTime: "2026-04-29T14:34:07Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
