@@ -2,60 +2,73 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/openshift/hive?rev=2369d9bb950f6890320e0e0bab1f82146e918aed
-    build.appstudio.redhat.com/commit_sha: 2369d9bb950f6890320e0e0bab1f82146e918aed
-    build.appstudio.redhat.com/target_branch: master
-    pac.test.appstudio.openshift.io/branch: master
-    pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "76266150114"
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/cluster-proxy-addon?rev=bdd1c03095f0506007dcdb2ca06e0a9ca8304014
+    build.appstudio.redhat.com/commit_sha: bdd1c03095f0506007dcdb2ca06e0a9ca8304014
+    build.appstudio.redhat.com/target_branch: backplane-2.8
+    pac.test.appstudio.openshift.io/branch: backplane-2.8
+    pac.test.appstudio.openshift.io/check-run-id: "76817704797"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-dapudx
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-vrbrfd
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35333059"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hive-mce-28-on-push-cd4c4
+    pac.test.appstudio.openshift.io/installation-id: "35324288"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/cluster-proxy-addon-mce-28-on-push-llzb2
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "master" && !files.all.all(x, x.matches('^docs/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
-    pac.test.appstudio.openshift.io/original-prname: hive-mce-28-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hive
-    pac.test.appstudio.openshift.io/repository: hive-master
+      == "backplane-2.8"
+    pac.test.appstudio.openshift.io/original-prname: cluster-proxy-addon-mce-28-on-push
+    pac.test.appstudio.openshift.io/pull-request: "651"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/cluster-proxy-addon
+    pac.test.appstudio.openshift.io/repository: cluster-proxy-addon-ezmt
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
-    pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: 2369d9bb950f6890320e0e0bab1f82146e918aed
-    pac.test.appstudio.openshift.io/sha-title: 'Merge pull request #2908 from 2uasimojo/HIVE-3157/cve-xnet'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hive/commit/2369d9bb950f6890320e0e0bab1f82146e918aed
-    pac.test.appstudio.openshift.io/source-branch: master
-    pac.test.appstudio.openshift.io/source-repo-url: ""
+    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
+    pac.test.appstudio.openshift.io/sha: bdd1c03095f0506007dcdb2ca06e0a9ca8304014
+    pac.test.appstudio.openshift.io/sha-title: |-
+      fix: pin clusteradm to v1.2.0 for e2e tests (#651)
+
+      Pin clusteradm version to v1.2.0 (which deploys OCM v1.2.0) to avoid
+      the v1beta1 sentinel value bug in OCM v1.3.0 that causes e2e test
+      failures with 'addon deployment config desired spec hash is empty'.
+
+      OCM v1.2.0 has v1beta1 APIs and conversion webhook, but uses v1alpha1
+      internally and does not have the sentinel value leak bug.
+
+      Signed-off-by: Tesshu Flower <tflower@redhat.com>
+      Co-authored-by: Tesshu Flower <tflower@redhat.com>
+      Co-authored-by: Claude Sonnet 4.5 <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/cluster-proxy-addon/commit/bdd1c03095f0506007dcdb2ca06e0a9ca8304014
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-2.8
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cluster-proxy-addon
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: hive
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-05-15T22:39:02Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-28-release-mce-28-20260515-215857-000":{"lastUpdateTime":"2026-05-15T22:39:55.127260196Z"}}}'
+    pac.test.appstudio.openshift.io/url-org: stolostron
+    pac.test.appstudio.openshift.io/url-repository: cluster-proxy-addon
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-05-19T19:28:18Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-28-release-mce-28-20260519-191619-000":{"lastUpdateTime":"2026-05-19T19:29:18.596915837Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1778882337000"
-    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-28","status":"BuildPLRInProgress","lastUpdateTime":"2026-05-15T22:39:55.127260196Z","details":"Integration
-      test passed with warnings","startTime":"2026-05-15T22:39:02.645937455Z","completionTime":"2026-05-15T22:39:55.127260196Z","testPipelineRunName":"enterprise-contract-mce-28-2w48q"}]'
-  creationTimestamp: "2026-05-15T22:39:02Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1779218179000"
+    test.appstudio.openshift.io/pr-status: merged
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cluster-proxy-addon
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-28","status":"BuildPLRInProgress","lastUpdateTime":"2026-05-19T19:29:18.596915837Z","details":"Integration
+      test passed with warnings","startTime":"2026-05-19T19:28:18.549422547Z","completionTime":"2026-05-19T19:29:18.596915837Z","testPipelineRunName":"enterprise-contract-mce-28-7rbqb"}]'
+  creationTimestamp: "2026-05-19T19:28:18Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-28
-    appstudio.openshift.io/build-pipelinerun: hive-mce-28-on-push-cd4c4
-    appstudio.openshift.io/component: hive-mce-28
-    pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "76266150114"
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: hive-mce-28-on-push
-    pac.test.appstudio.openshift.io/repository: hive-master
-    pac.test.appstudio.openshift.io/sha: 2369d9bb950f6890320e0e0bab1f82146e918aed
+    appstudio.openshift.io/build-pipelinerun: cluster-proxy-addon-mce-28-on-push-llzb2
+    appstudio.openshift.io/component: cluster-proxy-addon-mce-28
+    pac.test.appstudio.openshift.io/check-run-id: "76817704797"
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/original-prname: cluster-proxy-addon-mce-28-on-push
+    pac.test.appstudio.openshift.io/pull-request: "651"
+    pac.test.appstudio.openshift.io/repository: cluster-proxy-addon-ezmt
+    pac.test.appstudio.openshift.io/sha: bdd1c03095f0506007dcdb2ca06e0a9ca8304014
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: hive
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1778884737"
+    pac.test.appstudio.openshift.io/url-org: stolostron
+    pac.test.appstudio.openshift.io/url-repository: cluster-proxy-addon
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1779218893"
     test.appstudio.openshift.io/type: component
-  name: release-mce-28-20260515-215857-000
+  name: release-mce-28-20260519-191619-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -64,8 +77,8 @@ metadata:
     kind: Application
     name: release-mce-28
     uid: 1bb16185-3532-42f1-8819-a53d8cfd38dc
-  resourceVersion: "8835243068"
-  uid: 39de4008-2b03-42a7-a448-d81f3ea92e11
+  resourceVersion: "8896728727"
+  uid: 33edfc2a-662f-4e8d-864e-9cbb9f7b8612
 spec:
   application: release-mce-28
   artifacts: {}
@@ -251,13 +264,11 @@ spec:
         revision: c59d4422a1033ce75cf364b806be3d120130e5d5
         url: https://github.com/openshift/cluster-api-provider-agent
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-proxy-addon-mce-28@sha256:36b78783512dfc96d04b762b8df6e60fae3d3f65429cc1a506228dbe4f0d44d5
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-proxy-addon-mce-28@sha256:f81e24d3d2579a317fa432545448eb6141a4c59ca3cb55f11a3b8d761d07d520
     name: cluster-proxy-addon-mce-28
     source:
       git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 4ec57da8947f9211d79a752953884dff23c67b7a
+        revision: bdd1c03095f0506007dcdb2ca06e0a9ca8304014
         url: https://github.com/stolostron/cluster-proxy-addon
     version: ""
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/clusterlifecycle-state-metrics-mce-28@sha256:cf94bc6009e78249ef4260a190a8e2d0e975687a3fc1c59d835e26bda4b444d7
@@ -278,11 +289,13 @@ spec:
         revision: 29b93f4e9fddad1f185ec8b64c181cc4bd6d86ef
         url: https://github.com/stolostron/console
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-28@sha256:639ee5cc19d618e3a34d840f1ecff8c83f50a5243cd0512349fb7dfc59cafc0d
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-28@sha256:748b493878b363cfb40d130621145fc8633d2c75287bcf13634ceb948181a631
     name: hive-mce-28
     source:
       git:
-        revision: 2369d9bb950f6890320e0e0bab1f82146e918aed
+        context: ./
+        dockerfileUrl: Dockerfile
+        revision: ab4b2490385a31a5481a0ef69a40a71f88ac2faf
         url: https://github.com/openshift/hive
     version: ""
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managedcluster-import-controller-addon-mce-28@sha256:ea9031b3c0414713bde01d7e8fe33d68d914d0d17ee953ea840a1919b98e4c72
@@ -314,18 +327,18 @@ spec:
     version: ""
 status:
   conditions:
-  - lastTransitionTime: "2026-05-15T22:39:55Z"
+  - lastTransitionTime: "2026-05-19T19:29:18Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-05-15T22:39:55Z"
+  - lastTransitionTime: "2026-05-19T19:29:18Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-05-15T22:39:55Z"
+  - lastTransitionTime: "2026-05-19T19:29:18Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
