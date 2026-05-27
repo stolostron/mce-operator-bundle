@@ -91,11 +91,12 @@ def compare_scan_results(current_results, previous_results):
         'net_change': {'critical': 0, 'high': 0, 'total': 0}
     }
 
-    # Build dict of current results
+    # Build dict of current results (use unfiltered counts for comparison)
     current_dict = {}
     for result in current_results:
         if result['status'] == 'success' and result.get('cve_count'):
-            current_dict[result['image']] = result['cve_count']
+            # Use unfiltered counts for baseline comparison, fallback to filtered if missing
+            current_dict[result['image']] = result.get('cve_count_unfiltered', result['cve_count'])
 
     # Calculate totals
     current_total_critical = sum(cve.get('critical', 0) for cve in current_dict.values())
@@ -802,12 +803,17 @@ def main():
             txt_report = reports_path / f"{version}_{image_key}_grype.txt"
         
         if json_report.exists():
+            # Parse with filtering for display
             cve_count = parse_grype_json(json_report, filter_unfixable=filter_unfixable)
-            if cve_count:
+            # Always parse unfiltered for baseline comparison
+            cve_count_unfiltered = parse_grype_json(json_report, filter_unfixable=False)
+
+            if cve_count and cve_count_unfiltered:
                 results.append({
                     'image': image_key,
                     'status': 'success',
-                    'cve_count': cve_count
+                    'cve_count': cve_count,
+                    'cve_count_unfiltered': cve_count_unfiltered
                 })
             else:
                 # JSON parse failed, treat as failed
