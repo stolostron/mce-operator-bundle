@@ -2,79 +2,76 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/multicloud-operators-foundation?rev=1306ed9a5f8758dc3fbb79c8c5326868fc1a84f4
-    build.appstudio.redhat.com/commit_sha: 1306ed9a5f8758dc3fbb79c8c5326868fc1a84f4
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/azure-service-operator?rev=62748b7ac9975781b1c027673c09303e5ec57ff7
+    build.appstudio.redhat.com/commit_sha: 62748b7ac9975781b1c027673c09303e5ec57ff7
     build.appstudio.redhat.com/target_branch: backplane-2.11
     pac.test.appstudio.openshift.io/branch: backplane-2.11
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "79384597019"
+    pac.test.appstudio.openshift.io/check-run-id: "79494654597"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-pfygop
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-rpxkrx
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/multicloud-manager-mce-211-on-push-bnksc
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/azure-service-operator-mce-211-on-push-4nd5j
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-2.11"
-    pac.test.appstudio.openshift.io/original-prname: multicloud-manager-mce-211-on-push
-    pac.test.appstudio.openshift.io/pull-request: "1306"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/multicloud-operators-foundation
-    pac.test.appstudio.openshift.io/repository: multicloud-manager-mce-25
+    pac.test.appstudio.openshift.io/original-prname: azure-service-operator-mce-211-on-push
+    pac.test.appstudio.openshift.io/pull-request: "383"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/azure-service-operator
+    pac.test.appstudio.openshift.io/repository: azure-service-operator-mce-211
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
-    pac.test.appstudio.openshift.io/sha: 1306ed9a5f8758dc3fbb79c8c5326868fc1a84f4
+    pac.test.appstudio.openshift.io/sha: 62748b7ac9975781b1c027673c09303e5ec57ff7
     pac.test.appstudio.openshift.io/sha-title: |-
-      chore(deps): update module helm.sh/helm/v3 to v3.20.2 [security] (backplane-2.11) (#1306)
+      Remove v2/ exclusion from .dockerignore (#383)
 
-      * chore(deps): update module helm.sh/helm/v3 to v3.20.2 [security]
+      The v2 and !v2/boilerplate.go.txt entries in .dockerignore prevent
+      ART/Konflux builds from accessing v2/ contents when building from
+      the repo root. This causes COPY instructions targeting v2/ to silently
+      copy only boilerplate.go.txt, missing go.mod, go.sum, and all source.
 
-      Signed-off-by: red-hat-konflux <126015336+red-hat-konflux[bot]@users.noreply.github.com>
+      Existing upstream builds are unaffected because both v2/Dockerfile and
+      stolostron/Dockerfile.stolostron use v2/ directly as the build context
+      (via `docker build -f Dockerfile.stolostron ../v2`), so the root-level
+      .dockerignore is never consulted.
 
-      * chore: run openapi-gen
-
-      Signed-off-by: Dale Haiducek <19750917+dhaiducek@users.noreply.github.com>
-
-      ---------
-
-      Signed-off-by: red-hat-konflux <126015336+red-hat-konflux[bot]@users.noreply.github.com>
-      Signed-off-by: Dale Haiducek <19750917+dhaiducek@users.noreply.github.com>
-      Co-authored-by: red-hat-konflux[bot] <126015336+red-hat-konflux[bot]@users.noreply.github.com>
-      Co-authored-by: Dale Haiducek <19750917+dhaiducek@users.noreply.github.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/multicloud-operators-foundation/commit/1306ed9a5f8758dc3fbb79c8c5326868fc1a84f4
+      Co-authored-by: Cursor <cursoragent@cursor.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/azure-service-operator/commit/62748b7ac9975781b1c027673c09303e5ec57ff7
     pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-2.11
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/multicloud-operators-foundation
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/azure-service-operator
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: multicloud-operators-foundation
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-06-03T20:17:12Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-211-release-mce-211-20260603-200445-000":{"lastUpdateTime":"2026-06-03T20:18:15.37481321Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: azure-service-operator
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-06-04T10:33:48Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-211-release-mce-211-20260604-095816-000":{"lastUpdateTime":"2026-06-04T10:40:25.511696591Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1780517085000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1780567096000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/multicloud-operators-foundation
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-211","status":"BuildPLRInProgress","lastUpdateTime":"2026-06-03T20:18:15.37481321Z","details":"Integration
-      test passed with warnings","startTime":"2026-06-03T20:17:13.016878849Z","completionTime":"2026-06-03T20:18:15.37481321Z","testPipelineRunName":"enterprise-contract-mce-211-cpr5h"}]'
-  creationTimestamp: "2026-06-03T20:17:12Z"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/azure-service-operator
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-211","status":"BuildPLRInProgress","lastUpdateTime":"2026-06-04T10:40:25.511696591Z","details":"Integration
+      test passed with warnings","startTime":"2026-06-04T10:33:48.383222903Z","completionTime":"2026-06-04T10:40:25.511696591Z","testPipelineRunName":"enterprise-contract-mce-211-xjmpt"}]'
+  creationTimestamp: "2026-06-04T10:33:48Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-211
-    appstudio.openshift.io/build-pipelinerun: multicloud-manager-mce-211-on-push-bnksc
-    appstudio.openshift.io/component: multicloud-manager-mce-211
+    appstudio.openshift.io/build-pipelinerun: azure-service-operator-mce-211-on-push-4nd5j
+    appstudio.openshift.io/component: azure-service-operator-mce-211
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "79384597019"
+    pac.test.appstudio.openshift.io/check-run-id: "79494654597"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: multicloud-manager-mce-211-on-push
-    pac.test.appstudio.openshift.io/pull-request: "1306"
-    pac.test.appstudio.openshift.io/repository: multicloud-manager-mce-25
-    pac.test.appstudio.openshift.io/sha: 1306ed9a5f8758dc3fbb79c8c5326868fc1a84f4
+    pac.test.appstudio.openshift.io/original-prname: azure-service-operator-mce-211-on-push
+    pac.test.appstudio.openshift.io/pull-request: "383"
+    pac.test.appstudio.openshift.io/repository: azure-service-operator-mce-211
+    pac.test.appstudio.openshift.io/sha: 62748b7ac9975781b1c027673c09303e5ec57ff7
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: multicloud-operators-foundation
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1780517822"
+    pac.test.appstudio.openshift.io/url-repository: azure-service-operator
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1780569220"
     test.appstudio.openshift.io/type: component
-  name: release-mce-211-20260603-200445-000
+  name: release-mce-211-20260604-095816-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -83,8 +80,8 @@ metadata:
     kind: Application
     name: release-mce-211
     uid: 921a3f28-4836-45b7-a77b-5415074a8225
-  resourceVersion: "9175171399"
-  uid: f6c0d9e8-0c6f-470c-aa64-2f4accd022e0
+  resourceVersion: "9186942241"
+  uid: 9ffcc63f-bd66-4d89-9c0d-fe0b4d40a4ca
 spec:
   application: release-mce-211
   artifacts: {}
@@ -121,6 +118,8 @@ spec:
     name: multicloud-manager-mce-211
     source:
       git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: 1306ed9a5f8758dc3fbb79c8c5326868fc1a84f4
         url: https://github.com/stolostron/multicloud-operators-foundation
     version: ""
@@ -241,13 +240,11 @@ spec:
         revision: 7e2b731f60d342d94ab7e8f26467864b4b5f63d7
         url: https://github.com/stolostron/ocm
     version: ""
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/azure-service-operator-mce-211@sha256:374d2d211b1687e0ed940251525a1969a8ca0ab4013733a57716425f2df699b5
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/azure-service-operator-mce-211@sha256:156ce222742b57131a3e42e80be786f541c5cb0a90672253f0449af04692cca8
     name: azure-service-operator-mce-211
     source:
       git:
-        context: ./
-        dockerfileUrl: stolostron/Dockerfile.stolostron
-        revision: 14e282ed9878cb21c90483befb71cdd61c77cc70
+        revision: 62748b7ac9975781b1c027673c09303e5ec57ff7
         url: https://github.com/stolostron/azure-service-operator
     version: ""
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-211@sha256:1fea4df5b9f3ada181101d8418d33f48a5b33a4e7902f5c9dca909629bd00eb8
@@ -378,18 +375,18 @@ spec:
     version: ""
 status:
   conditions:
-  - lastTransitionTime: "2026-06-03T20:18:15Z"
+  - lastTransitionTime: "2026-06-04T10:40:25Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-06-03T20:18:15Z"
+  - lastTransitionTime: "2026-06-04T10:40:25Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-06-03T20:18:15Z"
+  - lastTransitionTime: "2026-06-04T10:40:25Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
