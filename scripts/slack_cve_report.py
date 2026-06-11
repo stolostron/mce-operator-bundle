@@ -91,12 +91,11 @@ def compare_scan_results(current_results, previous_results):
         'net_change': {'critical': 0, 'high': 0, 'total': 0}
     }
 
-    # Build dict of current results (use unfiltered counts for comparison)
+    # Build dict of current results
     current_dict = {}
     for result in current_results:
         if result['status'] == 'success' and result.get('cve_count'):
-            # Use unfiltered counts for baseline comparison, fallback to filtered if missing
-            current_dict[result['image']] = result.get('cve_count_unfiltered', result['cve_count'])
+            current_dict[result['image']] = result['cve_count']
 
     # Calculate totals
     current_total_critical = sum(cve.get('critical', 0) for cve in current_dict.values())
@@ -330,7 +329,7 @@ def create_slack_message(version, results, format_type='summary', image_details=
                 "type": "header",
                 "text": {
                     "type": "plain_text",
-                    "text": f"{severity_emoji} CVE Gate Report - MCE {version}",
+                    "text": f"{severity_emoji} CVE Gate Report – MCE {version}",
                     "emoji": True
                 }
             },
@@ -357,12 +356,23 @@ def create_slack_message(version, results, format_type='summary', image_details=
         github_repository = os.getenv('GITHUB_REPOSITORY')
         if github_run_id and github_repository:
             artifacts_url = f"https://github.com/{github_repository}/actions/runs/{github_run_id}"
+
+            # Check if trend dashboard exists
+            reports_dir = os.getenv('REPORTS_DIR', 'reports')
+            trends_dir = Path(reports_dir) / 'trends'
+            version_slug = version.replace('.', '')
+            trend_dashboard = trends_dir / f"release-{version_slug}-dashboard.html"
+
+            link_text = f"📊 <{artifacts_url}|View detailed reports in workflow artifacts>"
+            if trend_dashboard.exists():
+                link_text += " | 📈 Trend dashboard included"
+
             blocks.append({"type": "divider"})
             blocks.append({
                 "type": "context",
                 "elements": [{
                     "type": "mrkdwn",
-                    "text": f"📊 <{artifacts_url}|View detailed reports in workflow artifacts>"
+                    "text": link_text
                 }]
             })
 
@@ -618,7 +628,7 @@ def send_to_slack(webhook_url, message):
     """Send message to Slack webhook"""
     try:
         # Add custom username and icon to match bot appearance
-        message['username'] = 'MCE Konflux Support'
+        message['username'] = 'ACM Konflux Support'
         message['icon_emoji'] = ':robot_face:'
 
         data = json.dumps(message).encode('utf-8')
@@ -803,17 +813,12 @@ def main():
             txt_report = reports_path / f"{version}_{image_key}_grype.txt"
         
         if json_report.exists():
-            # Parse with filtering for display
             cve_count = parse_grype_json(json_report, filter_unfixable=filter_unfixable)
-            # Always parse unfiltered for baseline comparison
-            cve_count_unfiltered = parse_grype_json(json_report, filter_unfixable=False)
-
-            if cve_count and cve_count_unfiltered:
+            if cve_count:
                 results.append({
                     'image': image_key,
                     'status': 'success',
-                    'cve_count': cve_count,
-                    'cve_count_unfiltered': cve_count_unfiltered
+                    'cve_count': cve_count
                 })
             else:
                 # JSON parse failed, treat as failed
