@@ -1443,7 +1443,6 @@ def main():
     # Generate final HTML
     html = HTML_TEMPLATE.format(
         timestamp=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'),
-        tab_buttons=tab_buttons,
         tab_contents=tab_contents,
         comparison_cards=comparison_cards,
         chart_data_js=compare_data_js,
