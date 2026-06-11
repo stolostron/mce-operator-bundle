@@ -24,7 +24,7 @@ def load_history(history_file):
     try:
         with open(history_file, 'r') as f:
             return json.load(f)
-    except Exception as e:
+    except (OSError, json.JSONDecodeError) as e:
         console.print(f"[red]Error loading history: {e}[/red]")
         sys.exit(1)
 
@@ -48,7 +48,7 @@ def format_timestamp(timestamp_str):
     try:
         dt = datetime.fromisoformat(timestamp_str.replace('Z', ''))
         return dt.strftime('%Y-%m-%d')
-    except:
+    except (ValueError, AttributeError):
         return timestamp_str
 
 
@@ -269,7 +269,7 @@ def main():
     parser.add_argument('--reports-dir', default='reports',
                        help='Reports directory (default: reports)')
     parser.add_argument('--release', required=True,
-                       help='Release name (e.g., backplane-2.17)')
+                       help='Release name (e.g., release-2.17)')
     parser.add_argument('--weeks', type=int, default=8,
                        help='Number of weeks to show in trend (default: 8)')
     parser.add_argument('--format', choices=['table', 'json'], default='table',

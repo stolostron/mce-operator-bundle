@@ -4,7 +4,7 @@
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from rich.console import Console
@@ -421,7 +421,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
     <div class="header">
-        <h1>🔒 MCE CVE Trend Dashboard</h1>
+        <h1>🔒 ACM CVE Trend Dashboard</h1>
         <p class="meta">Multi-Release Analysis | Updated: {timestamp}</p>
     </div>
 
@@ -719,6 +719,17 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             }}
         }}
 
+        // Attach click handlers to component links (prevents XSS from inline onclick)
+        document.addEventListener('DOMContentLoaded', function() {{
+            document.querySelectorAll('.component-link').forEach(link => {{
+                link.addEventListener('click', function() {{
+                    const component = this.getAttribute('data-component');
+                    const tabId = this.getAttribute('data-tab');
+                    showComponentCVEs(component, tabId);
+                }});
+            }});
+        }});
+
         function toggleShowAll(tabId, tableType) {{
             const tableId = tableType === 'internal' ? 'componentTable-' + tabId : 'externalTable-' + tabId;
             const table = document.getElementById(tableId);
@@ -791,7 +802,7 @@ def format_timestamp(timestamp_str):
     try:
         dt = datetime.fromisoformat(timestamp_str.replace('Z', ''))
         return dt.strftime('%Y-%m-%d %H:%M UTC')
-    except:
+    except (ValueError, AttributeError):
         return timestamp_str
 
 
@@ -800,7 +811,7 @@ def format_date_short(timestamp_str):
     try:
         dt = datetime.fromisoformat(timestamp_str.replace('Z', ''))
         return dt.strftime('%m/%d')
-    except:
+    except (ValueError, AttributeError):
         return timestamp_str
 
 
@@ -814,7 +825,7 @@ def load_release_history(trends_dir, release):
     try:
         with open(history_file, 'r') as f:
             return json.load(f)
-    except:
+    except (ValueError, AttributeError):
         return None
 
 
@@ -846,8 +857,17 @@ def get_version_from_reports(release):
     if not matching:
         return major_minor
 
-    # Sort by version and get latest
-    matching.sort(key=lambda v: [int(x) for x in v.split('.')])
+    # Sort by version and get latest (handle non-numeric like 2.15.0-rc1)
+    def version_key(v):
+        import re
+        parts = []
+        for part in v.split('.'):
+            # Extract leading digits, default to 0
+            match = re.match(r'^(\d+)', part)
+            parts.append(int(match.group(1)) if match else 0)
+        return parts
+
+    matching.sort(key=version_key)
     return matching[-1]
 
 
@@ -966,16 +986,16 @@ def generate_release_tab_content(release, history, extras_metadata=None):
         high = counts.get('HIGH', 0)
         total = counts.get('total', 0)
 
-        # Get git metadata and make clickable for CVE drill-down
+        # Get git metadata and make clickable for CVE drill-down (use data attrs to avoid XSS)
         if extras_metadata and component in extras_metadata:
             meta = extras_metadata[component]
             if meta.get('commit_url'):
                 commit_short = meta['git_revision'][:7] if meta.get('git_revision') else ''
-                component_display = f'<span class="component-link" onclick="showComponentCVEs(\'{component}\', \'{tab_id}\')">{component}</span> <a href="{meta["commit_url"]}" target="_blank" style="text-decoration: none; color: #666; font-size: 0.85em;">({commit_short})</a>'
+                component_display = f'<span class="component-link" data-component="{component}" data-tab="{tab_id}">{component}</span> <a href="{meta["commit_url"]}" target="_blank" style="text-decoration: none; color: #666; font-size: 0.85em;">({commit_short})</a>'
             else:
-                component_display = f'<span class="component-link" onclick="showComponentCVEs(\'{component}\', \'{tab_id}\')">{component}</span>'
+                component_display = f'<span class="component-link" data-component="{component}" data-tab="{tab_id}">{component}</span>'
         else:
-            component_display = f'<span class="component-link" onclick="showComponentCVEs(\'{component}\', \'{tab_id}\')">{component}</span>'
+            component_display = f'<span class="component-link" data-component="{component}" data-tab="{tab_id}">{component}</span>'
 
         # Hide rows beyond top 15 by default
         hidden_class = ' class="component-row-hidden"' if i >= 15 else ''
@@ -999,7 +1019,7 @@ def generate_release_tab_content(release, history, extras_metadata=None):
 
         external_rows.append(f"""
                 <tr{hidden_class} data-component="{component}" data-critical="{critical}" data-high="{high}" data-total="{total}">
-                    <td><span class="component-link" onclick="showComponentCVEs('{component}', '{tab_id}')">{component}</span> <span style="color: #666; font-size: 0.85em;">(upstream)</span></td>
+                    <td><span class="component-link" data-component="{component}" data-tab="{tab_id}">{component}</span> <span style="color: #666; font-size: 0.85em;">(upstream)</span></td>
                     <td style="text-align: center;"><span class="severity-badge severity-critical">{critical}</span></td>
                     <td style="text-align: center;"><span class="severity-badge severity-high">{high}</span></td>
                     <td style="text-align: center;">{total}</td>
@@ -1422,7 +1442,7 @@ def main():
 
     # Generate final HTML
     html = HTML_TEMPLATE.format(
-        timestamp=datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC'),
+        timestamp=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'),
         tab_buttons=tab_buttons,
         tab_contents=tab_contents,
         comparison_cards=comparison_cards,
@@ -1443,7 +1463,7 @@ def main():
         with open(output_path, 'w') as f:
             f.write(html)
         console.print(f"[green]✓ Multi-release dashboard generated: {output_path}[/green]")
-    except Exception as e:
+    except (OSError, PermissionError) as e:
         console.print(f"[red]Error writing HTML: {e}[/red]")
         sys.exit(1)
 

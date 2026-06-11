@@ -4,7 +4,7 @@
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 from rich.console import Console
@@ -36,8 +36,13 @@ def aggregate_scan_results(json_dir):
     all_cve_details = []
 
     for grype_file in grype_files:
-        # Extract component name from filename
-        component_name = grype_file.stem.replace('_grype', '').split('_', 1)[1] if '_' in grype_file.stem else grype_file.stem
+        # Extract component name from filename (safe split)
+        stem = grype_file.stem.replace('_grype', '')
+        if '_' in stem:
+            parts = stem.split('_', 1)
+            component_name = parts[1] if len(parts) > 1 else stem
+        else:
+            component_name = stem
 
         try:
             with open(grype_file, 'r') as f:
@@ -96,7 +101,7 @@ def main():
     parser.add_argument('--json-dir', required=True,
                        help='Directory containing Grype JSON files (e.g., reports/2.17.0/json/)')
     parser.add_argument('--release', required=True,
-                       help='Release name (e.g., backplane-2.17)')
+                       help='Release name (e.g., release-2.17)')
     parser.add_argument('--reports-dir', default='reports',
                        help='Reports directory (default: reports)')
     parser.add_argument('--timestamp',
@@ -131,7 +136,7 @@ def main():
             "release": args.release,
             "scans": [],
             "metadata": {
-                "created": datetime.utcnow().isoformat() + "Z",
+                "created": datetime.now(timezone.utc).isoformat() + "Z",
                 "last_updated": None,
                 "scan_frequency": "weekly",
                 "retention_weeks": 26
@@ -172,7 +177,7 @@ def main():
 
     # Create scan record
     scan_record = {
-        'timestamp': args.timestamp or (datetime.utcnow().isoformat() + 'Z'),
+        'timestamp': args.timestamp or (datetime.now(timezone.utc).isoformat() + 'Z'),
         'json_dir': args.json_dir,
         'github_run_id': args.github_run_id,
         'summary': {
@@ -188,7 +193,7 @@ def main():
 
     # Append to history
     history['scans'].append(scan_record)
-    history['metadata']['last_updated'] = datetime.utcnow().isoformat() + 'Z'
+    history['metadata']['last_updated'] = datetime.now(timezone.utc).isoformat() + 'Z'
 
     # Save history
     with open(history_file, 'w') as f:

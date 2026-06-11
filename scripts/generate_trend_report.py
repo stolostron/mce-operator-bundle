@@ -18,7 +18,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCE CVE Trends - {release}</title>
+    <title>ACM CVE Trends - {release}</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {{
@@ -222,7 +222,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
     <div class="container">
-        <h1>🔒 MCE CVE Trend Dashboard</h1>
+        <h1>🔒 ACM CVE Trend Dashboard</h1>
         <p class="meta">Release: <strong>{release}</strong> | Updated: {last_updated} | Scans: {scan_count}</p>
 
         <div class="summary-cards">
@@ -374,7 +374,7 @@ def format_timestamp(timestamp_str):
     try:
         dt = datetime.fromisoformat(timestamp_str.replace('Z', ''))
         return dt.strftime('%Y-%m-%d %H:%M UTC')
-    except:
+    except (ValueError, AttributeError):
         return timestamp_str
 
 
@@ -383,7 +383,7 @@ def format_date_short(timestamp_str):
     try:
         dt = datetime.fromisoformat(timestamp_str.replace('Z', ''))
         return dt.strftime('%m/%d')
-    except:
+    except (ValueError, AttributeError):
         return timestamp_str
 
 
@@ -637,7 +637,7 @@ def main():
     parser.add_argument('--reports-dir', default='reports',
                        help='Reports directory (default: reports)')
     parser.add_argument('--release', required=True,
-                       help='Release name (e.g., backplane-2.17)')
+                       help='Release name (e.g., release-2.17)')
     parser.add_argument('--output',
                        help='Output HTML file path (default: reports/trends/{release}-dashboard.html)')
 
@@ -654,7 +654,7 @@ def main():
     try:
         with open(history_file, 'r') as f:
             history = json.load(f)
-    except Exception as e:
+    except (OSError, json.JSONDecodeError) as e:
         console.print(f"[red]Error loading history: {e}[/red]")
         sys.exit(1)
 
@@ -706,7 +706,7 @@ def main():
         with open(output_path, 'w') as f:
             f.write(html)
         console.print(f"[green]✓ Dashboard generated: {output_path}[/green]")
-    except Exception as e:
+    except (OSError, PermissionError) as e:
         console.print(f"[red]Error writing HTML: {e}[/red]")
         sys.exit(1)
 
