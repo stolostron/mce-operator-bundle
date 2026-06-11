@@ -1,4 +1,4 @@
-.PHONY: help list-images list-images-full check-dummy-shas verify-images verify-images-icsp verify-images-podman verify-images-arm64 verify-images-amd64 verify-images-ppc64le verify-images-s390x verify-release scan-release scan-cves scan-cves-icsp scan-cves-json scan-cves-json-icsp image-report clean-reports check-tools install-deps all-checks full-scan make-scripts-executable setup-release
+.PHONY: help list-images list-images-full check-dummy-shas verify-images verify-images-icsp verify-images-podman verify-images-arm64 verify-images-amd64 verify-images-ppc64le verify-images-s390x verify-release scan-release scan-cves scan-cves-icsp scan-cves-json scan-cves-json-icsp image-report clean-reports check-tools install-deps all-checks full-scan make-scripts-executable setup-release store-scan-result cve-trends cve-trends-html cve-trends-multi
 
 # Configuration
 export EXTRAS_DIR ?= extras
@@ -82,10 +82,12 @@ scan-cves-icsp: ## Scan images using ICSP registry redirects (text output)
 scan-cves-json: ## Scan images and output results in JSON format
 	$(setup-if-release)
 	@OUTPUT_JSON=true python3 $(SCRIPTS_DIR)/scan_cves.py $(SCAN_ARGS)
+	@$(MAKE) store-scan-result
 
 scan-cves-json-icsp: ## Scan images with ICSP and output JSON (for Slack reports)
 	$(setup-if-release)
 	@ICSP_CONFIG=icsp-config.json OUTPUT_JSON=true python3 $(SCRIPTS_DIR)/scan_cves.py $(SCAN_ARGS)
+	@$(MAKE) store-scan-result
 
 image-report: ## Generate comprehensive image report
 	@python3 $(SCRIPTS_DIR)/image_report.py
@@ -128,3 +130,15 @@ install-deps: ## Install Python dependencies
 make-scripts-executable: ## Make all scripts executable
 	@chmod +x $(SCRIPTS_DIR)/*.py $(SCRIPTS_DIR)/*.sh
 	@echo "Scripts are now executable"
+
+store-scan-result: ## Store latest scan results for trend tracking
+	@python3 $(SCRIPTS_DIR)/store_scan_results.py --reports-dir $(REPORTS_DIR) --extras-dir $(EXTRAS_DIR) $(if $(RELEASE),--release $(RELEASE),)
+
+cve-trends: ## Generate CVE trend report (Usage: make cve-trends RELEASE=backplane-2.17)
+	@python3 $(SCRIPTS_DIR)/cve_trends.py --reports-dir $(REPORTS_DIR) --release $(or $(RELEASE),$(error RELEASE not specified. Use: make cve-trends RELEASE=backplane-2.17))
+
+cve-trends-html: ## Generate HTML trend dashboard (Usage: make cve-trends-html RELEASE=backplane-2.17)
+	@python3 $(SCRIPTS_DIR)/generate_trend_report.py --reports-dir $(REPORTS_DIR) --release $(or $(RELEASE),$(error RELEASE not specified. Use: make cve-trends-html RELEASE=backplane-2.17))
+
+cve-trends-multi: ## Generate multi-release comparison dashboard with tabs
+	@python3 $(SCRIPTS_DIR)/generate_multi_release_dashboard.py --reports-dir $(REPORTS_DIR)
