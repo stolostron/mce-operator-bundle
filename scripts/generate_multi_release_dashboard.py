@@ -1384,8 +1384,8 @@ def main():
         console.print(f"[red]Trends directory not found: {trends_dir}[/red]")
         sys.exit(1)
 
-    # Find all history files
-    history_files = list(trends_dir.glob('release-*-history.json'))
+    # Find all history files (both release-* for ACM and backplane-* for MCE)
+    history_files = list(trends_dir.glob('*-history.json'))
 
     if not history_files:
         console.print("[yellow]No release history files found[/yellow]")
