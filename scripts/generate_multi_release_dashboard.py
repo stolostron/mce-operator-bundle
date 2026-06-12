@@ -19,7 +19,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCE CVE Trends - All Releases</title>
+    <title>ACM CVE Trends - All Releases</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {{
@@ -871,10 +871,16 @@ def get_version_from_reports(release):
     return matching[-1]
 
 
-def generate_tab_button(release, is_active=False):
+def generate_tab_button(release, history=None, is_active=False):
     """Generate tab button HTML"""
     tab_id = release.replace('.', '').replace('-', '')  # release-2.17 -> release217
-    display_name = get_version_from_reports(release)
+
+    # Try to get version from history first, fallback to reports dir
+    if history and history.get('version'):
+        display_name = history['version']
+    else:
+        display_name = get_version_from_reports(release)
+
     active_class = ' active' if is_active else ''
     return f'<button class="tab{active_class}" onclick="openTab(event, \'{tab_id}\')">{display_name}</button>'
 
@@ -1384,8 +1390,8 @@ def main():
         console.print(f"[red]Trends directory not found: {trends_dir}[/red]")
         sys.exit(1)
 
-    # Find all history files (both release-* for ACM and backplane-* for MCE)
-    history_files = list(trends_dir.glob('*-history.json'))
+    # Find all history files
+    history_files = list(trends_dir.glob('release-*-history.json'))
 
     if not history_files:
         console.print("[yellow]No release history files found[/yellow]")
@@ -1414,7 +1420,7 @@ def main():
         sys.exit(0)
 
     # Generate HTML components
-    tab_buttons = '\n'.join([generate_tab_button(rel) for rel in sorted(releases.keys())])
+    tab_buttons = '\n'.join([generate_tab_button(rel, hist) for rel, hist in sorted(releases.items())])
     tab_contents = '\n'.join([generate_release_tab_content(rel, hist, extras_metadata) for rel, hist in sorted(releases.items())])
     comparison_cards = '\n'.join([generate_comparison_card(rel, hist) for rel, hist in sorted(releases.items())])
 
@@ -1443,6 +1449,7 @@ def main():
     # Generate final HTML
     html = HTML_TEMPLATE.format(
         timestamp=datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC'),
+        tab_buttons=tab_buttons,
         tab_contents=tab_contents,
         comparison_cards=comparison_cards,
         chart_data_js=compare_data_js,
