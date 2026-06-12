@@ -19,7 +19,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACM CVE Trends - All Releases</title>
+    <title>MCE CVE Trends - All Releases</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {{
@@ -421,7 +421,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
     <div class="header">
-        <h1>🔒 ACM CVE Trend Dashboard</h1>
+        <h1>🔒 MCE CVE Trend Dashboard</h1>
         <p class="meta">Multi-Release Analysis | Updated: {timestamp}</p>
     </div>
 
