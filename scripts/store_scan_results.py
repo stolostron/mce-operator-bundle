@@ -18,6 +18,7 @@ def load_history(history_file):
     if not history_file.exists():
         return {
             "release": None,
+            "version": None,
             "scans": [],
             "metadata": {
                 "created": datetime.now(timezone.utc).isoformat() + "Z",
@@ -36,43 +37,66 @@ def load_history(history_file):
         sys.exit(1)
 
 
-def extract_scan_summary(scan_report):
-    """Extract summary statistics from Grype JSON report"""
-    matches = scan_report.get('matches', [])
+def extract_image_key_from_filename(filepath):
+    """Extract image key from grype JSON filename
 
-    # Count by severity
-    severity_counts = {
-        'CRITICAL': 0,
-        'HIGH': 0,
-        'MEDIUM': 0,
-        'LOW': 0,
-        'NEGLIGIBLE': 0,
-        'UNKNOWN': 0
-    }
+    Example: 2.17.0_klusterlet_addon_controller_grype.json -> klusterlet_addon_controller
+    """
+    filename = Path(filepath).name
+    # Remove version prefix and _grype.json suffix
+    # Pattern: {version}_{image_key}_grype.json
+    parts = filename.replace('_grype.json', '').split('_')
+    # First part is version (e.g., 2.17.0), rest is image key
+    if len(parts) > 1:
+        return '_'.join(parts[1:])
+    return 'unknown'
 
-    # Track unique CVEs and components
-    cve_set = set()
-    component_breakdown = {}
-    cve_details = []
 
-    for match in matches:
-        vuln = match.get('vulnerability', {})
-        artifact = match.get('artifact', {})
+def extract_scan_summary_from_all(reports_dir):
+    """Extract summary statistics from all Grype JSON reports, grouped by image
 
-        cve_id = vuln.get('id', 'UNKNOWN')
-        severity = vuln.get('severity', 'UNKNOWN').upper()
-        component = artifact.get('name', 'unknown')
+    Args:
+        reports_dir: Path to reports directory
 
-        # Count by severity
-        if severity in severity_counts:
-            severity_counts[severity] += 1
+    Returns:
+        dict with overall stats and per-image component_breakdown
+    """
+    reports_path = Path(reports_dir)
+    json_files = list(reports_path.rglob('*_grype.json'))
 
-        # Track unique CVEs
-        cve_set.add(cve_id)
+    if not json_files:
+        console.print(f"[yellow]Warning: No Grype JSON files found in {reports_dir}[/yellow]")
+        return {
+            'total_cves': 0,
+            'total_matches': 0,
+            'by_severity': {'CRITICAL': 0, 'HIGH': 0, 'MEDIUM': 0, 'LOW': 0, 'NEGLIGIBLE': 0, 'UNKNOWN': 0},
+            'component_breakdown': {},
+            'cve_details': []
+        }
 
-        # Track per-component breakdown
-        if component not in component_breakdown:
-            component_breakdown[component] = {
+    # Global counters
+    severity_counts = {'CRITICAL': 0, 'HIGH': 0, 'MEDIUM': 0, 'LOW': 0, 'NEGLIGIBLE': 0, 'UNKNOWN': 0}
+    global_cve_set = set()
+    total_matches = 0
+    component_breakdown = {}  # keyed by image_key
+    all_cve_details = []
+
+    for json_file in json_files:
+        image_key = extract_image_key_from_filename(json_file)
+
+        try:
+            with open(json_file, 'r') as f:
+                scan_report = json.load(f)
+        except (OSError, json.JSONDecodeError) as e:
+            console.print(f"[yellow]Warning: Could not read {json_file}: {e}[/yellow]")
+            continue
+
+        matches = scan_report.get('matches', [])
+        total_matches += len(matches)
+
+        # Initialize image entry
+        if image_key not in component_breakdown:
+            component_breakdown[image_key] = {
                 'CRITICAL': 0,
                 'HIGH': 0,
                 'MEDIUM': 0,
@@ -80,25 +104,42 @@ def extract_scan_summary(scan_report):
                 'total': 0
             }
 
-        if severity in ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW']:
-            component_breakdown[component][severity] += 1
-        component_breakdown[component]['total'] += 1
+        for match in matches:
+            vuln = match.get('vulnerability', {})
+            artifact = match.get('artifact', {})
 
-        # Store CVE details for new/fixed detection
-        cve_details.append({
-            'cve_id': cve_id,
-            'severity': severity,
-            'component': component,
-            'fixed_versions': vuln.get('fix', {}).get('versions', []),
-            'fixable': len(vuln.get('fix', {}).get('versions', [])) > 0
-        })
+            cve_id = vuln.get('id', 'UNKNOWN')
+            severity = vuln.get('severity', 'UNKNOWN').upper()
+            package_name = artifact.get('name', 'unknown')
+
+            # Count by severity globally
+            if severity in severity_counts:
+                severity_counts[severity] += 1
+
+            # Track unique CVEs globally
+            global_cve_set.add(cve_id)
+
+            # Count by severity per image
+            if severity in ['CRITICAL', 'HIGH', 'MEDIUM', 'LOW']:
+                component_breakdown[image_key][severity] += 1
+            component_breakdown[image_key]['total'] += 1
+
+            # Store CVE details with image context
+            all_cve_details.append({
+                'cve_id': cve_id,
+                'severity': severity,
+                'component': image_key,  # Now this is the image, not the package
+                'package': package_name,
+                'fixed_versions': vuln.get('fix', {}).get('versions', []),
+                'fixable': len(vuln.get('fix', {}).get('versions', [])) > 0
+            })
 
     return {
-        'total_cves': len(cve_set),
-        'total_matches': len(matches),
+        'total_cves': len(global_cve_set),
+        'total_matches': total_matches,
         'by_severity': severity_counts,
         'component_breakdown': component_breakdown,
-        'cve_details': cve_details
+        'cve_details': all_cve_details
     }
 
 
@@ -136,19 +177,26 @@ def detect_changes(current_scan, previous_scan):
 
 
 def detect_release_from_extras(extras_dir):
-    """Auto-detect release version from extras directory"""
+    """Auto-detect release version from extras directory
+
+    Returns:
+        tuple: (release_name, full_version) e.g., ('release-2.17', '2.17.0')
+    """
     extras_path = Path(extras_dir)
     if not extras_path.exists():
-        return None
+        return None, None
 
     # Look for version pattern in JSON filenames (e.g., 2.17.0.json)
     for json_file in extras_path.glob('*.json'):
         name = json_file.stem
         parts = name.split('.')
-        if len(parts) >= 2 and parts[0].isdigit() and parts[1].isdigit():
-            return f"release-{parts[0]}.{parts[1]}"
+        if len(parts) >= 3 and parts[0].isdigit() and parts[1].isdigit():
+            # Return both release-X.Y and full X.Y.Z
+            release_name = f"release-{parts[0]}.{parts[1]}"
+            full_version = name  # e.g., "2.17.0"
+            return release_name, full_version
 
-    return None
+    return None, None
 
 
 def prune_old_scans(history, retention_weeks=None, max_scans=None):
@@ -188,42 +236,23 @@ def main():
 
     # Detect release if not provided
     release = args.release
+    full_version = None
     if not release:
-        release = detect_release_from_extras(args.extras_dir)
+        release, full_version = detect_release_from_extras(args.extras_dir)
         if not release:
             console.print("[red]Could not auto-detect release. Use --release flag[/red]")
             sys.exit(1)
+    else:
+        # Manual release specified, try to get version from extras
+        _, full_version = detect_release_from_extras(args.extras_dir)
 
     console.print(f"[cyan]Storing scan results for {release}[/cyan]")
+    if full_version:
+        console.print(f"[cyan]Version: {full_version}[/cyan]")
 
-    # Find scan report
-    scan_report_path = args.scan_report
-    if not scan_report_path:
-        # Look for latest Grype JSON in reports dir (search recursively)
-        reports_path = Path(args.reports_dir)
-        json_files = list(reports_path.rglob('*_grype.json'))
-        if not json_files:
-            console.print(f"[red]No Grype JSON reports found in {args.reports_dir}[/red]")
-            sys.exit(1)
-        scan_report_path = max(json_files, key=lambda p: p.stat().st_mtime)
-
-    scan_report_path = Path(scan_report_path)
-    if not scan_report_path.exists():
-        console.print(f"[red]Scan report not found: {scan_report_path}[/red]")
-        sys.exit(1)
-
-    console.print(f"[cyan]Loading scan report: {scan_report_path}[/cyan]")
-
-    # Load scan report
-    try:
-        with open(scan_report_path, 'r') as f:
-            scan_report = json.load(f)
-    except (OSError, json.JSONDecodeError) as e:
-        console.print(f"[red]Error loading scan report: {e}[/red]")
-        sys.exit(1)
-
-    # Extract summary
-    summary = extract_scan_summary(scan_report)
+    # Extract summary from all Grype JSON files
+    console.print(f"[cyan]Processing all Grype scan results in {args.reports_dir}[/cyan]")
+    summary = extract_scan_summary_from_all(args.reports_dir)
 
     # Load or create history
     trends_dir = Path(args.reports_dir) / 'trends'
@@ -232,9 +261,11 @@ def main():
     history_file = trends_dir / f"{release}-history.json"
     history = load_history(history_file)
 
-    # Set release name if new history
+    # Set release name and version if new history
     if not history.get('release'):
         history['release'] = release
+    if full_version and not history.get('version'):
+        history['version'] = full_version
 
     # Get previous scan for comparison
     previous_scan = history['scans'][-1]['summary'] if history.get('scans') else None
@@ -245,7 +276,6 @@ def main():
     # Create scan record
     scan_record = {
         'timestamp': datetime.now(timezone.utc).isoformat() + 'Z',
-        'scan_report_path': str(scan_report_path),
         'github_run_id': args.github_run_id or os.environ.get('GITHUB_RUN_ID'),
         'summary': {
             'total_cves': summary['total_cves'],
