@@ -191,9 +191,9 @@ def detect_release_from_extras(extras_dir):
         name = json_file.stem
         parts = name.split('.')
         if len(parts) >= 3 and parts[0].isdigit() and parts[1].isdigit():
-            # Return both release-X.Y and full X.Y.Z
-            release_name = f"release-{parts[0]}.{parts[1]}"
-            full_version = name  # e.g., "2.17.0"
+            # Return both backplane-X.Y (MCE) and full X.Y.Z
+            release_name = f"backplane-{parts[0]}.{parts[1]}"
+            full_version = name  # e.g., "2.11.0"
             return release_name, full_version
 
     return None, None

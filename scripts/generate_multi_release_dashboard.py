@@ -19,7 +19,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ACM CVE Trends - All Releases</title>
+    <title>MCE CVE Trends - All Releases</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {{
@@ -421,7 +421,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
     <div class="header">
-        <h1>🔒 ACM CVE Trend Dashboard</h1>
+        <h1>🔒 MCE CVE Trend Dashboard</h1>
         <p class="meta">Multi-Release Analysis | Updated: {timestamp}</p>
     </div>
 
@@ -643,6 +643,51 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             rows.forEach(row => tbody.appendChild(row));
         }}
 
+        function sortModalTable(tableId, columnIndex, type) {{
+            const table = document.getElementById(tableId);
+            if (!table) return;
+
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const header = table.querySelectorAll('th')[columnIndex];
+
+            // Determine sort direction
+            const currentSort = header.classList.contains('sort-asc') ? 'asc' :
+                               header.classList.contains('sort-desc') ? 'desc' : 'none';
+            const newSort = currentSort === 'asc' ? 'desc' : 'asc';
+
+            // Remove all sort classes
+            table.querySelectorAll('th').forEach(th => {{
+                th.classList.remove('sort-asc', 'sort-desc');
+            }});
+
+            // Add new sort class
+            header.classList.add('sort-' + newSort);
+
+            // Sort rows
+            rows.sort((a, b) => {{
+                let aVal, bVal;
+
+                if (type === 'number') {{
+                    const dataAttr = ['cve', 'severity', 'cvss', 'description', 'fix'][columnIndex];
+                    aVal = parseFloat(a.dataset[dataAttr] || 0);
+                    bVal = parseFloat(b.dataset[dataAttr] || 0);
+                }} else {{
+                    aVal = a.cells[columnIndex].textContent.trim().toLowerCase();
+                    bVal = b.cells[columnIndex].textContent.trim().toLowerCase();
+                }}
+
+                if (newSort === 'asc') {{
+                    return aVal > bVal ? 1 : aVal < bVal ? -1 : 0;
+                }} else {{
+                    return aVal < bVal ? 1 : aVal > bVal ? -1 : 0;
+                }}
+            }});
+
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        }}
+
         function closeModal() {{
             document.getElementById('cveModal').style.display = 'none';
         }}
@@ -663,25 +708,30 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 return;
             }}
 
-            // Build CVE table
+            // Build CVE table with sorting
+            const tableId = 'modalTable-' + component.replace(/[^a-zA-Z0-9]/g, '_');
             let html = `
                 <p><strong>${{componentData.length}} CVEs found</strong></p>
-                <table class="component-table">
+                <table class="component-table" id="${{tableId}}">
                     <thead>
                         <tr>
-                            <th>CVE ID</th>
-                            <th>Severity</th>
-                            <th>CVSS</th>
-                            <th>Description</th>
-                            <th>Fix Available</th>
+                            <th onclick="sortModalTable('${{tableId}}', 0, 'string')">CVE ID</th>
+                            <th onclick="sortModalTable('${{tableId}}', 1, 'number')">Severity</th>
+                            <th onclick="sortModalTable('${{tableId}}', 2, 'number')">CVSS</th>
+                            <th onclick="sortModalTable('${{tableId}}', 3, 'string')">Description</th>
+                            <th onclick="sortModalTable('${{tableId}}', 4, 'string')">Fix Available</th>
                         </tr>
                     </thead>
                     <tbody>`;
 
+            const severityOrder = {{'CRITICAL': 4, 'HIGH': 3, 'MEDIUM': 2, 'LOW': 1, 'UNKNOWN': 0}};
+
             componentData.forEach(cve => {{
                 const cvssDisplay = cve.cvss_score ? cve.cvss_score.toFixed(1) : '—';
+                const cvssValue = cve.cvss_score || 0;
                 const cvssColor = cve.cvss_score >= 9 ? '#d73a49' : cve.cvss_score >= 7 ? '#f66a0a' : '#666';
                 const severityClass = 'severity-' + cve.severity.toLowerCase();
+                const severityValue = severityOrder[cve.severity] || 0;
                 const description = cve.description.substring(0, 150) + (cve.description.length > 150 ? '...' : '');
 
                 let cveLink;
@@ -694,7 +744,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
                 }}
 
                 html += `
-                    <tr>
+                    <tr data-cve="${{cve.cve_id}}" data-severity="${{severityValue}}" data-cvss="${{cvssValue}}" data-description="${{description}}" data-fix="${{cve.fix_display}}">
                         <td>${{cveLink}}</td>
                         <td><span class="severity-badge ${{severityClass}}">${{cve.severity}}</span></td>
                         <td style="text-align: center; color: ${{cvssColor}}; font-weight: 700;">${{cvssDisplay}}</td>
