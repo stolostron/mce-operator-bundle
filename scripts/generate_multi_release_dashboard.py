@@ -19,7 +19,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCE CVE Trends - All Releases</title>
+    <title>ACM CVE Trends - All Releases</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {{
@@ -421,7 +421,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 </head>
 <body>
     <div class="header">
-        <h1>🔒 MCE CVE Trend Dashboard</h1>
+        <h1>🔒 ACM CVE Trend Dashboard</h1>
         <p class="meta">Multi-Release Analysis | Updated: {timestamp}</p>
     </div>
 
@@ -809,7 +809,9 @@ def format_timestamp(timestamp_str):
 def format_date_short(timestamp_str):
     """Return ISO timestamp for client-side local timezone conversion"""
     try:
-        # Return ISO format for JavaScript to convert to local time
+        # Clean malformed timestamps: remove Z if timezone offset present
+        if '+' in timestamp_str and timestamp_str.endswith('Z'):
+            timestamp_str = timestamp_str[:-1]
         return timestamp_str
     except (ValueError, AttributeError):
         return timestamp_str
