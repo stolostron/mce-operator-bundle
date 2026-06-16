@@ -85,6 +85,30 @@ jobs:
           echo "Manual trigger - branch input: ${INPUT_BRANCH}"
         fi
 
+    - name: Determine branch context
+      id: branch
+      env:
+        # Use the branch that triggered the workflow:
+        # - workflow_run: use head_branch (the PR branch, e.g., backplane-2.17)
+        # - workflow_dispatch: use ref_name or input branch
+        WORKFLOW_RUN_BRANCH: ${{ github.event.workflow_run.head_branch }}
+        INPUT_BRANCH: ${{ inputs.branch }}
+        REF_NAME: ${{ github.ref_name }}
+      run: |
+        BRANCH_NAME="${WORKFLOW_RUN_BRANCH:-${INPUT_BRANCH:-${REF_NAME}}}"
+        echo "name=${BRANCH_NAME}" >> $GITHUB_OUTPUT
+
+        # Extract backplane version from branch name
+        # Matches: backplane-2.17, update-snapshot-backplane-2.17, etc.
+        BACKPLANE_VERSION=""
+        if [[ "${BRANCH_NAME}" =~ backplane-([0-9]+\.[0-9]+) ]]; then
+          BACKPLANE_VERSION="${BASH_REMATCH[1]}"
+        fi
+        echo "backplane_version=${BACKPLANE_VERSION}" >> $GITHUB_OUTPUT
+
+        echo "Branch name: ${BRANCH_NAME}"
+        echo "Backplane version: ${BACKPLANE_VERSION}"
+
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
@@ -130,6 +154,17 @@ jobs:
       id: mirror
       continue-on-error: true
       run: |
+        BRANCH_NAME="${{ steps.branch.outputs.name }}"
+        BACKPLANE_VERSION="${{ steps.branch.outputs.backplane_version }}"
+
+        # Add to GitHub Actions summary
+        echo "### Image Mirroring for MCE ${BACKPLANE_VERSION:-${BRANCH_NAME}}" >> $GITHUB_STEP_SUMMARY
+        echo "**Branch:** ${BRANCH_NAME}" >> $GITHUB_STEP_SUMMARY
+        if [ -n "$BACKPLANE_VERSION" ]; then
+          echo "**Backplane Version:** ${BACKPLANE_VERSION}" >> $GITHUB_STEP_SUMMARY
+        fi
+        echo "" >> $GITHUB_STEP_SUMMARY
+
         # Authenticate to needed image registries...
 
         # Access to registry.redhat.io needed to resolve external image references (shipped images):
@@ -161,9 +196,11 @@ jobs:
       if: always()
       env:
         EVENT_NAME: ${{ github.event_name }}
-        REF_NAME: ${{ github.ref_name }}
         SLACK_USER_ID: ${{ vars.SLACK_USER_ID }}
       run: |
+        BRANCH_NAME="${{ steps.branch.outputs.name }}"
+        BACKPLANE_VERSION="${{ steps.branch.outputs.backplane_version }}"
+
         # Read results from the JSON file
         if [ ! -f workflow/mirror-results.json ]; then
           echo "No results file found, creating minimal report"
@@ -208,55 +245,65 @@ jobs:
           USER_MENTION=" <@$SLACK_USER_ID>"
         fi
 
-        # Build the Slack message
+        # Build header with backplane version if available
+        HEADER_TEXT="Image Mirroring Report"
+        if [ -n "$BACKPLANE_VERSION" ]; then
+          HEADER_TEXT="Image Mirroring Report - MCE ${BACKPLANE_VERSION}"
+        fi
+
+        # Build the Slack message using jq for safe JSON construction
         WORKFLOW_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        MESSAGE=$(cat <<EOF
-        {
-          "blocks": [
-            {
-              "type": "header",
-              "text": {
-                "type": "plain_text",
-                "text": "Image Mirroring Report"
-              }
-            },
-            {
-              "type": "section",
-              "text": {
-                "type": "mrkdwn",
-                "text": "$STATUS$USER_MENTION\n\n$SUMMARY$DETAILS"
-              }
-            },
-            {
-              "type": "section",
-              "fields": [
-                {
-                  "type": "mrkdwn",
-                  "text": "*Triggered by:*\n${EVENT_NAME}"
-                },
-                {
-                  "type": "mrkdwn",
-                  "text": "*Branch:*\n${REF_NAME}"
+        MESSAGE=$(jq -n \
+          --arg header "$HEADER_TEXT" \
+          --arg status "$STATUS$USER_MENTION" \
+          --arg summary "$SUMMARY$DETAILS" \
+          --arg event "$EVENT_NAME" \
+          --arg branch "$BRANCH_NAME" \
+          --arg url "$WORKFLOW_URL" \
+          '{
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": $header
                 }
-              ]
-            },
-            {
-              "type": "actions",
-              "elements": [
-                {
-                  "type": "button",
-                  "text": {
-                    "type": "plain_text",
-                    "text": "View Workflow Run"
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": ($status + "\n\n" + $summary)
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": ("*Triggered by:*\n" + $event)
                   },
-                  "url": "$WORKFLOW_URL"
-                }
-              ]
-            }
-          ]
-        }
-        EOF
-        )
+                  {
+                    "type": "mrkdwn",
+                    "text": ("*Branch:*\n" + $branch)
+                  }
+                ]
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "View Workflow Run"
+                    },
+                    "url": $url
+                  }
+                ]
+              }
+            ]
+          }')
 
         # Send to Slack
         curl -X POST -H 'Content-type: application/json' \
