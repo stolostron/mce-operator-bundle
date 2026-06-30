@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2026-06-29T13:38:20Z'
+    createdAt: '2026-06-30T03:14:24Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -29,9 +29,9 @@ metadata:
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
     olm.properties: '[{"type": "olm.maxOpenShiftVersion", "value": "5.1"}]'
-    olm.skipRange: '>=2.17.0-0 <5.0.0-133'
+    olm.skipRange: '>=2.17.0-0 <5.0.0-134'
     operators.openshift.io/must-gather-image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:075e9a6598c01e745b0240e8fabef26dd4388e76acd6edc3afce6823f9d7ef90
-  name: multicluster-engine.v5.0.0-133
+  name: multicluster-engine.v5.0.0-134
   namespace: placeholder
   labels:
     operatorframework.io/arch.amd64: supported
@@ -41,7 +41,7 @@ metadata:
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 5.0.0-133
+  version: 5.0.0-134
   provider:
     name: Red Hat
   maintainers:
@@ -2704,6 +2704,7 @@ spec:
           - networkpolicies
           verbs:
           - create
+          - delete
           - get
           - patch
           - update
@@ -3564,7 +3565,7 @@ spec:
                 - name: OPERAND_IMAGE_BACKPLANE_MUST_GATHER
                   value: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:075e9a6598c01e745b0240e8fabef26dd4388e76acd6edc3afce6823f9d7ef90
                 - name: OPERAND_IMAGE_BACKPLANE_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:e0914ad9a9c112cdb07bcfa06f86e0105c88acdab2cb1e652f573b2fbbff78dc
+                  value: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:76f61273095a956df69475b1c2e7462ef218af003d1f09b7cc0432380fff76a8
                 - name: OPERAND_IMAGE_CLOUDEVENTS_CONDUCTOR
                   value: registry.redhat.io/multicluster-engine/cloudevents-conductor-rhel9@sha256:051fd63de48259bdcc7ac776326b069a65c6b6e4ee5e63c084e3470e9f2f3cd7
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_AGENT
@@ -3572,19 +3573,19 @@ spec:
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_AWS_RHEL9
                   value: registry.redhat.io/multicluster-engine/cluster-api-provider-aws-rhel9@sha256:bb012834a357320ec8770c1b010482dd7959681f9d448e64aae3f3da551ad4b0
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_AZURE_RHEL9
-                  value: registry.redhat.io/multicluster-engine/cluster-api-provider-azure-rhel9@sha256:12a6ddaf556a84b43299790f7774bdd116a5cbb9492e1f78f258b38df0aededf
+                  value: registry.redhat.io/multicluster-engine/cluster-api-provider-azure-rhel9@sha256:3d00179d0e6766a7ae3f170e9fe7a311fe21bf22c50969d67e2ba54c8a8944cc
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_KUBEVIRT
                   value: registry.redhat.io/multicluster-engine/cluster-api-provider-kubevirt-rhel9@sha256:896633b34cfaa657bf78f58c05de3494a41bd4945f7bd51cce0986f30f701791
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_OPENSHIFT_ASSISTED_BOOTSTRAP
-                  value: registry.redhat.io/multicluster-engine/capoa-bootstrap-rhel9@sha256:07006849858e791412fb23d86b1866cbf9369fe73f311998537e4f48049392f6
+                  value: registry.redhat.io/multicluster-engine/capoa-bootstrap-rhel9@sha256:9b6c85b40f951762ff3b05de5b4ead9e15549bccfe01bfffece67a10c2241bfb
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_OPENSHIFT_ASSISTED_CONTROL_PLANE
-                  value: registry.redhat.io/multicluster-engine/capoa-control-plane-rhel9@sha256:f8559c507a24e1722be34fde1e5f49c6247e6366f613c6b4e38d6ed7cb410d1a
+                  value: registry.redhat.io/multicluster-engine/capoa-control-plane-rhel9@sha256:b83fb0560db43be2809021639bb25945c5781a5b45857a9eb26b07dacdd96447
                 - name: OPERAND_IMAGE_MCE_CAPI_WEBHOOK_CONFIG_RHEL9
-                  value: registry.redhat.io/multicluster-engine/mce-capi-webhook-config-rhel9@sha256:507993617b1a41f538bcb6b5ed968d1b200c3cd605e7074931def39020c2eeff
+                  value: registry.redhat.io/multicluster-engine/mce-capi-webhook-config-rhel9@sha256:3c96d35e74161b4426d6b663ab23175de7df2aa007cfdedbd7f468580c2ec51b
                 - name: OPERAND_IMAGE_CLUSTERCLAIMS_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:e99dd0a082be6b88c32dcd464edcdbaef4cf04c9d33570c6de56c9ec9dc7e4d5
+                  value: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:2e7de64c93f682fcb486fffad6d1945c2a1c76105af68bab016b980a9ddf16d3
                 - name: OPERAND_IMAGE_CLUSTER_CURATOR_CONTROLLER
-                  value: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:849069e7a77d61d07cf254ead6117ef8cb56764950f41c216b81a208d1b02c2a
+                  value: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:1f29349947d11a9e66d376340d9fecbb71a4654264e44473b6c6b877174daea2
                 - name: OPERAND_IMAGE_CLUSTER_IMAGE_SET_CONTROLLER
                   value: registry.redhat.io/multicluster-engine/cluster-image-set-controller-rhel9@sha256:8d3a12dcb49acb2bbd1e6bf1f91917e677f07b11c2d3d329e19865d87a6d5696
                 - name: OPERAND_IMAGE_CLUSTERLIFECYCLE_STATE_METRICS
@@ -3594,17 +3595,17 @@ spec:
                 - name: OPERAND_IMAGE_CLUSTER_PROXY
                   value: registry.redhat.io/multicluster-engine/cluster-proxy-rhel9@sha256:330534af5a10a85e3408b19a5535a91324168758cb2421ee680e64c2afba9368
                 - name: OPERAND_IMAGE_CONSOLE_MCE
-                  value: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:4b549df87017fc5fb8ad8856d78784270b2b3f9cda2fa237f80e812af1910776
+                  value: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:0e21173fe0765251f1cab1c09000ae1a72276cb8ae4a2ff5a74e902c532dde9e
                 - name: OPERAND_IMAGE_DISCOVERY_OPERATOR
                   value: registry.redhat.io/multicluster-engine/discovery-rhel9@sha256:063c102feaeec77ab9d825134d5c6250e5f284613fb2769d74146cfe263db4f2
                 - name: OPERAND_IMAGE_OPENSHIFT_HIVE
-                  value: registry.redhat.io/multicluster-engine/hive-rhel9@sha256:75e5bd133113c9d72b9175a9fd3a8d53de81251e4cb2b58d25f0bdd9e6544212
+                  value: registry.redhat.io/multicluster-engine/hive-rhel9@sha256:eeaf4a9334de4433ee4a8014cbb1d8d93951a31f3172605c105d60b02087ea95
                 - name: OPERAND_IMAGE_HYPERSHIFT_ADDON_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/hypershift-addon-rhel9-operator@sha256:fcc749bd13af88568018330cb01ac31ea92a6b9ebaa0458d7a48991b35eccd1e
+                  value: registry.redhat.io/multicluster-engine/hypershift-addon-rhel9-operator@sha256:7fcc7800be10c65b73807b0453c552b20b548d90f4d7c7ad1a2ac9e6a1058325
                 - name: OPERAND_IMAGE_HYPERSHIFT_CLI
-                  value: registry.redhat.io/multicluster-engine/hypershift-cli-rhel9@sha256:be987f99e4f8734ab80a411a7b7891122d9a425eafb6367b5dc22f322f4487fc
+                  value: registry.redhat.io/multicluster-engine/hypershift-cli-rhel9@sha256:3eabd0dd83983e3f3b03bef8f56101dc46f632b47563e099169fe59138492d08
                 - name: OPERAND_IMAGE_HYPERSHIFT_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/hypershift-rhel9-operator@sha256:5ebf586612d208529c6de91da53346530dbf595c777e47aebaecb2bb03c91b87
+                  value: registry.redhat.io/multicluster-engine/hypershift-rhel9-operator@sha256:4ae8b10f4776f560825adcbb6e19ffe2ff15a62ba1c0d615f51ab826ff443e70
                 - name: OPERAND_IMAGE_IMAGE_BASED_INSTALL_OPERATOR
                   value: registry.redhat.io/multicluster-engine/image-based-install-rhel9@sha256:9767c6a7d5207fa5d86197da7f0d0e1fe918b03bc389860e698974ed46bed72c
                 - name: OPERAND_IMAGE_KUBE_RBAC_PROXY_MCE
@@ -3646,10 +3647,10 @@ spec:
                 - name: OPERAND_IMAGE_POSTGRESQL_16
                   value: registry.redhat.io/rhel9/postgresql-16@sha256:160578ef9e4c872f8f06d407aceb65c5d874049bb56a14b62a09b52ecc1ca0a0
                 - name: OPERATOR_VERSION
-                  value: 5.0.0-133
+                  value: 5.0.0-134
                 - name: OPERATOR_PACKAGE
                   value: multicluster-engine
-                image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:e0914ad9a9c112cdb07bcfa06f86e0105c88acdab2cb1e652f573b2fbbff78dc
+                image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:76f61273095a956df69475b1c2e7462ef218af003d1f09b7cc0432380fff76a8
                 livenessProbe:
                   httpGet:
                     path: /healthz
@@ -3706,19 +3707,19 @@ spec:
   - name: cluster_api_provider_aws_rhel9
     image: registry.redhat.io/multicluster-engine/cluster-api-provider-aws-rhel9@sha256:bb012834a357320ec8770c1b010482dd7959681f9d448e64aae3f3da551ad4b0
   - name: cluster_api_provider_azure_rhel9
-    image: registry.redhat.io/multicluster-engine/cluster-api-provider-azure-rhel9@sha256:12a6ddaf556a84b43299790f7774bdd116a5cbb9492e1f78f258b38df0aededf
+    image: registry.redhat.io/multicluster-engine/cluster-api-provider-azure-rhel9@sha256:3d00179d0e6766a7ae3f170e9fe7a311fe21bf22c50969d67e2ba54c8a8944cc
   - name: cluster_api_provider_kubevirt
     image: registry.redhat.io/multicluster-engine/cluster-api-provider-kubevirt-rhel9@sha256:896633b34cfaa657bf78f58c05de3494a41bd4945f7bd51cce0986f30f701791
   - name: cluster_api_provider_openshift_assisted_bootstrap
-    image: registry.redhat.io/multicluster-engine/capoa-bootstrap-rhel9@sha256:07006849858e791412fb23d86b1866cbf9369fe73f311998537e4f48049392f6
+    image: registry.redhat.io/multicluster-engine/capoa-bootstrap-rhel9@sha256:9b6c85b40f951762ff3b05de5b4ead9e15549bccfe01bfffece67a10c2241bfb
   - name: cluster_api_provider_openshift_assisted_control_plane
-    image: registry.redhat.io/multicluster-engine/capoa-control-plane-rhel9@sha256:f8559c507a24e1722be34fde1e5f49c6247e6366f613c6b4e38d6ed7cb410d1a
+    image: registry.redhat.io/multicluster-engine/capoa-control-plane-rhel9@sha256:b83fb0560db43be2809021639bb25945c5781a5b45857a9eb26b07dacdd96447
   - name: mce_capi_webhook_config_rhel9
-    image: registry.redhat.io/multicluster-engine/mce-capi-webhook-config-rhel9@sha256:507993617b1a41f538bcb6b5ed968d1b200c3cd605e7074931def39020c2eeff
+    image: registry.redhat.io/multicluster-engine/mce-capi-webhook-config-rhel9@sha256:3c96d35e74161b4426d6b663ab23175de7df2aa007cfdedbd7f468580c2ec51b
   - name: clusterclaims_controller
-    image: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:e99dd0a082be6b88c32dcd464edcdbaef4cf04c9d33570c6de56c9ec9dc7e4d5
+    image: registry.redhat.io/multicluster-engine/clusterclaims-controller-rhel9@sha256:2e7de64c93f682fcb486fffad6d1945c2a1c76105af68bab016b980a9ddf16d3
   - name: cluster_curator_controller
-    image: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:849069e7a77d61d07cf254ead6117ef8cb56764950f41c216b81a208d1b02c2a
+    image: registry.redhat.io/multicluster-engine/cluster-curator-controller-rhel9@sha256:1f29349947d11a9e66d376340d9fecbb71a4654264e44473b6c6b877174daea2
   - name: cluster_image_set_controller
     image: registry.redhat.io/multicluster-engine/cluster-image-set-controller-rhel9@sha256:8d3a12dcb49acb2bbd1e6bf1f91917e677f07b11c2d3d329e19865d87a6d5696
   - name: clusterlifecycle_state_metrics
@@ -3728,17 +3729,17 @@ spec:
   - name: cluster_proxy
     image: registry.redhat.io/multicluster-engine/cluster-proxy-rhel9@sha256:330534af5a10a85e3408b19a5535a91324168758cb2421ee680e64c2afba9368
   - name: console_mce
-    image: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:4b549df87017fc5fb8ad8856d78784270b2b3f9cda2fa237f80e812af1910776
+    image: registry.redhat.io/multicluster-engine/console-mce-rhel9@sha256:0e21173fe0765251f1cab1c09000ae1a72276cb8ae4a2ff5a74e902c532dde9e
   - name: discovery_operator
     image: registry.redhat.io/multicluster-engine/discovery-rhel9@sha256:063c102feaeec77ab9d825134d5c6250e5f284613fb2769d74146cfe263db4f2
   - name: openshift_hive
-    image: registry.redhat.io/multicluster-engine/hive-rhel9@sha256:75e5bd133113c9d72b9175a9fd3a8d53de81251e4cb2b58d25f0bdd9e6544212
+    image: registry.redhat.io/multicluster-engine/hive-rhel9@sha256:eeaf4a9334de4433ee4a8014cbb1d8d93951a31f3172605c105d60b02087ea95
   - name: hypershift_addon_operator
-    image: registry.redhat.io/multicluster-engine/hypershift-addon-rhel9-operator@sha256:fcc749bd13af88568018330cb01ac31ea92a6b9ebaa0458d7a48991b35eccd1e
+    image: registry.redhat.io/multicluster-engine/hypershift-addon-rhel9-operator@sha256:7fcc7800be10c65b73807b0453c552b20b548d90f4d7c7ad1a2ac9e6a1058325
   - name: hypershift_cli
-    image: registry.redhat.io/multicluster-engine/hypershift-cli-rhel9@sha256:be987f99e4f8734ab80a411a7b7891122d9a425eafb6367b5dc22f322f4487fc
+    image: registry.redhat.io/multicluster-engine/hypershift-cli-rhel9@sha256:3eabd0dd83983e3f3b03bef8f56101dc46f632b47563e099169fe59138492d08
   - name: hypershift_operator
-    image: registry.redhat.io/multicluster-engine/hypershift-rhel9-operator@sha256:5ebf586612d208529c6de91da53346530dbf595c777e47aebaecb2bb03c91b87
+    image: registry.redhat.io/multicluster-engine/hypershift-rhel9-operator@sha256:4ae8b10f4776f560825adcbb6e19ffe2ff15a62ba1c0d615f51ab826ff443e70
   - name: image_based_install_operator
     image: registry.redhat.io/multicluster-engine/image-based-install-rhel9@sha256:9767c6a7d5207fa5d86197da7f0d0e1fe918b03bc389860e698974ed46bed72c
   - name: kube_rbac_proxy_mce
