@@ -2,71 +2,180 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/openshift/hypershift?rev=c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
-    build.appstudio.redhat.com/commit_sha: c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
+    build.appstudio.openshift.io/repo: https://github.com/openshift/hypershift?rev=ca3d34776b3e6267264ae63b34e317c9746b042e
+    build.appstudio.redhat.com/commit_sha: ca3d34776b3e6267264ae63b34e317c9746b042e
     build.appstudio.redhat.com/target_branch: release-5.0
     pac.test.appstudio.openshift.io/branch: release-5.0
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "84426010483"
+    pac.test.appstudio.openshift.io/check-run-id: "84507140854"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-wwvmlw
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-ywndha
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35333059"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hypershift-cli-mce-50-on-push-6rms5
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hypershift-cli-mce-50-on-push-fqn9j
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "release-5.0"
     pac.test.appstudio.openshift.io/original-prname: hypershift-cli-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "8852"
+    pac.test.appstudio.openshift.io/pull-request: "8337"
     pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hypershift
     pac.test.appstudio.openshift.io/repository: hypershift-manual-merge
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/secret-created: "true"
     pac.test.appstudio.openshift.io/sender: openshift-merge-robot
-    pac.test.appstudio.openshift.io/sha: c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
+    pac.test.appstudio.openshift.io/sha: ca3d34776b3e6267264ae63b34e317c9746b042e
     pac.test.appstudio.openshift.io/sha-title: |-
-      Merge pull request #8852 from celebdor/docs-developer-scripts
+      CNTRLPLANE-2262: Add Azure scale-from-zero support (#8337)
 
-      NO-JIRA: add Konflux CI scripts reference and document validate-pr-override-images
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hypershift/commit/c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
+      * feat: CNTRLPLANE-2262: Add Azure scale-from-zero support
+
+      Extend the existing scale-from-zero autoscaling framework to support
+      Azure by implementing an Azure instance type provider that queries the
+      Azure Resource SKUs API for VM size specifications and writing capacity
+      annotations on MachineDeployments.
+
+      Changes:
+      - Add Azure instancetype.Provider using armcompute.ResourceSKUsClient
+      - Add AzureMachineTemplate case to scale_from_zero.go type switch
+      - Extend supportedScaleFromZeroPlatform() for Azure
+      - Extend reconcileScaleFromZeroAnnotations() for Azure
+      - Update autoscalerEnabledCondition() to accept Azure with min=0
+      - Update effectiveMin guard in capi.go to allow min=0 for Azure
+      - Add "azure" to supportedProviders in main.go and install.go
+      - Add Azure provider initialization with credential file parsing
+      - Update CRD CEL validation to allow min=0 for Azure platform
+      - Add unit tests for Azure provider and extended type switches
+
+      Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+
+      * fix: address review feedback for Azure scale-from-zero
+
+      - Update NodePoolAutoScaling.Min field comment and CRD validation rule
+        to reflect Azure support alongside AWS
+      - Regenerate CRD manifests with updated docs and validation
+      - Fix partial SKU cache on Azure pager failure: build into local map
+        and assign to cache only after full walk succeeds
+      - Tighten platform gate: add ScaleFromZeroPlatform field so annotations
+        are only set when nodepool platform matches the configured provider
+      - Validate all required Azure credential fields (subscriptionId,
+        clientId, clientSecret, tenantId, location) upfront with a clear
+        error listing missing fields
+
+      Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+
+      * fix: update envtest suite for Azure scale-from-zero
+
+      Update CRD test suite to match the updated validation rule that
+      allows autoScaling.min=0 on Azure platform:
+      - Change Azure min=0 test from expecting failure to expecting success
+      - Update Agent and KubeVirt error messages to include Azure
+
+      Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+
+      * fix: address lint and verify CI failures
+
+      - Lowercase error string for Azure scale-from-zero credentials
+      - Fix gci import ordering in main.go, provider_test.go,
+        scale_from_zero_test.go, and nodepool_test.go
+
+      Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+
+      * fix: address CodeRabbit review for Azure scale-from-zero
+
+      - Gate effectiveMin=0 on runtime-configured scaleFromZeroPlatform instead
+        of static platform type check, preventing stalled pools when the
+        scale-from-zero provider isn't wired up
+      - Resolve AZURE_CLOUD_NAME for credential and SKU client construction in
+        scale-from-zero init, matching sovereign cloud support used elsewhere
+      - Return errors on invalid/negative GPU values in transformSKU instead of
+        silently skipping, with VM size in error messages for debuggability
+
+      Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+
+      * fix: update CLI help text and regenerate vendor files
+
+      Update the --scale-from-zero-provider help text to list both aws and azure
+      as supported platforms. Regenerate vendor and docs to sync with the rebased
+      branch.
+
+      Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+
+      * test(e2e): enable scale-from-zero e2e test for Azure platform
+
+      The TestNodePoolAutoscalingScaleFromZero test was hardcoded to skip on
+      non-AWS platforms. The test logic is already platform-agnostic (it copies
+      the existing NodePool spec), so the only change needed is widening the
+      platform gate to include Azure.
+
+      A follow-up PR in openshift/release will configure the Azure CI jobs to
+      install the operator with --scale-from-zero-provider=azure and the
+      appropriate credentials.
+
+      Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+
+      * refactor: make scale-from-zero effectiveMin data-driven
+
+      Replace hardcoded platform checks with a data-driven approach:
+      - Add hasStatusCapacity() to check native provider support
+      - Change setMachine{Deployment,Set}Replicas to accept bool
+      - Add statusCapacity extraction for Azure machine templates
+      - effectiveMin=0 allowed when Status.Capacity is populated OR
+        when the runtime scale-from-zero provider matches the platform
+
+      Addresses review comments from enxebre on PR #8337.
+
+      * fix: add cache TTL, VMSizeNotFoundError, and remove unrelated gitignore entries
+
+      Address csrwng review feedback:
+      - Add 1-hour TTL to Azure SKU cache so new VM sizes are picked up
+      - Introduce VMSizeNotFoundError to distinguish permanent errors (VM size
+        doesn't exist in region) from transient errors (API failure)
+      - Stop retrying indefinitely for non-existent VM sizes
+      - Document why Azure uses caching unlike the AWS provider
+      - Remove unrelated .claude/skills/dev/azure-sandbox-* from .gitignore
+
+      ---------
+
+      Co-authored-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hypershift/commit/ca3d34776b3e6267264ae63b34e317c9746b042e
     pac.test.appstudio.openshift.io/source-branch: refs/heads/release-5.0
     pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hypershift
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: openshift
     pac.test.appstudio.openshift.io/url-repository: hypershift
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-07-01T00:47:21Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260701-000145-000":{"lastUpdateTime":"2026-07-01T00:48:33.165691768Z"}}}'
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-07-01T10:58:56Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260701-100957-000":{"lastUpdateTime":"2026-07-01T11:00:03.533229511Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1782864105000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1782900597000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/result-chains-git-commit: c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
+    test.appstudio.openshift.io/result-chains-git-commit: ca3d34776b3e6267264ae63b34e317c9746b042e
     test.appstudio.openshift.io/result-chains-git-url: https://github.com/openshift/hypershift
-    test.appstudio.openshift.io/result-image-digest: sha256:dd10ccc07cb37efc45193a589de4057c1d6043048e6a5dabb6135a7622fad4db
-    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-50:c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
+    test.appstudio.openshift.io/result-image-digest: sha256:e3eeb0f543b849ddf75b35b329364a17ca952dda59526bf9dc02df1a353ba3e7
+    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-50:ca3d34776b3e6267264ae63b34e317c9746b042e
     test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hypershift
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"TestPassed","lastUpdateTime":"2026-07-01T00:48:33.165691768Z","details":"Integration
-      test passed","startTime":"2026-07-01T00:47:21.820706957Z","completionTime":"2026-07-01T00:48:33.165691768Z","testPipelineRunName":"enterprise-contract-mce-50-mqcj2"}]'
-  creationTimestamp: "2026-07-01T00:47:21Z"
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-07-01T11:00:03.533229511Z","details":"Integration
+      test passed with warnings","startTime":"2026-07-01T10:58:56.409752447Z","completionTime":"2026-07-01T11:00:03.533229511Z","testPipelineRunName":"enterprise-contract-mce-50-9z4ww"}]'
+  creationTimestamp: "2026-07-01T10:58:56Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: hypershift-cli-mce-50-on-push-6rms5
+    appstudio.openshift.io/build-pipelinerun: hypershift-cli-mce-50-on-push-fqn9j
     appstudio.openshift.io/component: hypershift-cli-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "84426010483"
+    pac.test.appstudio.openshift.io/check-run-id: "84507140854"
     pac.test.appstudio.openshift.io/event-type: push
     pac.test.appstudio.openshift.io/original-prname: hypershift-cli-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "8852"
+    pac.test.appstudio.openshift.io/pull-request: "8337"
     pac.test.appstudio.openshift.io/repository: hypershift-manual-merge
-    pac.test.appstudio.openshift.io/sha: c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
+    pac.test.appstudio.openshift.io/sha: ca3d34776b3e6267264ae63b34e317c9746b042e
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: openshift
     pac.test.appstudio.openshift.io/url-repository: hypershift
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1782866835"
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1782903529"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20260701-000145-000
+  name: release-mce-50-20260701-100957-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -75,76 +184,12 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "9641762314"
-  uid: 6a2676a4-a428-43b6-851c-26d7c0467bd9
+  resourceVersion: "9651269939"
+  uid: c42cc214-0aaa-4665-93df-cdbb500cc422
 spec:
   application: release-mce-50
   artifacts: {}
   components:
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:76f61273095a956df69475b1c2e7462ef218af003d1f09b7cc0432380fff76a8
-    name: backplane-operator-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: f6a7ead6b60d5f54c10ecab10b08ec662589e251
-        url: https://github.com/stolostron/backplane-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/image-based-install-operator-mce-50@sha256:9767c6a7d5207fa5d86197da7f0d0e1fe918b03bc389860e698974ed46bed72c
-    name: image-based-install-operator-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile
-        revision: 6836f6608f4e2b39f6e1f243b86b7296abe91c58
-        url: https://github.com/openshift/image-based-install-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managed-serviceaccount-mce-50@sha256:3390388a09c51d8cfe96528fbe7a606747ced21801641d6409b8a1aaa25cea54
-    name: managed-serviceaccount-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: bf2e71eeb375bd8d2e15085e5cfe16e4f3847cd9
-        url: https://github.com/stolostron/managed-serviceaccount
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-permission-mce-50@sha256:88b0e19532b3996f8323e91ab48b948474163390ca828b11bc19cdfb27ac2208
-    name: cluster-permission-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: a9a64dc449da5d0f21b8d66bdc55493b2ef96f66
-        url: https://github.com/stolostron/cluster-permission
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:e88b9646a01c213d4f37bf250789405f511669e653adef62929e03c8b67d2ed5
-    name: discovery-operator-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: fc4d31246269c3c08f5b4e2d5c693d502d2e067d
-        url: https://github.com/stolostron/discovery
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-50@sha256:eeaf4a9334de4433ee4a8014cbb1d8d93951a31f3172605c105d60b02087ea95
-    name: hive-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile
-        revision: 2ea50dca914c77bca220e0be7ba7ef9f89ef06f0
-        url: https://github.com/openshift/hive
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-50@sha256:74968305e1e1da7101b7c754519f955852816a8ea1b20bfee4d76a0d5bf4f86c
-    name: kube-rbac-proxy-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Containerfile.operator
-        revision: 476cbbdf5734f736bfa0c66a9064752516629e4d
-        url: https://github.com/stolostron/kube-rbac-proxy
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/placement-mce-50@sha256:8903c5ba507d69da59a72ff39ed1b95e33bc0a0d93ec1d4508d5b0d6d223ee2f
-    name: placement-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: build/Dockerfile.placement.rhtap
-        revision: 69cc78f0c37e685cce59e7ccb650dd09512ddd36
-        url: https://github.com/stolostron/ocm
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-proxy-mce-50@sha256:330534af5a10a85e3408b19a5535a91324168758cb2421ee680e64c2afba9368
     name: cluster-proxy-mce-50
     source:
@@ -169,12 +214,12 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: b2bf5cdd6f3156ba45d78983cd3d2e842946f574
         url: https://github.com/stolostron/hypershift-addon-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-50@sha256:dd10ccc07cb37efc45193a589de4057c1d6043048e6a5dabb6135a7622fad4db
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-cli-mce-50@sha256:e3eeb0f543b849ddf75b35b329364a17ca952dda59526bf9dc02df1a353ba3e7
     name: hypershift-cli-mce-50
     source:
       git:
         context: ./
-        revision: c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
+        revision: ca3d34776b3e6267264ae63b34e317c9746b042e
         url: https://github.com/openshift/hypershift
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-kubevirt-mce-50@sha256:896633b34cfaa657bf78f58c05de3494a41bd4945f7bd51cce0986f30f701791
     name: cluster-api-provider-kubevirt-mce-50
@@ -224,13 +269,13 @@ spec:
         dockerfileUrl: Containerfile.mce.konflux
         revision: c6929c0c38dabdbe02f04c9e67e1068e366e3a83
         url: https://github.com/stolostron/console
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-50@sha256:59fbd65f49628e28a8346efa7b94b39b06096bfc696ac116215d0e20832e548a
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-release-mce-50@sha256:f1f1dde15061c832b0f797fec497c5d52c471bad0b7bad024aa9c57676fc14f7
     name: hypershift-release-mce-50
     source:
       git:
         context: ./
         dockerfileUrl: Containerfile.operator
-        revision: c5c87300ce16e08dcd9dd61cecdba90fcfe223bd
+        revision: ca3d34776b3e6267264ae63b34e317c9746b042e
         url: https://github.com/openshift/hypershift
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/maestro-mce-50@sha256:6a9d2c7469b1947a9c3bafaef9827d226c1ffc9b094731d35be1d268c714741f
     name: maestro-mce-50
@@ -360,20 +405,84 @@ spec:
         dockerfileUrl: build/Dockerfile.work.rhtap
         revision: 69cc78f0c37e685cce59e7ccb650dd09512ddd36
         url: https://github.com/stolostron/ocm
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:76f61273095a956df69475b1c2e7462ef218af003d1f09b7cc0432380fff76a8
+    name: backplane-operator-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: f6a7ead6b60d5f54c10ecab10b08ec662589e251
+        url: https://github.com/stolostron/backplane-operator
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/image-based-install-operator-mce-50@sha256:9767c6a7d5207fa5d86197da7f0d0e1fe918b03bc389860e698974ed46bed72c
+    name: image-based-install-operator-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile
+        revision: 6836f6608f4e2b39f6e1f243b86b7296abe91c58
+        url: https://github.com/openshift/image-based-install-operator
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managed-serviceaccount-mce-50@sha256:3390388a09c51d8cfe96528fbe7a606747ced21801641d6409b8a1aaa25cea54
+    name: managed-serviceaccount-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: bf2e71eeb375bd8d2e15085e5cfe16e4f3847cd9
+        url: https://github.com/stolostron/managed-serviceaccount
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-permission-mce-50@sha256:88b0e19532b3996f8323e91ab48b948474163390ca828b11bc19cdfb27ac2208
+    name: cluster-permission-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: a9a64dc449da5d0f21b8d66bdc55493b2ef96f66
+        url: https://github.com/stolostron/cluster-permission
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:e88b9646a01c213d4f37bf250789405f511669e653adef62929e03c8b67d2ed5
+    name: discovery-operator-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: fc4d31246269c3c08f5b4e2d5c693d502d2e067d
+        url: https://github.com/stolostron/discovery
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-50@sha256:eeaf4a9334de4433ee4a8014cbb1d8d93951a31f3172605c105d60b02087ea95
+    name: hive-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile
+        revision: 2ea50dca914c77bca220e0be7ba7ef9f89ef06f0
+        url: https://github.com/openshift/hive
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-50@sha256:74968305e1e1da7101b7c754519f955852816a8ea1b20bfee4d76a0d5bf4f86c
+    name: kube-rbac-proxy-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Containerfile.operator
+        revision: 476cbbdf5734f736bfa0c66a9064752516629e4d
+        url: https://github.com/stolostron/kube-rbac-proxy
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/placement-mce-50@sha256:8903c5ba507d69da59a72ff39ed1b95e33bc0a0d93ec1d4508d5b0d6d223ee2f
+    name: placement-mce-50
+    source:
+      git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.placement.rhtap
+        revision: 69cc78f0c37e685cce59e7ccb650dd09512ddd36
+        url: https://github.com/stolostron/ocm
 status:
   conditions:
-  - lastTransitionTime: "2026-07-01T00:48:33Z"
+  - lastTransitionTime: "2026-07-01T11:00:03Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-07-01T00:48:33Z"
+  - lastTransitionTime: "2026-07-01T11:00:03Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-07-01T00:48:33Z"
+  - lastTransitionTime: "2026-07-01T11:00:03Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
