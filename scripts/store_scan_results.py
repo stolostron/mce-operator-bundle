@@ -206,9 +206,10 @@ def prune_old_scans(history, retention_weeks=None, max_scans=None):
 
     # Apply max_scans limit first (keep most recent N scans)
     if max_scans and len(history['scans']) > max_scans:
-        # Sort by timestamp descending, keep newest max_scans
-        history['scans'].sort(key=lambda s: s['timestamp'], reverse=True)
-        history['scans'] = history['scans'][:max_scans]
+        # Sort ascending (oldest first) so scans[-1] is latest
+        # and charts render left-to-right as old → new
+        history['scans'].sort(key=lambda s: s['timestamp'])
+        history['scans'] = history['scans'][-max_scans:]
 
     # Then apply time-based retention (if specified)
     if retention_weeks:
