@@ -8,7 +8,7 @@ metadata:
     categories: Integration & Delivery
     certified: 'true'
     support: Red Hat
-    createdAt: '2026-07-24T14:20:01Z'
+    createdAt: '2026-07-24T15:25:24Z'
     description: Foundational components for central management of multiple OpenShift Container Platform
       and Kubernetes clusters
     operatorframework.io/suggested-namespace: multicluster-engine
@@ -29,9 +29,9 @@ metadata:
     features.operators.openshift.io/token-auth-azure: 'false'
     features.operators.openshift.io/token-auth-gcp: 'false'
     olm.properties: '[{"type": "olm.maxOpenShiftVersion", "value": "5.1"}]'
-    olm.skipRange: '>=2.17.0-0 <5.0.0-180'
+    olm.skipRange: '>=2.17.0-0 <5.0.0-181'
     operators.openshift.io/must-gather-image: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:d8bceadd6efbc3680c68c9de8460779322af24c48f2478d4897ad72cea6df902
-  name: multicluster-engine.v5.0.0-180
+  name: multicluster-engine.v5.0.0-181
   namespace: placeholder
   labels:
     operatorframework.io/arch.amd64: supported
@@ -41,7 +41,7 @@ metadata:
     operatorframework.io/os.linux: supported
 spec:
   displayName: multicluster engine for Kubernetes
-  version: 5.0.0-180
+  version: 5.0.0-181
   provider:
     name: Red Hat
   maintainers:
@@ -1076,6 +1076,7 @@ spec:
           - managedclusters/status
           - managedclustersets
           - placementdecisions
+          - placements
           verbs:
           - create
           - delete
@@ -1092,7 +1093,6 @@ spec:
           - managedclustersets/bind
           - managedclustersets/finalizers
           - managedclustersets/join
-          - placements
           - placements/finalizers
           verbs:
           - create
@@ -1300,6 +1300,7 @@ spec:
         - apiGroups:
           - console.openshift.io
           resources:
+          - consolenotifications
           - consoleplugins
           - consolequickstarts
           verbs:
@@ -1972,6 +1973,7 @@ spec:
           - metal3remediations
           - rosamachinepools
           - rosanetworks
+          - rosaocmroleconfigs
           - rosaroleconfigs
           verbs:
           - create
@@ -1991,6 +1993,7 @@ spec:
           - azureasomanagedmachinepools/finalizers
           - rosamachinepools/finalizers
           - rosanetworks/finalizers
+          - rosaocmroleconfigs/finalizers
           - rosaroleconfigs/finalizers
           verbs:
           - update
@@ -2020,6 +2023,7 @@ spec:
           - metal3remediations/status
           - rosaclusters/status
           - rosanetworks/status
+          - rosaocmroleconfigs/status
           - rosaroleconfigs/status
           verbs:
           - get
@@ -2874,14 +2878,6 @@ spec:
           resources:
           - managedproxyconfigurations/finalizers
           - managedproxyconfigurations/status
-          - managedproxyserviceresolvers/finalizers
-          - managedproxyserviceresolvers/status
-          verbs:
-          - '*'
-        - apiGroups:
-          - proxy.open-cluster-management.io
-          resources:
-          - managedproxyserviceresolvers
           verbs:
           - '*'
         - apiGroups:
@@ -3562,7 +3558,7 @@ spec:
                 - name: OPERAND_IMAGE_BACKPLANE_MUST_GATHER
                   value: registry.redhat.io/multicluster-engine/must-gather-rhel9@sha256:d8bceadd6efbc3680c68c9de8460779322af24c48f2478d4897ad72cea6df902
                 - name: OPERAND_IMAGE_BACKPLANE_OPERATOR
-                  value: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:0a2ebe04e4af022b77bbc3aca409bd6dddbaec534a0bd35b0175b3494d27006d
+                  value: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:7dad5cd6bb1098e670a04f14c1e515f4d9da6eafcf7933fd6ead5bc0145f11e5
                 - name: OPERAND_IMAGE_CLOUDEVENTS_CONDUCTOR
                   value: registry.redhat.io/multicluster-engine/cloudevents-conductor-rhel9@sha256:e090c8289c577bc29f0be6babd9ea8d27bcf64a1ac9b8747db6b337100e86894
                 - name: OPERAND_IMAGE_CLUSTER_API_PROVIDER_AGENT
@@ -3644,10 +3640,10 @@ spec:
                 - name: OPERAND_IMAGE_POSTGRESQL_16
                   value: registry.redhat.io/rhel9/postgresql-16@sha256:160578ef9e4c872f8f06d407aceb65c5d874049bb56a14b62a09b52ecc1ca0a0
                 - name: OPERATOR_VERSION
-                  value: 5.0.0-180
+                  value: 5.0.0-181
                 - name: OPERATOR_PACKAGE
                   value: multicluster-engine
-                image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:0a2ebe04e4af022b77bbc3aca409bd6dddbaec534a0bd35b0175b3494d27006d
+                image: registry.redhat.io/multicluster-engine/backplane-rhel9-operator@sha256:7dad5cd6bb1098e670a04f14c1e515f4d9da6eafcf7933fd6ead5bc0145f11e5
                 livenessProbe:
                   httpGet:
                     path: /healthz
