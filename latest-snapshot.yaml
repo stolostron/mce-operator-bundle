@@ -1,6 +1,13 @@
 apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
+  annotations:
+    test.appstudio.openshift.io/git-reporting-failure: no suitable git reporter found
+      for snapshot crt-redhat-acm-tenant/mce-211-payload-cve-2026-16242-updated -
+      missing required git provider labels/annotations
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-211","status":"BuildPLRInProgress","lastUpdateTime":"2026-07-25T04:27:50.113595743Z","details":"Integration
+      test passed with warnings","startTime":"2026-07-25T04:10:40.123432961Z","completionTime":"2026-07-25T04:27:50.113595743Z","testPipelineRunName":"enterprise-contract-mce-211-qlp6n"}]'
+  creationTimestamp: "2026-07-25T04:10:39Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-211
@@ -15,6 +22,8 @@ metadata:
     kind: Application
     name: release-mce-211
     uid: 921a3f28-4836-45b7-a77b-5415074a8225
+  resourceVersion: "10147143223"
+  uid: 281e4ec1-4679-4499-b881-5d3c496ab746
 spec:
   application: release-mce-211
   artifacts: {}
@@ -274,3 +283,21 @@ spec:
         dockerfileUrl: build/Dockerfile.rhtap
         revision: dbd0b8d053f1e1aeb434e2caba06c2025153b447
         url: https://github.com/stolostron/clusterlifecycle-state-metrics
+status:
+  conditions:
+  - lastTransitionTime: "2026-07-25T04:27:50Z"
+    message: Snapshot integration status condition is finished since all testing pipelines
+      completed
+    reason: Finished
+    status: "True"
+    type: AppStudioIntegrationStatus
+  - lastTransitionTime: "2026-07-25T04:27:50Z"
+    message: All Integration Pipeline tests passed
+    reason: Passed
+    status: "True"
+    type: AppStudioTestSucceeded
+  - lastTransitionTime: "2026-07-25T04:27:50Z"
+    message: The Snapshot was auto-released
+    reason: AutoReleased
+    status: "True"
+    type: AutoReleased
