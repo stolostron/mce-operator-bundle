@@ -1,8 +1,21 @@
 apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
+  creationTimestamp: "2026-07-26T00:25:39Z"
+  generation: 1
+  labels:
+    appstudio.openshift.io/application: release-mce-211
   name: mce-211-payload-cve-2026-16242-fips
   namespace: crt-redhat-acm-tenant
+  ownerReferences:
+  - apiVersion: appstudio.redhat.com/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Application
+    name: release-mce-211
+    uid: 921a3f28-4836-45b7-a77b-5415074a8225
+  resourceVersion: "10161566230"
+  uid: f81735ec-eb84-45c2-8407-cebbb1d5cefd
 spec:
   application: release-mce-211
   artifacts: {}
@@ -262,3 +275,15 @@ spec:
         dockerfileUrl: build/Dockerfile.rhtap
         revision: dbd0b8d053f1e1aeb434e2caba06c2025153b447
         url: https://github.com/stolostron/clusterlifecycle-state-metrics
+status:
+  conditions:
+  - lastTransitionTime: "2026-07-26T00:25:39Z"
+    message: No required IntegrationTestScenarios found, skipped testing
+    reason: Passed
+    status: "True"
+    type: AppStudioTestSucceeded
+  - lastTransitionTime: "2026-07-26T00:25:39Z"
+    message: The Snapshot was auto-released
+    reason: AutoReleased
+    status: "True"
+    type: AutoReleased
