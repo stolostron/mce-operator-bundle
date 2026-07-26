@@ -1,12 +1,29 @@
 apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
+  annotations:
+    test.appstudio.openshift.io/git-reporting-failure: no suitable git reporter found
+      for snapshot crt-redhat-acm-tenant/mce-217-payload-cve-2026-16242-fips3 - missing
+      required git provider labels/annotations
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-217","status":"BuildPLRInProgress","lastUpdateTime":"2026-07-26T03:03:24.415495306Z","details":"Integration
+      test passed with warnings","startTime":"2026-07-26T02:45:09.000293513Z","completionTime":"2026-07-26T03:03:24.415495306Z","testPipelineRunName":"enterprise-contract-mce-217-mtd8f"}]'
+  creationTimestamp: "2026-07-26T02:45:08Z"
+  generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-217
     pac.test.appstudio.openshift.io/url-org: stolostron
     test.appstudio.openshift.io/type: component
   name: mce-217-payload-cve-2026-16242-fips3
   namespace: crt-redhat-acm-tenant
+  ownerReferences:
+  - apiVersion: appstudio.redhat.com/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Application
+    name: release-mce-217
+    uid: eb1bca8e-186b-497c-b89a-82d12cc150e3
+  resourceVersion: "10162438371"
+  uid: 21c3bbe5-7094-46a8-8737-0f28ca37dfbd
 spec:
   application: release-mce-217
   artifacts: {}
@@ -290,3 +307,21 @@ spec:
         dockerfileUrl: mce-capi-webhook-config/Dockerfile
         revision: 171645ae364ad63d3b7584480d0841c518d01e57
         url: https://github.com/stolostron/cluster-api-installer
+status:
+  conditions:
+  - lastTransitionTime: "2026-07-26T03:03:24Z"
+    message: Snapshot integration status condition is finished since all testing pipelines
+      completed
+    reason: Finished
+    status: "True"
+    type: AppStudioIntegrationStatus
+  - lastTransitionTime: "2026-07-26T03:03:24Z"
+    message: All Integration Pipeline tests passed
+    reason: Passed
+    status: "True"
+    type: AppStudioTestSucceeded
+  - lastTransitionTime: "2026-07-26T03:03:24Z"
+    message: The Snapshot was auto-released
+    reason: AutoReleased
+    status: "True"
+    type: AutoReleased
