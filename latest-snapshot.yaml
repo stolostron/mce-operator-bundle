@@ -5,8 +5,8 @@ metadata:
     test.appstudio.openshift.io/git-reporting-failure: no suitable git reporter found
       for snapshot crt-redhat-acm-tenant/mce-29-payload-cve-2026-16242-refresh - missing
       required git provider labels/annotations
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"InProgress","lastUpdateTime":"2026-07-25T16:10:57.250289267Z","details":"Integration
-      test is running as pipeline run ''https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/enterprise-contract-mce-29-sdnnj''","startTime":"2026-07-25T16:10:49.860772913Z","testPipelineRunName":"enterprise-contract-mce-29-sdnnj"}]'
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-29","status":"BuildPLRInProgress","lastUpdateTime":"2026-07-25T16:26:32.284888695Z","details":"Integration
+      test passed with warnings","startTime":"2026-07-25T16:10:49.860772913Z","completionTime":"2026-07-25T16:26:32.284888695Z","testPipelineRunName":"enterprise-contract-mce-29-sdnnj"}]'
   creationTimestamp: "2026-07-25T16:10:49Z"
   generation: 1
   labels:
@@ -22,7 +22,7 @@ metadata:
     kind: Application
     name: release-mce-29
     uid: 20473971-c86b-40e3-8b15-f0637463a27d
-  resourceVersion: "10157951041"
+  resourceVersion: "10158263026"
   uid: bfd05f21-6769-40c4-8367-85b7308af366
 spec:
   application: release-mce-29
@@ -269,8 +269,19 @@ spec:
         url: https://github.com/stolostron/cluster-image-set-controller
 status:
   conditions:
-  - lastTransitionTime: "2026-07-25T16:10:49Z"
-    message: Snapshot starts being tested by the integrationPipelineRun
-    reason: InProgress
-    status: Unknown
+  - lastTransitionTime: "2026-07-25T16:26:32Z"
+    message: Snapshot integration status condition is finished since all testing pipelines
+      completed
+    reason: Finished
+    status: "True"
     type: AppStudioIntegrationStatus
+  - lastTransitionTime: "2026-07-25T16:26:32Z"
+    message: All Integration Pipeline tests passed
+    reason: Passed
+    status: "True"
+    type: AppStudioTestSucceeded
+  - lastTransitionTime: "2026-07-25T16:26:32Z"
+    message: The Snapshot was auto-released
+    reason: AutoReleased
+    status: "True"
+    type: AutoReleased
