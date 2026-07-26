@@ -1,29 +1,8 @@
 apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
-  annotations:
-    test.appstudio.openshift.io/git-reporting-failure: no suitable git reporter found
-      for snapshot crt-redhat-acm-tenant/mce-211-payload-cve-2026-16242-updated -
-      missing required git provider labels/annotations
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-211","status":"BuildPLRInProgress","lastUpdateTime":"2026-07-25T04:27:50.113595743Z","details":"Integration
-      test passed with warnings","startTime":"2026-07-25T04:10:40.123432961Z","completionTime":"2026-07-25T04:27:50.113595743Z","testPipelineRunName":"enterprise-contract-mce-211-qlp6n"}]'
-  creationTimestamp: "2026-07-25T04:10:39Z"
-  generation: 1
-  labels:
-    appstudio.openshift.io/application: release-mce-211
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    test.appstudio.openshift.io/type: component
-  name: mce-211-payload-cve-2026-16242-updated
+  name: mce-211-payload-cve-2026-16242-fips
   namespace: crt-redhat-acm-tenant
-  ownerReferences:
-  - apiVersion: appstudio.redhat.com/v1alpha1
-    blockOwnerDeletion: true
-    controller: true
-    kind: Application
-    name: release-mce-211
-    uid: 921a3f28-4836-45b7-a77b-5415074a8225
-  resourceVersion: "10147143223"
-  uid: 281e4ec1-4679-4499-b881-5d3c496ab746
 spec:
   application: release-mce-211
   artifacts: {}
@@ -219,13 +198,13 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: 7cc49eb52b36b75c267b7a6c3d778c3e861d2bb4
         url: https://github.com/stolostron/backplane-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-webhook-config-mce-211@sha256:14c61daaef25434a55ee80f045673ed0eb28ad6c78a354a5b0808d4f34233c4b
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-webhook-config-mce-211@sha256:23ebdcecc827c88245d94de80394f474fa609adb220d8c14d1a5281fc2cc1bd9
     name: cluster-api-webhook-config-mce-211
     source:
       git:
         context: ./
         dockerfileUrl: mce-capi-webhook-config/Dockerfile
-        revision: 6af22ae6d1f82f84708e75b1dea129c2a04afed4
+        revision: 9303d335fee4f9add0bc09a2d0b2a085f65a9cd6
         url: https://github.com/stolostron/cluster-api-installer
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/azure-service-operator-mce-211@sha256:c43dce152f9dbb080a6f47cf65d03d1219db5bedea8794fc96e3b67b43c6d1b4
     name: azure-service-operator-mce-211
@@ -283,21 +262,3 @@ spec:
         dockerfileUrl: build/Dockerfile.rhtap
         revision: dbd0b8d053f1e1aeb434e2caba06c2025153b447
         url: https://github.com/stolostron/clusterlifecycle-state-metrics
-status:
-  conditions:
-  - lastTransitionTime: "2026-07-25T04:27:50Z"
-    message: Snapshot integration status condition is finished since all testing pipelines
-      completed
-    reason: Finished
-    status: "True"
-    type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-07-25T04:27:50Z"
-    message: All Integration Pipeline tests passed
-    reason: Passed
-    status: "True"
-    type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-07-25T04:27:50Z"
-    message: The Snapshot was auto-released
-    reason: AutoReleased
-    status: "True"
-    type: AutoReleased
