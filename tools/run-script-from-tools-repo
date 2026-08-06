@@ -14,8 +14,8 @@
 # is that it should be the case that this script is identical across all of our various
 # bundle-building repos and branches in those repos. Maintaining this goal  will make
 # any required maintenance easy (just drop identical copies everywhere). And hopefully,
-# this script is a sufficiently "thin" shim that the there will be minimal need to update
-# those identical copies, as the real" logic lives in the single, common tools repo.
+# this script is a sufficiently "thin" shim that there will be minimal need to update
+# those identical copies, as the real logic lives in the single, common tools repo.
 #
 # Invocation dependencies:
 #
@@ -67,7 +67,7 @@ if [[ -z "$target_script" ]]; then
 fi
 
 # We need access to the tools repo, which may be private. In order to allow for
-#a least-privilege granting of permissions if desired, we will prefer to use a
+# a least-privilege granting of permissions if desired, we will prefer to use a
 # token specified in env var GH_TOOLS_REPO_READER_TOKEN so that a token that
 # provides only read-only access to the tools repo can be used while allowing
 # another token with more/different permission to be used by the target workflow
@@ -111,8 +111,8 @@ if [[ ! -d "$tools_repo_clone_dir" ]]; then
    git init
 
    # Rather than clone with an https URL that includes the token, instead clone
-   # generically and configure the git client to add an Authentication header that
-   # specifies the encoded "token:<TOKEN_VALUE>" auth info.
+   # generically and configure the git credential helper to provide the token
+   # as the password for authentication.
 
    git remote add origin "https://github.com/$tools_repo"
    git config credential.helper '!f() { echo "username=x-access-token"; echo "password='"$tools_repo_access_token"'"; }; f'
