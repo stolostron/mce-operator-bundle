@@ -2,77 +2,102 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/openshift/hive?rev=f1cc92b576a5db92e8a408677192f5e28366f3c4
-    build.appstudio.redhat.com/commit_sha: f1cc92b576a5db92e8a408677192f5e28366f3c4
-    build.appstudio.redhat.com/target_branch: master
-    pac.test.appstudio.openshift.io/branch: master
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/cluster-curator-controller?rev=dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
+    build.appstudio.redhat.com/commit_sha: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
+    build.appstudio.redhat.com/target_branch: main
+    pac.test.appstudio.openshift.io/branch: main
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "92993237390"
+    pac.test.appstudio.openshift.io/check-run-id: "93035350807"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-wdfoqg
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-rxnfkr
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35333059"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hive-mce-51-on-push-h9mkp
+    pac.test.appstudio.openshift.io/installation-id: "35324288"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/cluster-curator-controller-mce-51-on-push-m9bqx
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "master" && !files.all.all(x, x.matches('^docs/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
-    pac.test.appstudio.openshift.io/original-prname: hive-mce-51-on-push
-    pac.test.appstudio.openshift.io/pull-request: "2931"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hive
-    pac.test.appstudio.openshift.io/repository: hive-master
+      == "main"
+    pac.test.appstudio.openshift.io/original-prname: cluster-curator-controller-mce-51-on-push
+    pac.test.appstudio.openshift.io/pull-request: "607"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/cluster-curator-controller
+    pac.test.appstudio.openshift.io/repository: cluster-curator-controller-2kgj
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/secret-created: "true"
-    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
-    pac.test.appstudio.openshift.io/sha: f1cc92b576a5db92e8a408677192f5e28366f3c4
+    pac.test.appstudio.openshift.io/sender: xiangjingli
+    pac.test.appstudio.openshift.io/sha: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
     pac.test.appstudio.openshift.io/sha-title: |-
-      Merge pull request #2931 from 2uasimojo/OCPBUGS-78995/azure-mp-image-id
+      Close upgrade cleanup gap for cluster-wide curator-crb (#607)
 
-      OCPBUGS-78995: Azure MachinePool: Accept OSImageID
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hive/commit/f1cc92b576a5db92e8a408677192f5e28366f3c4
-    pac.test.appstudio.openshift.io/source-branch: refs/heads/master
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
+      PR #606 fixed cluster-wide ClusterRoleBinding/curator-crb to bind a
+      minimal ClusterRole, and added cleanup of the cluster-installer
+      ServiceAccount and namespaced RoleBinding once a curation completes.
+      However, upgrade curations never clear DesiredCuration back to "" (see
+      utils.NeedToUpgrade), and the predicate blocked events where only
+      CuratingJob cleared, so the cleanup path never ran for Hypershift
+      upgrades. This left curator-crb granting cluster-wide managedclusters
+      access indefinitely after an upgrade completed.
+
+      - Allow the predicate to pass through when CuratingJob clears, not just
+        when DesiredCuration clears, so Reconcile runs once an upgrade Job
+        finishes.
+      - Add an independent, ownership-guarded cleanup of curator-crb in
+        Reconcile for Hypershift curators whenever no job is actively
+        running, covering the upgrade completion path.
+      - Extract the guarded curator-crb deletion from CleanupRBACHypershift
+        into an exported CleanupCuratorCRBIfOwned helper shared by both call
+        sites.
+
+      The cluster-installer ServiceAccount and namespaced RoleBinding/curator
+      still persist after an upgrade completes (DesiredCuration remains
+      "upgrade"), matching existing Hive-style residue; this is accepted as
+      lower-severity, namespace-bounded risk since it grants no cluster-wide
+      authority.
+
+      Signed-off-by: Xiangjing Li <xiangli@redhat.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/cluster-curator-controller/commit/dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/main
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cluster-curator-controller
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: hive
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-08-07T21:13:14Z"}'
+    pac.test.appstudio.openshift.io/url-org: stolostron
+    pac.test.appstudio.openshift.io/url-repository: cluster-curator-controller
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-08-08T01:01:32Z"}'
     test.appstudio.openshift.io/create-snapshot-status: Component(s) 'hypershift-release-mce-51,
       cluster-api-webhook-config-mce-51, cluster-api-provider-agent-mce-51, image-based-install-operator-mce-51,
       maestro-mce-51, cluster-api-provider-openshift-assisted-bootstrap-mce-51, kube-rbac-proxy-mce-51,
       cluster-api-provider-kubevirt-mce-51, hypershift-cli-mce-51, cloudevents-conductor-mce-51,
       cluster-api-provider-openshift-assisted-control-plane-mce-51' is(are) not included
       in snapshot due to missing valid containerImage or git source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-51-release-mce-51-20260807-204427-000":{"lastUpdateTime":"2026-08-07T21:15:21.635175886Z"}}}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-51-release-mce-51-20260808-005154-000":{"lastUpdateTime":"2026-08-08T01:02:27.930389781Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1786135467000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1786150314000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/result-chains-git-commit: f1cc92b576a5db92e8a408677192f5e28366f3c4
-    test.appstudio.openshift.io/result-chains-git-url: https://github.com/openshift/hive
-    test.appstudio.openshift.io/result-image-digest: sha256:6a24215110d08d5dd9427c3ac2717cc275eb6075a39a3107efbb95fa9e42ef37
-    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-51:f1cc92b576a5db92e8a408677192f5e28366f3c4
-    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-51","status":"BuildPLRInProgress","lastUpdateTime":"2026-08-07T21:15:21.635175886Z","details":"Integration
-      test passed with warnings","startTime":"2026-08-07T21:13:14.916638832Z","completionTime":"2026-08-07T21:15:21.635175886Z","testPipelineRunName":"enterprise-contract-mce-51-drsdr"}]'
-  creationTimestamp: "2026-08-07T21:13:14Z"
+    test.appstudio.openshift.io/result-chains-git-commit: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
+    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/cluster-curator-controller
+    test.appstudio.openshift.io/result-image-digest: sha256:9f215577a6b3af80a10c0f5e5b14ffa519bc9119231c59c8f1d34cfe6b0ded73
+    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-curator-controller-mce-51:dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cluster-curator-controller
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-51","status":"BuildPLRInProgress","lastUpdateTime":"2026-08-08T01:02:27.930389781Z","details":"Integration
+      test passed with warnings","startTime":"2026-08-08T01:01:32.310421754Z","completionTime":"2026-08-08T01:02:27.930389781Z","testPipelineRunName":"enterprise-contract-mce-51-rcg4j"}]'
+  creationTimestamp: "2026-08-08T01:01:32Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-51
-    appstudio.openshift.io/build-pipelinerun: hive-mce-51-on-push-h9mkp
-    appstudio.openshift.io/component: hive-mce-51
+    appstudio.openshift.io/build-pipelinerun: cluster-curator-controller-mce-51-on-push-m9bqx
+    appstudio.openshift.io/component: cluster-curator-controller-mce-51
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "92993237390"
+    pac.test.appstudio.openshift.io/check-run-id: "93035350807"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: hive-mce-51-on-push
-    pac.test.appstudio.openshift.io/pull-request: "2931"
-    pac.test.appstudio.openshift.io/repository: hive-master
-    pac.test.appstudio.openshift.io/sha: f1cc92b576a5db92e8a408677192f5e28366f3c4
+    pac.test.appstudio.openshift.io/original-prname: cluster-curator-controller-mce-51-on-push
+    pac.test.appstudio.openshift.io/pull-request: "607"
+    pac.test.appstudio.openshift.io/repository: cluster-curator-controller-2kgj
+    pac.test.appstudio.openshift.io/sha: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: openshift
-    pac.test.appstudio.openshift.io/url-repository: hive
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1786137188"
+    pac.test.appstudio.openshift.io/url-org: stolostron
+    pac.test.appstudio.openshift.io/url-repository: cluster-curator-controller
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1786150885"
     test.appstudio.openshift.io/type: component
-  name: release-mce-51-20260807-204427-000
+  name: release-mce-51-20260808-005154-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -81,8 +106,8 @@ metadata:
     kind: Application
     name: release-mce-51
     uid: 134f311c-f1c6-4c9f-8132-d26cebd82060
-  resourceVersion: "10450433179"
-  uid: 43af5626-340b-40e2-9b89-4fac72a5cffe
+  resourceVersion: "10452794824"
+  uid: 6a98c2e0-b84d-4be9-9734-4732a1401639
 spec:
   application: release-mce-51
   artifacts: {}
@@ -167,19 +192,19 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: a4c3933f213805da33b1e71e706e1108e4eca6f0
         url: https://github.com/stolostron/cluster-image-set-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-curator-controller-mce-51@sha256:b849d72106c85a460f830405e6b16545a4a50ea901f549e8930f75f14cd9a8d9
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-curator-controller-mce-51@sha256:9f215577a6b3af80a10c0f5e5b14ffa519bc9119231c59c8f1d34cfe6b0ded73
     name: cluster-curator-controller-mce-51
     source:
       git:
         context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 25c9e2c68f390d6499e57df62e0d661e378f961b
+        revision: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
         url: https://github.com/stolostron/cluster-curator-controller
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-51@sha256:6a24215110d08d5dd9427c3ac2717cc275eb6075a39a3107efbb95fa9e42ef37
     name: hive-mce-51
     source:
       git:
         context: ./
+        dockerfileUrl: Dockerfile
         revision: f1cc92b576a5db92e8a408677192f5e28366f3c4
         url: https://github.com/openshift/hive
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-addon-operator-mce-51@sha256:d214b57a7490f6f14850b2751aacc7527bc0b24502a20c391f2f8d93e8f727f7
@@ -280,18 +305,18 @@ spec:
         url: https://github.com/stolostron/backplane-operator
 status:
   conditions:
-  - lastTransitionTime: "2026-08-07T21:15:21Z"
+  - lastTransitionTime: "2026-08-08T01:02:27Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-08-07T21:15:21Z"
+  - lastTransitionTime: "2026-08-08T01:02:27Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-08-07T21:15:21Z"
+  - lastTransitionTime: "2026-08-08T01:02:28Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
