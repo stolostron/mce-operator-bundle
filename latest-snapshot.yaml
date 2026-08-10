@@ -2,102 +2,77 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/cluster-curator-controller?rev=dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
-    build.appstudio.redhat.com/commit_sha: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
-    build.appstudio.redhat.com/target_branch: main
-    pac.test.appstudio.openshift.io/branch: main
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/cluster-api-provider-azure?rev=a750a5096c77fe395a929ee77ed28e5b1b5c6bc4
+    build.appstudio.redhat.com/commit_sha: a750a5096c77fe395a929ee77ed28e5b1b5c6bc4
+    build.appstudio.redhat.com/target_branch: backplane-5.1
+    pac.test.appstudio.openshift.io/branch: backplane-5.1
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "93035350807"
+    pac.test.appstudio.openshift.io/check-run-id: "93443292267"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-rxnfkr
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-iwsiri
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/cluster-curator-controller-mce-51-on-push-m9bqx
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/cluster-api-provider-azure-mce-51-on-push-kf92j
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "main"
-    pac.test.appstudio.openshift.io/original-prname: cluster-curator-controller-mce-51-on-push
-    pac.test.appstudio.openshift.io/pull-request: "607"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/cluster-curator-controller
-    pac.test.appstudio.openshift.io/repository: cluster-curator-controller-2kgj
+      == "backplane-5.1"
+    pac.test.appstudio.openshift.io/original-prname: cluster-api-provider-azure-mce-51-on-push
+    pac.test.appstudio.openshift.io/pull-request: "400"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/cluster-api-provider-azure
+    pac.test.appstudio.openshift.io/repository: cluster-api-provider-azure-mce-211
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/secret-created: "true"
-    pac.test.appstudio.openshift.io/sender: xiangjingli
-    pac.test.appstudio.openshift.io/sha: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
+    pac.test.appstudio.openshift.io/sender: github-actions[bot]
+    pac.test.appstudio.openshift.io/sha: a750a5096c77fe395a929ee77ed28e5b1b5c6bc4
     pac.test.appstudio.openshift.io/sha-title: |-
-      Close upgrade cleanup gap for cluster-wide curator-crb (#607)
+      fix(deps): update cel-go to v0.29.0 (GHSA-gcjh-h69q-9w9g) (#400)
 
-      PR #606 fixed cluster-wide ClusterRoleBinding/curator-crb to bind a
-      minimal ClusterRole, and added cleanup of the cluster-installer
-      ServiceAccount and namespaced RoleBinding once a curation completes.
-      However, upgrade curations never clear DesiredCuration back to "" (see
-      utils.NeedToUpgrade), and the predicate blocked events where only
-      CuratingJob cleared, so the cleanup path never ran for Hypershift
-      upgrades. This left curator-crb granting cluster-wide managedclusters
-      access indefinitely after an upgrade completed.
-
-      - Allow the predicate to pass through when CuratingJob clears, not just
-        when DesiredCuration clears, so Reconcile runs once an upgrade Job
-        finishes.
-      - Add an independent, ownership-guarded cleanup of curator-crb in
-        Reconcile for Hypershift curators whenever no job is actively
-        running, covering the upgrade completion path.
-      - Extract the guarded curator-crb deletion from CleanupRBACHypershift
-        into an exported CleanupCuratorCRBIfOwned helper shared by both call
-        sites.
-
-      The cluster-installer ServiceAccount and namespaced RoleBinding/curator
-      still persist after an upgrade completes (DesiredCuration remains
-      "upgrade"), matching existing Hive-style residue; this is accepted as
-      lower-severity, namespace-bounded risk since it grants no cluster-wide
-      authority.
-
-      Signed-off-by: Xiangjing Li <xiangli@redhat.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/cluster-curator-controller/commit/dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
-    pac.test.appstudio.openshift.io/source-branch: refs/heads/main
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cluster-curator-controller
-    pac.test.appstudio.openshift.io/state: completed
+      Co-authored-by: Claude Opus 4.6 (1M context) <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/cluster-api-provider-azure/commit/a750a5096c77fe395a929ee77ed28e5b1b5c6bc4
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.1
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cluster-api-provider-azure
+    pac.test.appstudio.openshift.io/state: queued
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: cluster-curator-controller
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-08-08T01:01:32Z"}'
-    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'hypershift-release-mce-51,
-      cluster-api-webhook-config-mce-51, cluster-api-provider-agent-mce-51, image-based-install-operator-mce-51,
+    pac.test.appstudio.openshift.io/url-repository: cluster-api-provider-azure
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-08-10T12:01:39Z"}'
+    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'image-based-install-operator-mce-51,
       maestro-mce-51, cluster-api-provider-openshift-assisted-bootstrap-mce-51, kube-rbac-proxy-mce-51,
       cluster-api-provider-kubevirt-mce-51, hypershift-cli-mce-51, cloudevents-conductor-mce-51,
-      cluster-api-provider-openshift-assisted-control-plane-mce-51' is(are) not included
-      in snapshot due to missing valid containerImage or git source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-51-release-mce-51-20260808-005154-000":{"lastUpdateTime":"2026-08-08T01:02:27.930389781Z"}}}'
+      cluster-api-provider-openshift-assisted-control-plane-mce-51, hypershift-release-mce-51,
+      cluster-api-webhook-config-mce-51, cluster-api-provider-agent-mce-51' is(are)
+      not included in snapshot due to missing valid containerImage or git source
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-51-release-mce-51-20260810-114630-000":{"lastUpdateTime":"2026-08-10T12:03:46.773825335Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1786150314000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1786362390000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/result-chains-git-commit: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
-    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/cluster-curator-controller
-    test.appstudio.openshift.io/result-image-digest: sha256:9f215577a6b3af80a10c0f5e5b14ffa519bc9119231c59c8f1d34cfe6b0ded73
-    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-curator-controller-mce-51:dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cluster-curator-controller
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-51","status":"BuildPLRInProgress","lastUpdateTime":"2026-08-08T01:02:27.930389781Z","details":"Integration
-      test passed with warnings","startTime":"2026-08-08T01:01:32.310421754Z","completionTime":"2026-08-08T01:02:27.930389781Z","testPipelineRunName":"enterprise-contract-mce-51-rcg4j"}]'
-  creationTimestamp: "2026-08-08T01:01:32Z"
+    test.appstudio.openshift.io/result-chains-git-commit: a750a5096c77fe395a929ee77ed28e5b1b5c6bc4
+    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/cluster-api-provider-azure
+    test.appstudio.openshift.io/result-image-digest: sha256:de8596d2b690693c55d8fc52f308df7ea4cafd789ffe853e08b6b70ebd072664
+    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-azure-mce-51:a750a5096c77fe395a929ee77ed28e5b1b5c6bc4
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cluster-api-provider-azure
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-51","status":"BuildPLRInProgress","lastUpdateTime":"2026-08-10T12:03:46.773825335Z","details":"Integration
+      test passed with warnings","startTime":"2026-08-10T12:01:40.463775724Z","completionTime":"2026-08-10T12:03:46.773825335Z","testPipelineRunName":"enterprise-contract-mce-51-4j4nv"}]'
+  creationTimestamp: "2026-08-10T12:01:40Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-51
-    appstudio.openshift.io/build-pipelinerun: cluster-curator-controller-mce-51-on-push-m9bqx
-    appstudio.openshift.io/component: cluster-curator-controller-mce-51
+    appstudio.openshift.io/build-pipelinerun: cluster-api-provider-azure-mce-51-on-push-kf92j
+    appstudio.openshift.io/component: cluster-api-provider-azure-mce-51
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "93035350807"
+    pac.test.appstudio.openshift.io/check-run-id: "93443292267"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: cluster-curator-controller-mce-51-on-push
-    pac.test.appstudio.openshift.io/pull-request: "607"
-    pac.test.appstudio.openshift.io/repository: cluster-curator-controller-2kgj
-    pac.test.appstudio.openshift.io/sha: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
-    pac.test.appstudio.openshift.io/state: completed
+    pac.test.appstudio.openshift.io/original-prname: cluster-api-provider-azure-mce-51-on-push
+    pac.test.appstudio.openshift.io/pull-request: "400"
+    pac.test.appstudio.openshift.io/repository: cluster-api-provider-azure-mce-211
+    pac.test.appstudio.openshift.io/sha: a750a5096c77fe395a929ee77ed28e5b1b5c6bc4
+    pac.test.appstudio.openshift.io/state: queued
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: cluster-curator-controller
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1786150885"
+    pac.test.appstudio.openshift.io/url-repository: cluster-api-provider-azure
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1786363287"
     test.appstudio.openshift.io/type: component
-  name: release-mce-51-20260808-005154-000
+  name: release-mce-51-20260810-114630-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -106,76 +81,12 @@ metadata:
     kind: Application
     name: release-mce-51
     uid: 134f311c-f1c6-4c9f-8132-d26cebd82060
-  resourceVersion: "10452794824"
-  uid: 6a98c2e0-b84d-4be9-9734-4732a1401639
+  resourceVersion: "10488566797"
+  uid: 1bd08db5-2d8d-4d51-809f-c907155654cb
 spec:
   application: release-mce-51
   artifacts: {}
   components:
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/addon-manager-mce-51@sha256:c0f795dc6ac0670090b270d4440586ca0a1cb002560510aad0fbf4fdf1c0e9ed
-    name: addon-manager-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: build/Dockerfile.addon.rhtap
-        revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
-        url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/placement-mce-51@sha256:6508d713a7f045a1c7baa8f1c95b7408a96325481a4700e92998ee8520002ee4
-    name: placement-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: build/Dockerfile.placement.rhtap
-        revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
-        url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-51@sha256:07d69be407a86c7a825782f9571c4dfd82a27474ad4c681b94b65c2ca6fe0bbc
-    name: discovery-operator-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 04c8e3e96d3d5072b48d68d103ec5e824af28084
-        url: https://github.com/stolostron/discovery
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/clusterlifecycle-state-metrics-mce-51@sha256:d4c766a9b53ac4deafa311d7441cf6bc10c6bc939dd999b4b35f9f8a46629940
-    name: clusterlifecycle-state-metrics-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: build/Dockerfile.rhtap
-        revision: 4d82b4b77ec17c5d19e584e805f0eb54459cc9fb
-        url: https://github.com/stolostron/clusterlifecycle-state-metrics
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/registration-mce-51@sha256:f0bae327dd604b3242d35e97105ce8560dc927aa420e1a89928e1bd33a276a03
-    name: registration-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: build/Dockerfile.registration.rhtap
-        revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
-        url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/console-mce-mce-51@sha256:6a5032a86f7de75269d74646bc60b87efbfe3c56179e634e719ab91e34c5703f
-    name: console-mce-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Containerfile.mce.konflux
-        revision: fd212518c6c24a04226df5336fb6cedb5839d181
-        url: https://github.com/stolostron/console
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-51@sha256:2dc40ce1990bf2d2a760f86a1201c1867451bc922535d1ff2304a106eebe566a
-    name: multicloud-manager-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: dc94bd9e10ea2e44145a4b40932de525c740da54
-        url: https://github.com/stolostron/multicloud-operators-foundation
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/provider-credential-controller-mce-51@sha256:7b3b1dbbc2c138a72d4d045e6e06f02fbd017675639f0ad9e547c7bfce0106c3
-    name: provider-credential-controller-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: d66784563af7390de9fa67366b402e1aa073e697
-        url: https://github.com/stolostron/provider-credential-controller
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-must-gather-mce-51@sha256:82d821719460dde20a5b8d78263650219d73c0171f1f742691136f5f5b1efdca
     name: backplane-must-gather-mce-51
     source:
@@ -184,7 +95,7 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: d2474b6f5d36ea5380d9b3c79eb230a599b94d07
         url: https://github.com/stolostron/backplane-must-gather
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-image-set-controller-mce-51@sha256:932789d926ddeb0fa2c57982b7f654ed20068335e44449a91144abe32897500f
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-image-set-controller-mce-51@sha256:35a324d0e7d4a6f37440fbe77be2531e1af871cd46249f985801dea838404b2b
     name: cluster-image-set-controller-mce-51
     source:
       git:
@@ -197,6 +108,7 @@ spec:
     source:
       git:
         context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: dc7ba8c5e5e63963e2a4a88b7c92952fa40b8a17
         url: https://github.com/stolostron/cluster-curator-controller
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-51@sha256:6a24215110d08d5dd9427c3ac2717cc275eb6075a39a3107efbb95fa9e42ef37
@@ -215,13 +127,12 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: 724eb28783b5b4c6a6e511bb5a69370a82564372
         url: https://github.com/stolostron/hypershift-addon-operator
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-azure-mce-51@sha256:ba19683b2d93536615be4239558a22825bc68b08cb1eeeda8cde49c972341b33
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-azure-mce-51@sha256:de8596d2b690693c55d8fc52f308df7ea4cafd789ffe853e08b6b70ebd072664
     name: cluster-api-provider-azure-mce-51
     source:
       git:
         context: ./
-        dockerfileUrl: stolostron/Dockerfile.stolostron
-        revision: 2036e9eeb12fb7040a61830c67361570d32debad
+        revision: a750a5096c77fe395a929ee77ed28e5b1b5c6bc4
         url: https://github.com/stolostron/cluster-api-provider-azure
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managedcluster-import-controller-addon-mce-51@sha256:0d14e3709aaa0c072b6d4837cf769bfb35c99b00e060332b9304060560bc83a4
     name: managedcluster-import-controller-addon-mce-51
@@ -231,13 +142,13 @@ spec:
         dockerfileUrl: build/Dockerfile.rhtap
         revision: f557ba59e5224a7b7ca95c54ec03874483ac40cf
         url: https://github.com/stolostron/managedcluster-import-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/azure-service-operator-mce-51@sha256:f78c23401700f58b188e9f04f1ecff069e7bdf4c81675d574e0566dfa1536a05
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/azure-service-operator-mce-51@sha256:841599c53c8409442360ab78a4a7c4077ce58c6686c98e65eb03640025803ce5
     name: azure-service-operator-mce-51
     source:
       git:
         context: ./
         dockerfileUrl: stolostron/Dockerfile.stolostron
-        revision: 465f81fd92310920842954f4fa7d767dfbcb4d4c
+        revision: 0710eb5ea5eda3641a5efdc346e3c00bb5b93db2
         url: https://github.com/stolostron/azure-service-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/registration-operator-mce-51@sha256:2cd922edf9d1218b1c4ad5b897aacb16d3363d449e3cc1f448cf92a58c9738ce
     name: registration-operator-mce-51
@@ -303,20 +214,84 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: aaa689f98a99d75e3f42629d461ddd5c08216efe
         url: https://github.com/stolostron/backplane-operator
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/addon-manager-mce-51@sha256:c0f795dc6ac0670090b270d4440586ca0a1cb002560510aad0fbf4fdf1c0e9ed
+    name: addon-manager-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.addon.rhtap
+        revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
+        url: https://github.com/stolostron/ocm
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/placement-mce-51@sha256:6508d713a7f045a1c7baa8f1c95b7408a96325481a4700e92998ee8520002ee4
+    name: placement-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.placement.rhtap
+        revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
+        url: https://github.com/stolostron/ocm
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-51@sha256:07d69be407a86c7a825782f9571c4dfd82a27474ad4c681b94b65c2ca6fe0bbc
+    name: discovery-operator-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 04c8e3e96d3d5072b48d68d103ec5e824af28084
+        url: https://github.com/stolostron/discovery
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/clusterlifecycle-state-metrics-mce-51@sha256:d4c766a9b53ac4deafa311d7441cf6bc10c6bc939dd999b4b35f9f8a46629940
+    name: clusterlifecycle-state-metrics-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.rhtap
+        revision: 4d82b4b77ec17c5d19e584e805f0eb54459cc9fb
+        url: https://github.com/stolostron/clusterlifecycle-state-metrics
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/registration-mce-51@sha256:f0bae327dd604b3242d35e97105ce8560dc927aa420e1a89928e1bd33a276a03
+    name: registration-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.registration.rhtap
+        revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
+        url: https://github.com/stolostron/ocm
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/console-mce-mce-51@sha256:8214d963994668204a260f8e9f086d5be43ce1b96271c5a62787f0f57b439c58
+    name: console-mce-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Containerfile.mce.konflux
+        revision: f0fc20299382d9f476dc261c072c8867814394ce
+        url: https://github.com/stolostron/console
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-51@sha256:2dc40ce1990bf2d2a760f86a1201c1867451bc922535d1ff2304a106eebe566a
+    name: multicloud-manager-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: dc94bd9e10ea2e44145a4b40932de525c740da54
+        url: https://github.com/stolostron/multicloud-operators-foundation
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/provider-credential-controller-mce-51@sha256:3b7ca06c03b589453f5169bc463fff7f2261470f5e41c159774e6d62d38b9c2a
+    name: provider-credential-controller-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: d66784563af7390de9fa67366b402e1aa073e697
+        url: https://github.com/stolostron/provider-credential-controller
 status:
   conditions:
-  - lastTransitionTime: "2026-08-08T01:02:27Z"
+  - lastTransitionTime: "2026-08-10T12:03:46Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-08-08T01:02:27Z"
+  - lastTransitionTime: "2026-08-10T12:03:46Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-08-08T01:02:28Z"
+  - lastTransitionTime: "2026-08-10T12:03:48Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
