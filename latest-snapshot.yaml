@@ -2,87 +2,130 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/hypershift-addon-operator?rev=d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
-    build.appstudio.redhat.com/commit_sha: d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
-    build.appstudio.redhat.com/target_branch: main
-    pac.test.appstudio.openshift.io/branch: main
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/backplane-operator?rev=0c2d74af177a458d9dc73047fc74987bee30dabb
+    build.appstudio.redhat.com/commit_sha: 0c2d74af177a458d9dc73047fc74987bee30dabb
+    build.appstudio.redhat.com/target_branch: backplane-5.1
+    pac.test.appstudio.openshift.io/branch: backplane-5.1
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "94157879045"
+    pac.test.appstudio.openshift.io/check-run-id: "94165872135"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-hxyhln
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-irrowa
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hypershift-addon-operator-mce-51-on-push-wfxn6
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/backplane-operator-mce-51-on-push-rrvl7
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
-    pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && (target_branch
-      == "backplane-5.1" || target_branch == "main" )
-    pac.test.appstudio.openshift.io/original-prname: hypershift-addon-operator-mce-51-on-push
-    pac.test.appstudio.openshift.io/pull-request: "777"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/hypershift-addon-operator
-    pac.test.appstudio.openshift.io/repository: hypershift-addon-operator-backplane-24
+    pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
+      == "backplane-5.1"
+    pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-51-on-push
+    pac.test.appstudio.openshift.io/pull-request: "3839"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/backplane-operator
+    pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/secret-created: "true"
-    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
-    pac.test.appstudio.openshift.io/sha: d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
+    pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
+    pac.test.appstudio.openshift.io/sha: 0c2d74af177a458d9dc73047fc74987bee30dabb
     pac.test.appstudio.openshift.io/sha-title: |-
-      ACM-40671 - adding fix to load certs on every tls connection (#777)
+      fix: quote COMPONENT/CONFIG in Makefile.dev recipes (#3839)
 
-      * adding fix to load certs on every tls connection
+      * fix: quote COMPONENT/CONFIG in Makefile.dev recipes
 
-      Signed-off-by: kurwang <kurwang@redhat.com>
+      Same fix as stolostron/multiclusterhub-operator#4583 - a COMPONENT
+      input was added to the regenerate workflows here too, passing it as
+      `make regenerate-charts COMPONENT="${COMPONENT}"`. When COMPONENT is
+      empty (every scheduled run, and any manual run that doesn't specify
+      one), this sets Make's $(COMPONENT) to a genuinely empty string via
+      command-line assignment, which overrides the `?= ""` default.
 
-      * adding cache approach to tls connection
+      The recipes interpolate this unquoted (`--component $(COMPONENT)`), so
+      a genuinely empty value produces no token at all on the command line,
+      not even empty quotes - the previous "" default only worked by
+      accident because its value literally contained two quote characters
+      that the shell interpreted as an empty argument. With nothing between
+      --component and the next flag, argparse sees "--component" followed
+      immediately by "--config" and raises "expected one argument", since
+      the next token looks like another flag rather than a value.
 
-      Signed-off-by: kurwang <kurwang@redhat.com>
+      Quote all $(COMPONENT)/$(CONFIG) references in the recipes and drop
+      the embedded-quote-character defaults (now redundant and would produce
+      a `""""` artifact once the recipes quote correctly), so an empty value
+      always yields a well-formed, empty-but-present argument regardless of
+      how it was set.
+
+      Verified with `make -n`: COMPONENT="" and no override both now produce
+      a well-formed `--component "" --config ""` instead of a bare
+      `--component` with nothing following it.
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+
+      * fix: preserve COMPONENT/CONFIG as single argv entries
+
+      Same fix as stolostron/multiclusterhub-operator#4583 (found there by
+      CodeRabbit). execute_script() built the subprocess command via
+      `args.split()` on a plain concatenated string, which mis-tokenizes any
+      COMPONENT/CONFIG value containing whitespace (e.g. a config path like
+      "path with spaces/config.yaml") into multiple separate argv entries
+      instead of one. This also affected the extra_args passthrough here,
+      which was joined into the same string with " ".join() and then
+      subject to the same re-split.
+
+      Switch prepare_and_execute()/execute_script() to build and pass an
+      actual list from the start instead of round-tripping through a joined
+      string. The static "args" templates in SUPPORTED_OPERATIONS are
+      developer-authored strings, so they're tokenized once with shlex
+      (quote-aware); COMPONENT/CONFIG and extra_args are then appended as
+      individual list elements, so there's no later re-split that could
+      break a whitespace-containing value apart.
+
+      Signed-off-by: dislbenn <dbennett@redhat.com>
 
       ---------
 
-      Signed-off-by: kurwang <kurwang@redhat.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/hypershift-addon-operator/commit/d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
-    pac.test.appstudio.openshift.io/source-branch: refs/heads/main
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/hypershift-addon-operator
+      Signed-off-by: dislbenn <dbennett@redhat.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/backplane-operator/commit/0c2d74af177a458d9dc73047fc74987bee30dabb
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.1
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: hypershift-addon-operator
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-08-12T15:11:44Z"}'
-    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'cluster-api-provider-agent-mce-51,
-      image-based-install-operator-mce-51, cluster-api-provider-openshift-assisted-bootstrap-mce-51,
-      kube-rbac-proxy-mce-51, cluster-api-webhook-config-mce-51, hypershift-release-mce-51,
-      hypershift-cli-mce-51, cluster-api-provider-kubevirt-mce-51, cluster-api-provider-openshift-assisted-control-plane-mce-51'
-      is(are) not included in snapshot due to missing valid containerImage or git
-      source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-51-release-mce-51-20260812-145858-000":{"lastUpdateTime":"2026-08-12T15:13:02.935704624Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: backplane-operator
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-08-12T15:44:41Z"}'
+    test.appstudio.openshift.io/create-snapshot-status: Component(s) 'image-based-install-operator-mce-51,
+      cluster-api-provider-openshift-assisted-bootstrap-mce-51, kube-rbac-proxy-mce-51,
+      cluster-api-webhook-config-mce-51, hypershift-release-mce-51, hypershift-cli-mce-51,
+      cluster-api-provider-kubevirt-mce-51, cluster-api-provider-openshift-assisted-control-plane-mce-51,
+      cluster-api-provider-agent-mce-51' is(are) not included in snapshot due to missing
+      valid containerImage or git source
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-51-release-mce-51-20260812-152512-000":{"lastUpdateTime":"2026-08-12T15:45:48.536426535Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1786546738000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1786548312000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/result-chains-git-commit: d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
-    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/hypershift-addon-operator
-    test.appstudio.openshift.io/result-image-digest: sha256:3cc4987602345c78d484fc34f92871f76bc5194f6df79c5d5d68b67abd6491ea
-    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-addon-operator-mce-51:d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/hypershift-addon-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-51","status":"BuildPLRInProgress","lastUpdateTime":"2026-08-12T15:13:02.935704624Z","details":"Integration
-      test passed with warnings","startTime":"2026-08-12T15:11:44.578653511Z","completionTime":"2026-08-12T15:13:02.935704624Z","testPipelineRunName":"enterprise-contract-mce-51-b745f"}]'
-  creationTimestamp: "2026-08-12T15:11:44Z"
+    test.appstudio.openshift.io/result-chains-git-commit: 0c2d74af177a458d9dc73047fc74987bee30dabb
+    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/backplane-operator
+    test.appstudio.openshift.io/result-image-digest: sha256:70add77a3a87472691fc791cd283683a6d2165142bcdc912af2771c578b74812
+    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-51:0c2d74af177a458d9dc73047fc74987bee30dabb
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-51","status":"BuildPLRInProgress","lastUpdateTime":"2026-08-12T15:45:48.536426535Z","details":"Integration
+      test passed with warnings","startTime":"2026-08-12T15:44:42.009374496Z","completionTime":"2026-08-12T15:45:48.536426535Z","testPipelineRunName":"enterprise-contract-mce-51-bp6mw"}]'
+  creationTimestamp: "2026-08-12T15:44:41Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-51
-    appstudio.openshift.io/build-pipelinerun: hypershift-addon-operator-mce-51-on-push-wfxn6
-    appstudio.openshift.io/component: hypershift-addon-operator-mce-51
+    appstudio.openshift.io/build-pipelinerun: backplane-operator-mce-51-on-push-rrvl7
+    appstudio.openshift.io/component: backplane-operator-mce-51
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "94157879045"
+    pac.test.appstudio.openshift.io/check-run-id: "94165872135"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: hypershift-addon-operator-mce-51-on-push
-    pac.test.appstudio.openshift.io/pull-request: "777"
-    pac.test.appstudio.openshift.io/repository: hypershift-addon-operator-backplane-24
-    pac.test.appstudio.openshift.io/sha: d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
+    pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-51-on-push
+    pac.test.appstudio.openshift.io/pull-request: "3839"
+    pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
+    pac.test.appstudio.openshift.io/sha: 0c2d74af177a458d9dc73047fc74987bee30dabb
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: hypershift-addon-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1786547495"
+    pac.test.appstudio.openshift.io/url-repository: backplane-operator
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1786549474"
     test.appstudio.openshift.io/type: component
-  name: release-mce-51-20260812-145858-000
+  name: release-mce-51-20260812-152512-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -91,35 +134,12 @@ metadata:
     kind: Application
     name: release-mce-51
     uid: 134f311c-f1c6-4c9f-8132-d26cebd82060
-  resourceVersion: "10538906980"
-  uid: 370c48a8-e1da-43a1-8fe5-8a2db8b3f11e
+  resourceVersion: "10539734007"
+  uid: a1e5ec35-1f9a-4e03-883a-709f301b53a5
 spec:
   application: release-mce-51
   artifacts: {}
   components:
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-image-set-controller-mce-51@sha256:35a324d0e7d4a6f37440fbe77be2531e1af871cd46249f985801dea838404b2b
-    name: cluster-image-set-controller-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: a4c3933f213805da33b1e71e706e1108e4eca6f0
-        url: https://github.com/stolostron/cluster-image-set-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/work-mce-51@sha256:0d0739c1c3f00d6746e1551e88c4e76942153e94b0b5cc793c3a70409f13e1aa
-    name: work-mce-51
-    source:
-      git:
-        context: ./
-        dockerfileUrl: build/Dockerfile.work.rhtap
-        revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
-        url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-addon-operator-mce-51@sha256:3cc4987602345c78d484fc34f92871f76bc5194f6df79c5d5d68b67abd6491ea
-    name: hypershift-addon-operator-mce-51
-    source:
-      git:
-        context: ./
-        revision: d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
-        url: https://github.com/stolostron/hypershift-addon-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/provider-credential-controller-mce-51@sha256:ec6a23d89b3696f0e77b982667c799ce293630bacf19dc102656410836bbfe4f
     name: provider-credential-controller-mce-51
     source:
@@ -208,13 +228,12 @@ spec:
         dockerfileUrl: build/Dockerfile.placement.rhtap
         revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
         url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-51@sha256:ee013f6e86c1302d11f430e69d868ac7999b57322e02ebaf5fd1a9cf5b72289f
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-51@sha256:70add77a3a87472691fc791cd283683a6d2165142bcdc912af2771c578b74812
     name: backplane-operator-mce-51
     source:
       git:
         context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 1a147358d79000e3857be6b008512330d03fb8d1
+        revision: 0c2d74af177a458d9dc73047fc74987bee30dabb
         url: https://github.com/stolostron/backplane-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-proxy-mce-51@sha256:bc64e6d880548770773f6118959076c4c8269f8f1f380fea63ffa8d0f63cfe71
     name: cluster-proxy-mce-51
@@ -288,20 +307,44 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: dc94bd9e10ea2e44145a4b40932de525c740da54
         url: https://github.com/stolostron/multicloud-operators-foundation
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-image-set-controller-mce-51@sha256:35a324d0e7d4a6f37440fbe77be2531e1af871cd46249f985801dea838404b2b
+    name: cluster-image-set-controller-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: a4c3933f213805da33b1e71e706e1108e4eca6f0
+        url: https://github.com/stolostron/cluster-image-set-controller
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/work-mce-51@sha256:0d0739c1c3f00d6746e1551e88c4e76942153e94b0b5cc793c3a70409f13e1aa
+    name: work-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: build/Dockerfile.work.rhtap
+        revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
+        url: https://github.com/stolostron/ocm
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hypershift-addon-operator-mce-51@sha256:3cc4987602345c78d484fc34f92871f76bc5194f6df79c5d5d68b67abd6491ea
+    name: hypershift-addon-operator-mce-51
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: d15157e43084cb8feb9f7a3c9ea041f0b0d13b3d
+        url: https://github.com/stolostron/hypershift-addon-operator
 status:
   conditions:
-  - lastTransitionTime: "2026-08-12T15:13:02Z"
+  - lastTransitionTime: "2026-08-12T15:45:48Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-08-12T15:13:02Z"
+  - lastTransitionTime: "2026-08-12T15:45:48Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-08-12T15:13:03Z"
+  - lastTransitionTime: "2026-08-12T15:45:48Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
