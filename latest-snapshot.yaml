@@ -2,87 +2,71 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/multicloud-operators-foundation?rev=7f53ea89799020b3297296533daa6df9ef8026ff
-    build.appstudio.redhat.com/commit_sha: 7f53ea89799020b3297296533daa6df9ef8026ff
-    build.appstudio.redhat.com/target_branch: backplane-5.0
-    pac.test.appstudio.openshift.io/branch: backplane-5.0
+    build.appstudio.openshift.io/repo: https://github.com/openshift/hive?rev=99b389ea3f7b06af5d9ac9c15482e41792157c88
+    build.appstudio.redhat.com/commit_sha: 99b389ea3f7b06af5d9ac9c15482e41792157c88
+    build.appstudio.redhat.com/target_branch: master
+    pac.test.appstudio.openshift.io/branch: master
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "96084767673"
+    pac.test.appstudio.openshift.io/check-run-id: "96186123068"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-mvwmwr
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-xavvix
     pac.test.appstudio.openshift.io/git-provider: github
-    pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/multicloud-manager-mce-50-on-push-8vzbb
+    pac.test.appstudio.openshift.io/installation-id: "35333059"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/hive-mce-50-on-push-h2rfx
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
-      == "backplane-5.0"
-    pac.test.appstudio.openshift.io/original-prname: multicloud-manager-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "1327"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/multicloud-operators-foundation
-    pac.test.appstudio.openshift.io/repository: multicloud-manager-mce-25
+      == "master" && !files.all.all(x, x.matches('^docs/|\\.md$|^(?:.*/)?(?:\\.gitignore|OWNERS|PROJECT|LICENSE)$'))
+    pac.test.appstudio.openshift.io/original-prname: hive-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "2944"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/openshift/hive
+    pac.test.appstudio.openshift.io/repository: hive-master
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/secret-created: "true"
-    pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
-    pac.test.appstudio.openshift.io/sha: 7f53ea89799020b3297296533daa6df9ef8026ff
+    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
+    pac.test.appstudio.openshift.io/sha: 99b389ea3f7b06af5d9ac9c15482e41792157c88
     pac.test.appstudio.openshift.io/sha-title: |-
-      Bump google.golang.org/grpc in the go_modules group across 1 directory (#1327)
+      Merge pull request #2944 from grokspawn/netpol-e2e
 
-      Bumps the go_modules group with 1 update in the / directory: [google.golang.org/grpc](https://github.com/grpc/grpc-go).
-
-
-      Updates `google.golang.org/grpc` from 1.79.3 to 1.82.1
-      - [Release notes](https://github.com/grpc/grpc-go/releases)
-      - [Commits](https://github.com/grpc/grpc-go/compare/v1.79.3...v1.82.1)
-
-      ---
-      updated-dependencies:
-      - dependency-name: google.golang.org/grpc
-        dependency-version: 1.82.1
-        dependency-type: indirect
-        dependency-group: go_modules
-      ...
-
-      Signed-off-by: dependabot[bot] <support@github.com>
-      Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/multicloud-operators-foundation/commit/7f53ea89799020b3297296533daa6df9ef8026ff
-    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.0
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/multicloud-operators-foundation
+      HIVE-2671: add netpols to e2e env
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/openshift/hive/commit/99b389ea3f7b06af5d9ac9c15482e41792157c88
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/master
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: multicloud-operators-foundation
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-08-19T13:42:39Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260819-132722-000":{"lastUpdateTime":"2026-08-19T13:43:30.423210024Z"}}}'
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: hive
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-08-19T19:17:53Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20260819-184658-000":{"lastUpdateTime":"2026-08-19T19:18:49.308013833Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1787146042000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1787165218000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/result-chains-git-commit: 7f53ea89799020b3297296533daa6df9ef8026ff
-    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/multicloud-operators-foundation
-    test.appstudio.openshift.io/result-image-digest: sha256:a3bc660198b32bdd82648b43e412c20b4ea9c2f60c130936ab4c62fb877512b2
-    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-50:7f53ea89799020b3297296533daa6df9ef8026ff
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/multicloud-operators-foundation
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-08-19T13:43:30.423210024Z","details":"Integration
-      test passed with warnings","startTime":"2026-08-19T13:42:40.059795676Z","completionTime":"2026-08-19T13:43:30.423210024Z","testPipelineRunName":"enterprise-contract-mce-50-dpwdj"}]'
-  creationTimestamp: "2026-08-19T13:42:39Z"
+    test.appstudio.openshift.io/result-chains-git-commit: 99b389ea3f7b06af5d9ac9c15482e41792157c88
+    test.appstudio.openshift.io/result-chains-git-url: https://github.com/openshift/hive
+    test.appstudio.openshift.io/result-image-digest: sha256:7081c15581e62817b1d9c0b9a163379b878e4730483a343ad9694d98b18e95fc
+    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-50:99b389ea3f7b06af5d9ac9c15482e41792157c88
+    test.appstudio.openshift.io/source-repo-url: https://github.com/openshift/hive
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-08-19T19:18:49.308013833Z","details":"Integration
+      test passed with warnings","startTime":"2026-08-19T19:17:53.858665873Z","completionTime":"2026-08-19T19:18:49.308013833Z","testPipelineRunName":"enterprise-contract-mce-50-v7kfc"}]'
+  creationTimestamp: "2026-08-19T19:17:53Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: multicloud-manager-mce-50-on-push-8vzbb
-    appstudio.openshift.io/component: multicloud-manager-mce-50
+    appstudio.openshift.io/build-pipelinerun: hive-mce-50-on-push-h2rfx
+    appstudio.openshift.io/component: hive-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "96084767673"
+    pac.test.appstudio.openshift.io/check-run-id: "96186123068"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: multicloud-manager-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "1327"
-    pac.test.appstudio.openshift.io/repository: multicloud-manager-mce-25
-    pac.test.appstudio.openshift.io/sha: 7f53ea89799020b3297296533daa6df9ef8026ff
+    pac.test.appstudio.openshift.io/original-prname: hive-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "2944"
+    pac.test.appstudio.openshift.io/repository: hive-master
+    pac.test.appstudio.openshift.io/sha: 99b389ea3f7b06af5d9ac9c15482e41792157c88
     pac.test.appstudio.openshift.io/state: completed
-    pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: multicloud-operators-foundation
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1787146953"
+    pac.test.appstudio.openshift.io/url-org: openshift
+    pac.test.appstudio.openshift.io/url-repository: hive
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1787167063"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20260819-132722-000
+  name: release-mce-50-20260819-184658-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -91,20 +75,12 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "10667508449"
-  uid: ce9771f6-e5ba-4cfc-918f-1d84a41c9385
+  resourceVersion: "10673625627"
+  uid: 4389221f-dc39-4836-a9d1-5c2d32c78554
 spec:
   application: release-mce-50
   artifacts: {}
   components:
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-50@sha256:d44cb4c447045aa909cdd36c336a72d741e995f59d2eb46a885ff1807698a172
-    name: hive-mce-50
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile
-        revision: e93e22e8c698eec04c6c88c3f512ea2ed7219d02
-        url: https://github.com/openshift/hive
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/maestro-mce-50@sha256:75e4b8c1fa1089624e8c572df2955b0c52722e1fc33212cdc2ec4f49f31ca93e
     name: maestro-mce-50
     source:
@@ -185,13 +161,13 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: f81605d40fe94124c74fa1b296384612a0812456
         url: https://github.com/stolostron/backplane-must-gather
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/console-mce-mce-50@sha256:a31c5730f991e20f69f4b08716f33157bea81551b5e05d239dd0895459e657f1
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/console-mce-mce-50@sha256:d3eb5f131f7b2d0f7237e4b69982e529b0ae4d256e2720b2e5ef5fd6088daafa
     name: console-mce-mce-50
     source:
       git:
         context: ./
         dockerfileUrl: Containerfile.mce.konflux
-        revision: 6e493422e016f5c54c2046261394d8c4050ce8c9
+        revision: f47a1bfcf1f527de294eeb6c85302b4025601528
         url: https://github.com/stolostron/console
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-azure-mce-50@sha256:2522f4c9a7d98b546cb28544c0ae7339c95714e1c739b265ef82da304768f9b5
     name: cluster-api-provider-azure-mce-50
@@ -281,13 +257,13 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: 7629fd53208278ff1de0e1a311d69920533e852a
         url: https://github.com/stolostron/cluster-curator-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:7fbb2f4b00cb53677ce8d7d9ce2a55bc0fcbc547ec2ec15537641f880764c5cf
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-50@sha256:747376e0c976b1e461eea2da1bc484b6838657e48ab78a51288a635fcab23b18
     name: backplane-operator-mce-50
     source:
       git:
         context: ./
         dockerfileUrl: Dockerfile.rhtap
-        revision: 286131e6fd66935123582e1ea9db803827db5f55
+        revision: 397ce7d8f8443cf788e71d8fc010c0eb3540f87b
         url: https://github.com/stolostron/backplane-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managed-serviceaccount-mce-50@sha256:14454568dac9fbd2f3dfa93f7d0c2fa646e80536b536cb55424947a4abe0b630
     name: managed-serviceaccount-mce-50
@@ -342,6 +318,7 @@ spec:
     source:
       git:
         context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: 7f53ea89799020b3297296533daa6df9ef8026ff
         url: https://github.com/stolostron/multicloud-operators-foundation
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-50@sha256:0d79e9d3228ecaac3d2618778b598aecf8b91373c67568ffc74cab3d380cd7cd
@@ -376,20 +353,27 @@ spec:
         dockerfileUrl: build/Dockerfile.placement.rhtap
         revision: 5ac55c10abb7808604d0cf2881609bb983bdeae9
         url: https://github.com/stolostron/ocm
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/hive-mce-50@sha256:7081c15581e62817b1d9c0b9a163379b878e4730483a343ad9694d98b18e95fc
+    name: hive-mce-50
+    source:
+      git:
+        context: ./
+        revision: 99b389ea3f7b06af5d9ac9c15482e41792157c88
+        url: https://github.com/openshift/hive
 status:
   conditions:
-  - lastTransitionTime: "2026-08-19T13:43:30Z"
+  - lastTransitionTime: "2026-08-19T19:18:49Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-08-19T13:43:30Z"
+  - lastTransitionTime: "2026-08-19T19:18:49Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-08-19T13:43:30Z"
+  - lastTransitionTime: "2026-08-19T19:18:49Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
