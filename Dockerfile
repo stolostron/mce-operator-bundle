@@ -28,4 +28,4 @@ LABEL com.redhat.component="multicluster-engine-operator-bundle-container" \
       url="https://github.com/stolostron/mce-operator-bundle" \
       release="5.2.0-6" \
       distribution-scope="public" \
-      cpe="cpe:/a:redhat:multicluster_engine:5.1::el9"
+      cpe="cpe:/a:redhat:multicluster_engine:5.2::el9"
