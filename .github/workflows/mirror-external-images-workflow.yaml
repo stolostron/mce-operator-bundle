@@ -122,6 +122,18 @@ jobs:
           config
         show-progress: false
 
+    - name: Get tools-repo pin config from main branch
+      run: |
+        # Always pull tooling config (mce-bundle-pr-config-vars) from main
+        # branch to ensure consistency across all release branches, without
+        # disturbing other files under config/ (e.g. mce-manifest-gen-config.json,
+        # which lives only on release branches and must be preserved).
+        # A second full `actions/checkout` with path: workflow would overwrite
+        # the whole config/ directory instead of just this one file, so use
+        # `git show` to fetch only the single file we need.
+        git -C workflow fetch --depth=1 origin main
+        git -C workflow show origin/main:config/mce-bundle-pr-config-vars > workflow/config/mce-bundle-pr-config-vars
+
     - name: Read pinned release-tools commit
       id: tools-repo-pin
       run: |
@@ -230,6 +242,13 @@ jobs:
           SUMMARY="Mirror script did not complete successfully"
           DETAILS=""
           HAS_FAILURE=true
+          # No results file means the script never ran (e.g. an earlier step
+          # failed). Default the counts so the jq --argjson calls below still
+          # get valid JSON instead of empty strings.
+          MIRRORED=0
+          SKIPPED=0
+          FAILED=0
+          FAILURES_JSON="[]"
         else
           # Parse the JSON results
           MIRRORED=$(jq -r '.mirrored' workflow/mirror-results.json)
