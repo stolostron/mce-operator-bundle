@@ -2,78 +2,117 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/backplane-operator?rev=0dc920e3c0d90c9d300b69d3154c41694c1b2ab8
-    build.appstudio.redhat.com/commit_sha: 0dc920e3c0d90c9d300b69d3154c41694c1b2ab8
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/console?rev=61cb84e2dc93d56bf77e8a7940f5ffbb20f18f91
+    build.appstudio.redhat.com/commit_sha: 61cb84e2dc93d56bf77e8a7940f5ffbb20f18f91
     build.appstudio.redhat.com/target_branch: backplane-5.2
     pac.test.appstudio.openshift.io/branch: backplane-5.2
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "102627321506"
+    pac.test.appstudio.openshift.io/check-run-id: "102825851910"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-tsipdd
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-axgwva
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/backplane-operator-mce-52-on-push-8tv2f
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/console-mce-mce-52-on-push-qrptb
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-5.2"
-    pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-52-on-push
-    pac.test.appstudio.openshift.io/pull-request: "4002"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/backplane-operator
-    pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
+    pac.test.appstudio.openshift.io/original-prname: console-mce-mce-52-on-push
+    pac.test.appstudio.openshift.io/pull-request: "6764"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/console
+    pac.test.appstudio.openshift.io/repository: console
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/secret-created: "true"
     pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
-    pac.test.appstudio.openshift.io/sha: 0dc920e3c0d90c9d300b69d3154c41694c1b2ab8
+    pac.test.appstudio.openshift.io/sha: 61cb84e2dc93d56bf77e8a7940f5ffbb20f18f91
     pac.test.appstudio.openshift.io/sha-title: |-
-      [create-pull-request] automated change (#4002)
+      ACM-42794: Ensure typeahead inputs disable browser autocomplete (#6764)
 
-      Signed-off-by: GitHub <noreply@github.com>
-      Co-authored-by: openshift-merge-bot <openshift-merge-bot@users.noreply.github.com>
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/backplane-operator/commit/0dc920e3c0d90c9d300b69d3154c41694c1b2ab8
+      * ACM-42794: Ensure typeahead inputs disable browser autocomplete
+
+      Both AcmSelectBase and react-form-wizard's InputSelect already attempted
+      to disable native autocomplete by passing autoComplete="off" directly
+      to PatternFly's TextInputGroupMain, but that component only forwards a
+      fixed allowlist of props (plus inputProps) to the underlying <input> -
+      everything else lands on the wrapping <div> instead. As a result the
+      real <input> never received the attribute, so Chrome kept suggesting
+      and obscuring previously typed values in typeahead/combobox fields
+      (e.g. release image selection, automation template dropdown).
+
+      Route autoComplete through inputProps/resolvedInputProps, which is
+      the mechanism TextInputGroupMain actually spreads onto the input.
+
+      Signed-off-by: Randy Bruno Piverger <21374229+Randy424@users.noreply.github.com>
+      Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+      * ACM-42794: Add regression test for typeahead autocomplete attribute
+
+      Verifies the AcmSelectBase typeahead variant renders its <input> with
+      autocomplete="off", so Chrome's autofill/autocomplete UI cannot mask
+      ACM's own dropdown options.
+
+      Signed-off-by: Randy Bruno Piverger <21374229+Randy424@users.noreply.github.com>
+      Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+      * ACM-42794: Update snapshots for corrected autocomplete attribute placement
+
+      ControlPanelMultiSelect and ControlPanelSingleSelect snapshots
+      previously captured autoComplete="off" on the TextInputGroupMain
+      wrapper div (the prior no-op placement). Update them to reflect the
+      attribute now landing on the real <input> element.
+
+      Signed-off-by: Randy Bruno Piverger <21374229+Randy424@users.noreply.github.com>
+      Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+      ---------
+
+      Signed-off-by: Randy Bruno Piverger <21374229+Randy424@users.noreply.github.com>
+      Co-authored-by: Randy Bruno Piverger <21374229+Randy424@users.noreply.github.com>
+      Co-authored-by: Claude Sonnet 5 <noreply@anthropic.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/console/commit/61cb84e2dc93d56bf77e8a7940f5ffbb20f18f91
     pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.2
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/console
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: backplane-operator
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-09-09T20:38:50Z"}'
+    pac.test.appstudio.openshift.io/url-repository: console
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-09-10T10:13:49Z"}'
     test.appstudio.openshift.io/create-snapshot-status: Component(s) 'cluster-proxy-addon-mce-52,
       kube-rbac-proxy-mce-52, cluster-api-provider-openshift-assisted-control-plane-mce-52,
       cluster-api-provider-agent-mce-52, cluster-api-provider-aws-mce-52, cluster-api-provider-kubevirt-mce-52,
       hypershift-release-mce-52, cluster-api-provider-openshift-assisted-bootstrap-mce-52,
       image-based-install-operator-mce-52, hypershift-cli-mce-52' is(are) not included
       in snapshot due to missing valid containerImage or git source
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-52-release-mce-52-20260909-202739-000":{"lastUpdateTime":"2026-09-09T20:39:44.81266276Z"}}}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-52-release-mce-52-20260910-095510-000":{"lastUpdateTime":"2026-09-10T10:14:39.609502006Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1788985659000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1789034110000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/result-chains-git-commit: 0dc920e3c0d90c9d300b69d3154c41694c1b2ab8
-    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/backplane-operator
-    test.appstudio.openshift.io/result-image-digest: sha256:03a41273149be806f96df35460b094bf3ad7aec3419128c49b478970f084e329
-    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/backplane-operator-mce-52:0dc920e3c0d90c9d300b69d3154c41694c1b2ab8
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/backplane-operator
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-52","status":"BuildPLRInProgress","lastUpdateTime":"2026-09-09T20:39:44.81266276Z","details":"Integration
-      test passed with warnings","startTime":"2026-09-09T20:38:50.407935308Z","completionTime":"2026-09-09T20:39:44.81266276Z","testPipelineRunName":"enterprise-contract-mce-52-nc6zq"}]'
-  creationTimestamp: "2026-09-09T20:38:50Z"
+    test.appstudio.openshift.io/result-chains-git-commit: 61cb84e2dc93d56bf77e8a7940f5ffbb20f18f91
+    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/console
+    test.appstudio.openshift.io/result-image-digest: sha256:bcab2aa0d285de4b9fa7795f6b470fbe9a80607edcfe13bb3677f39ab59980b6
+    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/console-mce-mce-52:61cb84e2dc93d56bf77e8a7940f5ffbb20f18f91
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/console
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-52","status":"BuildPLRInProgress","lastUpdateTime":"2026-09-10T10:14:39.609502006Z","details":"Integration
+      test passed with warnings","startTime":"2026-09-10T10:13:49.513539168Z","completionTime":"2026-09-10T10:14:39.609502006Z","testPipelineRunName":"enterprise-contract-mce-52-8g7f6"}]'
+  creationTimestamp: "2026-09-10T10:13:49Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-52
-    appstudio.openshift.io/build-pipelinerun: backplane-operator-mce-52-on-push-8tv2f
-    appstudio.openshift.io/component: backplane-operator-mce-52
+    appstudio.openshift.io/build-pipelinerun: console-mce-mce-52-on-push-qrptb
+    appstudio.openshift.io/component: console-mce-mce-52
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "102627321506"
+    pac.test.appstudio.openshift.io/check-run-id: "102825851910"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: backplane-operator-mce-52-on-push
-    pac.test.appstudio.openshift.io/pull-request: "4002"
-    pac.test.appstudio.openshift.io/repository: backplane-operator-qa7p
-    pac.test.appstudio.openshift.io/sha: 0dc920e3c0d90c9d300b69d3154c41694c1b2ab8
+    pac.test.appstudio.openshift.io/original-prname: console-mce-mce-52-on-push
+    pac.test.appstudio.openshift.io/pull-request: "6764"
+    pac.test.appstudio.openshift.io/repository: console
+    pac.test.appstudio.openshift.io/sha: 61cb84e2dc93d56bf77e8a7940f5ffbb20f18f91
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: backplane-operator
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1788986318"
+    pac.test.appstudio.openshift.io/url-repository: console
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1789035220"
     test.appstudio.openshift.io/type: component
-  name: release-mce-52-20260909-202739-000
+  name: release-mce-52-20260910-095510-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -82,12 +121,28 @@ metadata:
     kind: Application
     name: release-mce-52
     uid: ea18f858-ba91-4267-aec7-54dae7b6b452
-  resourceVersion: "11083595449"
-  uid: 106c0e3b-14f3-4285-9d49-a38c5b07587d
+  resourceVersion: "11098282494"
+  uid: fecccc5c-640c-4a04-b384-6b1918f399ec
 spec:
   application: release-mce-52
   artifacts: {}
   components:
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-52@sha256:6604aeb64b9fcef8e6859ae2b59e954058d20570032bb11b2ea57d57db42e88c
+    name: multicloud-manager-mce-52
+    source:
+      git:
+        context: ./
+        dockerfileUrl: Dockerfile.rhtap
+        revision: 6e0e788456fe924ca4b0cf09f04bd78922cabaf8
+        url: https://github.com/stolostron/multicloud-operators-foundation
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/azure-service-operator-mce-52@sha256:b22480baf5b89476e0db3def9ee2a6049cafbd7b4932413098df086e55efdb6c
+    name: azure-service-operator-mce-52
+    source:
+      git:
+        context: ./
+        dockerfileUrl: stolostron/Dockerfile.stolostron
+        revision: 49c9c873ec8fdef39fe9f66fc215828eabaf94de
+        url: https://github.com/stolostron/azure-service-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/clusterlifecycle-state-metrics-mce-52@sha256:2803201b3a912b710a02132ac28ac3c2e07b3429264149db2d72fff4f3c461ed
     name: clusterlifecycle-state-metrics-mce-52
     source:
@@ -160,13 +215,12 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: a76bc5c0d233e7ca0057ec2477e96b27daafdf2a
         url: https://github.com/stolostron/clusterclaims-controller
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/console-mce-mce-52@sha256:8193b392355a62e702ee8051102490343f836ddb576e8a105aba2a6c8d64def4
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/console-mce-mce-52@sha256:bcab2aa0d285de4b9fa7795f6b470fbe9a80607edcfe13bb3677f39ab59980b6
     name: console-mce-mce-52
     source:
       git:
         context: ./
-        dockerfileUrl: Containerfile.mce.konflux
-        revision: df4925284813025d24f368f4022e35a7cc9784cb
+        revision: 61cb84e2dc93d56bf77e8a7940f5ffbb20f18f91
         url: https://github.com/stolostron/console
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-api-provider-azure-mce-52@sha256:107bccb26d5ecd56ea28916c44c12c0fe2cb21d3cf28f56b3e274ce715c990bb
     name: cluster-api-provider-azure-mce-52
@@ -205,6 +259,7 @@ spec:
     source:
       git:
         context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: 0dc920e3c0d90c9d300b69d3154c41694c1b2ab8
         url: https://github.com/stolostron/backplane-operator
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/provider-credential-controller-mce-52@sha256:6e450a430a4431b728a146c681a5186aca9d2e0f4c5c7b5b9597058812b1c8a8
@@ -263,36 +318,20 @@ spec:
         dockerfileUrl: Dockerfile.rhtap
         revision: d77e617bfdbb5fa5ef1fbfbc7e80b99e7ce3f264
         url: https://github.com/stolostron/backplane-must-gather
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/multicloud-manager-mce-52@sha256:6604aeb64b9fcef8e6859ae2b59e954058d20570032bb11b2ea57d57db42e88c
-    name: multicloud-manager-mce-52
-    source:
-      git:
-        context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 6e0e788456fe924ca4b0cf09f04bd78922cabaf8
-        url: https://github.com/stolostron/multicloud-operators-foundation
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/azure-service-operator-mce-52@sha256:f307d5b88cda16d46040401090c8a77fcbac5b8613a41e1865e70788f713fc6b
-    name: azure-service-operator-mce-52
-    source:
-      git:
-        context: ./
-        dockerfileUrl: stolostron/Dockerfile.stolostron
-        revision: 0371b9435c03923736dea3a9e6fe437af189c471
-        url: https://github.com/stolostron/azure-service-operator
 status:
   conditions:
-  - lastTransitionTime: "2026-09-09T20:39:44Z"
+  - lastTransitionTime: "2026-09-10T10:14:39Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-09-09T20:39:45Z"
+  - lastTransitionTime: "2026-09-10T10:14:39Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-09-09T20:39:45Z"
+  - lastTransitionTime: "2026-09-10T10:14:39Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
