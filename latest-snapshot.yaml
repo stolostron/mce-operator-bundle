@@ -2,71 +2,103 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/kube-rbac-proxy?rev=7c4500fc0589705ee2676433c6d5ef112fc5fdd2
-    build.appstudio.redhat.com/commit_sha: 7c4500fc0589705ee2676433c6d5ef112fc5fdd2
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/managedcluster-import-controller?rev=13336569cfb0e9ed240f9815e0045ba63112cc3e
+    build.appstudio.redhat.com/commit_sha: 13336569cfb0e9ed240f9815e0045ba63112cc3e
     build.appstudio.redhat.com/target_branch: backplane-5.0
     pac.test.appstudio.openshift.io/branch: backplane-5.0
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "122137460252"
+    pac.test.appstudio.openshift.io/check-run-id: "122221729709"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-mvulky
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-sazgqs
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/kube-rbac-proxy-mce-50-on-push-5hm9k
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/managedcluster-import-controller-addon-mce-50-on-push-2464w
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-5.0"
-    pac.test.appstudio.openshift.io/original-prname: kube-rbac-proxy-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "549"
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/kube-rbac-proxy
-    pac.test.appstudio.openshift.io/repository: kube-rbac-proxy-mce-25
+    pac.test.appstudio.openshift.io/original-prname: managedcluster-import-controller-addon-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "1381"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/managedcluster-import-controller
+    pac.test.appstudio.openshift.io/repository: managedcluster-import-controller
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/secret-created: "true"
-    pac.test.appstudio.openshift.io/sender: acm-cicd-prow-bot
-    pac.test.appstudio.openshift.io/sha: 7c4500fc0589705ee2676433c6d5ef112fc5fdd2
+    pac.test.appstudio.openshift.io/sender: rokej
+    pac.test.appstudio.openshift.io/sha: 13336569cfb0e9ed240f9815e0045ba63112cc3e
     pac.test.appstudio.openshift.io/sha-title: |-
-      Merge pull request #549 from openshift-cherrypick-robot/cherry-pick-535-to-release-5.0
+      fix: avoid GNU make 4.4.1 livelock with exported $(shell) variables (#1381)
 
-      [release-5.0] Add sripragnabitra to OWNERS
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/kube-rbac-proxy/commit/7c4500fc0589705ee2676433c6d5ef112fc5fdd2
+      GNU make 4.4.1 - shipped on the ubuntu-26.04 runner image that
+      ubuntu-latest rolled to on Oct 22 - livelocks when a Makefile has
+      exported, recursively-expanded variables containing $(shell ...):
+      while running any shell function, make re-enters its "export to shell
+      function" path ~18,000 times per second (visible as repeated "not
+      recursively expanding X to export to shell function" lines in make -d),
+      re-running the embedded commands in cycles. With this repo's ~8 such
+      variables (go env, go list ./..., cat), make took 8 minutes to 6+
+      hours to get through variable expansion - wedging every e2e job with
+      zero output until the 6h job timeout. make 4.3 (ubuntu-24.04) does not
+      have this behavior.
+
+      Fix: evaluate the exported shell variables once at parse time with :=
+      (using $(or ...) to preserve the ?= "respect a pre-set environment
+      value" semantics), and stop exporting GOPACKAGES (only the test target
+      uses it; un-exported, it expands only inside that recipe).
+
+      Also drop dead variables found during review: GOPATH was never
+      referenced anywhere in the repo (it merely re-exported `go env GOPATH`),
+      and the PROJECT_DIR -> BUILD_DIR -> DOCKER_FILE chain collapsed into
+      DOCKER_FILE = $(PWD)/build/Dockerfile, un-exported. GOHOSTOS and
+      GOHOSTARCH stay exported: build/setup-kind-clusters.sh runs under
+      `set -o nounset` and uses them for the kind download, and the Makefile's
+      darwin ifeq block sets HELM_ARCHOS/OPERATOR_SDK_ARCHOS from them.
+
+      Verified on make 4.4.1: export-cycle count drops from ~18,000/s to
+      zero and make completes instantly; on make 4.3 nothing changes. The
+      make test package list, go build ./..., and environment overrides
+      (GOPATH=/custom make ...) are all unchanged. make -n build-image
+      resolves -f $(PWD)/build/Dockerfile correctly.
+
+      Co-authored-by: Roke Jung <roke@redhat.com>
+      Co-authored-by: server-foundation-agent <sfa-bot@redhat.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/managedcluster-import-controller/commit/13336569cfb0e9ed240f9815e0045ba63112cc3e
     pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.0
-    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/kube-rbac-proxy
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/managedcluster-import-controller
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: kube-rbac-proxy
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-10-27T10:38:08Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20261027-102951-000":{"lastUpdateTime":"2026-10-27T10:44:04.385218938Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: managedcluster-import-controller
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-10-27T13:49:15Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20261027-133727-000":{"lastUpdateTime":"2026-10-27T13:50:08.744950215Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1793096991000"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1793108247000"
     test.appstudio.openshift.io/pr-status: merged
-    test.appstudio.openshift.io/result-chains-git-commit: 7c4500fc0589705ee2676433c6d5ef112fc5fdd2
-    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/kube-rbac-proxy
-    test.appstudio.openshift.io/result-image-digest: sha256:b98f1c4020bd1043ad3b8ae5af3401748447f22de89d9e6613739abb6a9810fc
-    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/kube-rbac-proxy-mce-50:7c4500fc0589705ee2676433c6d5ef112fc5fdd2
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/kube-rbac-proxy
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-10-27T10:44:04.385218938Z","details":"Integration
-      test passed with warnings","startTime":"2026-10-27T10:38:09.059977634Z","completionTime":"2026-10-27T10:44:04.385218938Z","testPipelineRunName":"enterprise-contract-mce-50-5fl8m"}]'
-  creationTimestamp: "2026-10-27T10:38:08Z"
+    test.appstudio.openshift.io/result-chains-git-commit: 13336569cfb0e9ed240f9815e0045ba63112cc3e
+    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/managedcluster-import-controller
+    test.appstudio.openshift.io/result-image-digest: sha256:8e51ef5c8aa6a377ca2fa5d7f686284bc36d373af293a835909ac70dfb481b65
+    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managedcluster-import-controller-addon-mce-50:13336569cfb0e9ed240f9815e0045ba63112cc3e
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/managedcluster-import-controller
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-10-27T13:50:08.744950215Z","details":"Integration
+      test passed with warnings","startTime":"2026-10-27T13:49:15.202648913Z","completionTime":"2026-10-27T13:50:08.744950215Z","testPipelineRunName":"enterprise-contract-mce-50-pdvbv"}]'
+  creationTimestamp: "2026-10-27T13:49:15Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: kube-rbac-proxy-mce-50-on-push-5hm9k
-    appstudio.openshift.io/component: kube-rbac-proxy-mce-50
+    appstudio.openshift.io/build-pipelinerun: managedcluster-import-controller-addon-mce-50-on-push-2464w
+    appstudio.openshift.io/component: managedcluster-import-controller-addon-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "122137460252"
+    pac.test.appstudio.openshift.io/check-run-id: "122221729709"
     pac.test.appstudio.openshift.io/event-type: push
-    pac.test.appstudio.openshift.io/original-prname: kube-rbac-proxy-mce-50-on-push
-    pac.test.appstudio.openshift.io/pull-request: "549"
-    pac.test.appstudio.openshift.io/repository: kube-rbac-proxy-mce-25
-    pac.test.appstudio.openshift.io/sha: 7c4500fc0589705ee2676433c6d5ef112fc5fdd2
+    pac.test.appstudio.openshift.io/original-prname: managedcluster-import-controller-addon-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "1381"
+    pac.test.appstudio.openshift.io/repository: managedcluster-import-controller
+    pac.test.appstudio.openshift.io/sha: 13336569cfb0e9ed240f9815e0045ba63112cc3e
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: kube-rbac-proxy
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1793097482"
+    pac.test.appstudio.openshift.io/url-repository: managedcluster-import-controller
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1793108948"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20261027-102951-000
+  name: release-mce-50-20261027-133727-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -75,8 +107,8 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "12003039808"
-  uid: 926341df-01fb-4a7e-beef-6033696a0de8
+  resourceVersion: "12007035107"
+  uid: a00f5d4e-f97d-460d-88c0-2a62489b101b
 spec:
   application: release-mce-50
   artifacts: {}
@@ -198,6 +230,7 @@ spec:
     source:
       git:
         context: ./
+        dockerfileUrl: Containerfile.operator
         revision: 7c4500fc0589705ee2676433c6d5ef112fc5fdd2
         url: https://github.com/stolostron/kube-rbac-proxy
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-permission-mce-50@sha256:d16f1bafd3a669365bf12f7b5e28516e43bbcaa002dcd205c82375b0c8354d16
@@ -216,13 +249,12 @@ spec:
         dockerfileUrl: build/Dockerfile.registration-operator.rhtap
         revision: 8dc63f1150c2e40b309fbf59d71778919980c343
         url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managedcluster-import-controller-addon-mce-50@sha256:35bf6a6ce87c37413271e1c4c3a551f67d3d9af94a89489824ac5edf05efe014
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/managedcluster-import-controller-addon-mce-50@sha256:8e51ef5c8aa6a377ca2fa5d7f686284bc36d373af293a835909ac70dfb481b65
     name: managedcluster-import-controller-addon-mce-50
     source:
       git:
         context: ./
-        dockerfileUrl: build/Dockerfile.rhtap
-        revision: fc14655578611270b0908d4893b09bafbf3e1c15
+        revision: 13336569cfb0e9ed240f9815e0045ba63112cc3e
         url: https://github.com/stolostron/managedcluster-import-controller
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/discovery-operator-mce-50@sha256:6847a5a02b0641ddd346bac0715c4b670e9bb7c9d2d8fdb190c3cbc7eeccc693
     name: discovery-operator-mce-50
@@ -362,18 +394,18 @@ spec:
         url: https://github.com/stolostron/console
 status:
   conditions:
-  - lastTransitionTime: "2026-10-27T10:44:04Z"
+  - lastTransitionTime: "2026-10-27T13:50:08Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-10-27T10:44:04Z"
+  - lastTransitionTime: "2026-10-27T13:50:08Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-10-27T10:44:05Z"
+  - lastTransitionTime: "2026-10-27T13:50:08Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
