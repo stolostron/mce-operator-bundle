@@ -2,65 +2,143 @@ apiVersion: appstudio.redhat.com/v1alpha1
 kind: Snapshot
 metadata:
   annotations:
-    build.appstudio.openshift.io/repo: https://github.com/stolostron/cloudevents-conductor?rev=f0bc706172f993d87586eb1fbb6b116134c8f89b
-    build.appstudio.redhat.com/commit_sha: f0bc706172f993d87586eb1fbb6b116134c8f89b
+    build.appstudio.openshift.io/repo: https://github.com/stolostron/maestro?rev=a5f07f1da44c3f3465cbaf39f0e558382d7fb9d9
+    build.appstudio.redhat.com/commit_sha: a5f07f1da44c3f3465cbaf39f0e558382d7fb9d9
     build.appstudio.redhat.com/target_branch: backplane-5.0
     pac.test.appstudio.openshift.io/branch: backplane-5.0
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "130208402911"
+    pac.test.appstudio.openshift.io/check-run-id: "130807867895"
     pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
       "gRepo": "pipelines-as-code"}'
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-rnpaod
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-sbosus
     pac.test.appstudio.openshift.io/git-provider: github
     pac.test.appstudio.openshift.io/installation-id: "35324288"
-    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/cloudevents-conductor-mce-50-on-push-c28mm
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/crt-redhat-acm-tenant/pipelinerun/maestro-mce-50-on-push-5zx85
     pac.test.appstudio.openshift.io/max-keep-runs: "3"
     pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch
       == "backplane-5.0"
-    pac.test.appstudio.openshift.io/original-prname: cloudevents-conductor-mce-50-on-push
-    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/cloudevents-conductor
-    pac.test.appstudio.openshift.io/repository: cloudevents-conductor-main
+    pac.test.appstudio.openshift.io/original-prname: maestro-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "104"
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/stolostron/maestro
+    pac.test.appstudio.openshift.io/repository: maestro-main
     pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
     pac.test.appstudio.openshift.io/secret-created: "true"
-    pac.test.appstudio.openshift.io/sender: incoming
-    pac.test.appstudio.openshift.io/sha: f0bc706172f993d87586eb1fbb6b116134c8f89b
-    pac.test.appstudio.openshift.io/sha-title: 'Merge pull request #83 from stolostron/fix/go-deps-backplane-5.0'
-    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/cloudevents-conductor/commit/f0bc706172f993d87586eb1fbb6b116134c8f89b
-    pac.test.appstudio.openshift.io/source-branch: backplane-5.0
-    pac.test.appstudio.openshift.io/source-repo-url: ""
+    pac.test.appstudio.openshift.io/sender: openshift-merge-bot[bot]
+    pac.test.appstudio.openshift.io/sha: a5f07f1da44c3f3465cbaf39f0e558382d7fb9d9
+    pac.test.appstudio.openshift.io/sha-title: |-
+      fix(security): validate SQL identifiers in list queries (#104)
+
+      * fix(security): validate SQL identifiers in list queries
+
+      Validate search identifiers against model schemas and use structured GORM ordering. Add handler/unit and Kind E2E regression coverage, and document the query restrictions.
+
+      Jira: ARO-28292
+      Co-authored with Red Hat Agentic SDLC AI Agents
+
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+      (cherry picked from commit 1e051ac2e442f9cbbbe0ec7112bba6dda648f6ef)
+
+      * fix(deps): upgrade ocm-common for JSONB safety
+
+      Use the parser version that binds JSONB path keys instead of interpolating them into SQL. This is required for the SQL identifier fix to pass its regression tests on the backplane branch.
+
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+
+      * fix(ci): use patched Go 1.26.11 in lint workflow
+
+      Go 1.26.10 is affected by GO-2026-6859 in net/http. Use Go 1.26.11 so govulncheck runs with the fixed standard library.
+
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+
+      * fix(security): redact list errors and structure joins
+
+      Avoid logging user-provided search and order identifiers in validation errors. Build related joins and grouping from structured GORM identifiers, and add log, DAO, and end-to-end regression coverage for rejected and valid list queries.
+
+      Assisted-by: OpenCode (GLM 5.3)
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+      (cherry picked from commit a515dc9d53b21cf2ff9736d6c12d26bb7f2be2f3)
+
+      * fix(security): render joins in FROM and correct list e2e coverage
+
+      The structured join was passed to GORM as a WHERE expression, producing invalid SQL; route it through the FROM clause and accumulate repeated joins. Key the resource-bundle e2e assertions on the created resource ids, since a resource defaults its name to its id rather than the work name, and assert on the rejected identifier itself in the log regression test so a leaked identifier fails the test.
+
+      Assisted-by: OpenCode (GLM 5.3)
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+      (cherry picked from commit e9032c17c58b59d0e3f4400b76f06246446e5792)
+
+      * test(dao): qualify joined name filter
+
+      The join regression test joins resources and consumers, both of which have a name column. Qualify the filter as resources.name so the dry-run query matches valid PostgreSQL and the test verifies the intended query placement.
+
+      Assisted-by: OpenCode (GLM 5.3)
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+      (cherry picked from commit e53519f6c68473c19c06d1404ac575501e2cb17b)
+
+      * test(e2e): use supported JSON search syntax
+
+      The SQL parser rejects a direct labels ->> expression on consumers. Keep consumer name search and ordering coverage, and limit the JSONB label case to the resource payload query supported by the parser.
+
+      Assisted-by: OpenCode (GLM 5.3)
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+      (cherry picked from commit 251c33600e88bfd5b67997be2c3f06cf378f030c)
+
+      * fix(search): reject JSON operators on scalar columns
+
+      Validate the base column of each JSON operator against the GORM model's JSON type before building the query. This prevents scalar fields such as resource names from reaching PostgreSQL as JSON expressions and returning a 500, while preserving mixed scalar and JSON searches.
+
+      Assisted-by: OpenCode (GLM 5.3)
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+      (cherry picked from commit bf8925ce9e197b8479385b7d2ad3372083c4e4ec)
+
+      * docs: clarify JSON search validation comments
+
+      Document that JSON type validation follows GORM model metadata, explain JSON parser selection and base-column scanning, and describe the persisted JSONB consumer-label field.
+
+      Assisted-by: OpenCode (GLM 5.3)
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+      (cherry picked from commit dc17e2a7491236c0eb4b8aa6d20b9e6a1a99cda9)
+
+      ---------
+
+      Signed-off-by: Joshua Packer <jpacker@redhat.com>
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/stolostron/maestro/commit/a5f07f1da44c3f3465cbaf39f0e558382d7fb9d9
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/backplane-5.0
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/maestro
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: cloudevents-conductor
-    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-11-10T23:50:30Z"}'
-    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20261110-233642-000":{"lastUpdateTime":"2026-11-10T23:51:12.443417736Z"}}}'
+    pac.test.appstudio.openshift.io/url-repository: maestro
+    test.appstudio.openshift.io/added-to-global-candidate-list: '{"result":true,"reason":"Success","lastupdatedtime":"2026-11-11T21:56:14Z"}'
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"enterprise-contract-mce-50-release-mce-50-20261111-214331-000":{"lastUpdateTime":"2026-11-11T21:56:58.735400308Z"}}}'
     test.appstudio.openshift.io/integration-workflow: push
-    test.appstudio.openshift.io/pipelinerunstarttime: "1794353802000"
-    test.appstudio.openshift.io/result-chains-git-commit: f0bc706172f993d87586eb1fbb6b116134c8f89b
-    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/cloudevents-conductor
-    test.appstudio.openshift.io/result-image-digest: sha256:54bb3f7c20d21d3c9ce1913d17298f563ffed6f85885447a50a5e7b3122f92a7
-    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cloudevents-conductor-mce-50:f0bc706172f993d87586eb1fbb6b116134c8f89b
-    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/cloudevents-conductor
-    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-11-10T23:51:12.443417736Z","details":"Integration
-      test passed with warnings","startTime":"2026-11-10T23:50:30.992041331Z","completionTime":"2026-11-10T23:51:12.443417736Z","testPipelineRunName":"enterprise-contract-mce-50-k42tz"}]'
-  creationTimestamp: "2026-11-10T23:50:30Z"
+    test.appstudio.openshift.io/pipelinerunstarttime: "1794433411000"
+    test.appstudio.openshift.io/pr-status: merged
+    test.appstudio.openshift.io/result-chains-git-commit: a5f07f1da44c3f3465cbaf39f0e558382d7fb9d9
+    test.appstudio.openshift.io/result-chains-git-url: https://github.com/stolostron/maestro
+    test.appstudio.openshift.io/result-image-digest: sha256:24938865cff53beba6d673bef7b5f49dbecce259850912f9c57058c55779fceb
+    test.appstudio.openshift.io/result-image-url: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/maestro-mce-50:a5f07f1da44c3f3465cbaf39f0e558382d7fb9d9
+    test.appstudio.openshift.io/source-repo-url: https://github.com/stolostron/maestro
+    test.appstudio.openshift.io/status: '[{"scenario":"enterprise-contract-mce-50","status":"BuildPLRInProgress","lastUpdateTime":"2026-11-11T21:56:58.735400308Z","details":"Integration
+      test passed with warnings","startTime":"2026-11-11T21:56:14.889825955Z","completionTime":"2026-11-11T21:56:58.735400308Z","testPipelineRunName":"enterprise-contract-mce-50-sjmfs"}]'
+  creationTimestamp: "2026-11-11T21:56:14Z"
   generation: 1
   labels:
     appstudio.openshift.io/application: release-mce-50
-    appstudio.openshift.io/build-pipelinerun: cloudevents-conductor-mce-50-on-push-c28mm
-    appstudio.openshift.io/component: cloudevents-conductor-mce-50
+    appstudio.openshift.io/build-pipelinerun: maestro-mce-50-on-push-5zx85
+    appstudio.openshift.io/component: maestro-mce-50
     pac.test.appstudio.openshift.io/cancel-in-progress: "false"
-    pac.test.appstudio.openshift.io/check-run-id: "130208402911"
-    pac.test.appstudio.openshift.io/event-type: incoming
-    pac.test.appstudio.openshift.io/original-prname: cloudevents-conductor-mce-50-on-push
-    pac.test.appstudio.openshift.io/repository: cloudevents-conductor-main
-    pac.test.appstudio.openshift.io/sha: f0bc706172f993d87586eb1fbb6b116134c8f89b
+    pac.test.appstudio.openshift.io/check-run-id: "130807867895"
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/original-prname: maestro-mce-50-on-push
+    pac.test.appstudio.openshift.io/pull-request: "104"
+    pac.test.appstudio.openshift.io/repository: maestro-main
+    pac.test.appstudio.openshift.io/sha: a5f07f1da44c3f3465cbaf39f0e558382d7fb9d9
     pac.test.appstudio.openshift.io/state: completed
     pac.test.appstudio.openshift.io/url-org: stolostron
-    pac.test.appstudio.openshift.io/url-repository: cloudevents-conductor
-    test.appstudio.openshift.io/pipelinerunfinishtime: "1794354624"
+    pac.test.appstudio.openshift.io/url-repository: maestro
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1794434168"
     test.appstudio.openshift.io/type: component
-  name: release-mce-50-20261110-233642-000
+  name: release-mce-50-20261111-214331-000
   namespace: crt-redhat-acm-tenant
   ownerReferences:
   - apiVersion: appstudio.redhat.com/v1alpha1
@@ -69,8 +147,8 @@ metadata:
     kind: Application
     name: release-mce-50
     uid: b3455ece-4b48-4ef3-9977-daf989879e65
-  resourceVersion: "12281587967"
-  uid: e80c4963-cd1f-4feb-8179-d2dfdaa82283
+  resourceVersion: "12301346550"
+  uid: f18e6017-a01d-4592-a528-adeee49216cc
 spec:
   application: release-mce-50
   artifacts: {}
@@ -304,6 +382,7 @@ spec:
     source:
       git:
         context: ./
+        dockerfileUrl: Dockerfile.rhtap
         revision: f0bc706172f993d87586eb1fbb6b116134c8f89b
         url: https://github.com/stolostron/cloudevents-conductor
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/registration-operator-mce-50@sha256:89dcb0c0617b9d263c764d35d2b8eb838f563ecdef4cc054aebe90059c9a8da0
@@ -314,13 +393,12 @@ spec:
         dockerfileUrl: build/Dockerfile.registration-operator.rhtap
         revision: 49c5ec6f546d1801129ce1b60f6e2547404db9dd
         url: https://github.com/stolostron/ocm
-  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/maestro-mce-50@sha256:389a24319bc2eec018ffb7db745dfbfe716b7ab0b49f3e23c1db3b30b8c9af88
+  - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/maestro-mce-50@sha256:24938865cff53beba6d673bef7b5f49dbecce259850912f9c57058c55779fceb
     name: maestro-mce-50
     source:
       git:
         context: ./
-        dockerfileUrl: Dockerfile.rhtap
-        revision: 872b904366f41d87fa204ecedee73d7caeb86a3e
+        revision: a5f07f1da44c3f3465cbaf39f0e558382d7fb9d9
         url: https://github.com/stolostron/maestro
   - containerImage: quay.io/redhat-user-workloads/crt-redhat-acm-tenant/cluster-curator-controller-mce-50@sha256:a778a11dfec9dde184af4ff77974dff3e22326e7f73ca3d5d92246e6f99e0695
     name: cluster-curator-controller-mce-50
@@ -356,18 +434,18 @@ spec:
         url: https://github.com/stolostron/discovery
 status:
   conditions:
-  - lastTransitionTime: "2026-11-10T23:51:12Z"
+  - lastTransitionTime: "2026-11-11T21:56:58Z"
     message: Snapshot integration status condition is finished since all testing pipelines
       completed
     reason: Finished
     status: "True"
     type: AppStudioIntegrationStatus
-  - lastTransitionTime: "2026-11-10T23:51:12Z"
+  - lastTransitionTime: "2026-11-11T21:56:58Z"
     message: All Integration Pipeline tests passed
     reason: Passed
     status: "True"
     type: AppStudioTestSucceeded
-  - lastTransitionTime: "2026-11-10T23:51:12Z"
+  - lastTransitionTime: "2026-11-11T21:56:58Z"
     message: The Snapshot was auto-released
     reason: AutoReleased
     status: "True"
